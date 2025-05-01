@@ -1,0 +1,39 @@
+<!-- authentification/personnel_deleted_list.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Personnels supprimés</title>
+</head>
+<body>
+    <h2>Liste des personnels supprimés</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Fonction</th>
+                <th>Téléphone</th>
+                <th>Restauration</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for personnel in personnels_supprimes %}
+                <tr>
+                    <td>{{ personnel.nom }}</td>
+                    <td>{{ personnel.prenom }}</td>
+                    <td>{{ personnel.fonction }}</td>
+                    <td>{{ personnel.telephone }}</td>
+                    <td>
+                        <form action="{% url 'personnel_restore' personnel.pk %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit">Restaurer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><a href="{% url 'personnel_list' %}">Retour à la liste des personnels</a></p>
+</body>
+</html>

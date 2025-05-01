@@ -1,0 +1,72 @@
+{% extends "base.html" %} 
+
+{% block content %} 
+<h2 class="text-center mb-4">Liste des patients supprimés</h2> 
+
+<!-- Barre de recherche -->
+<div class="d-flex justify-content-end mb-3">
+    <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un patient par nom...">
+</div>
+
+<div class="table-responsive"> 
+    <table class="table table-bordered table-striped"> 
+        <thead class="table-dark"> 
+            <tr> 
+                <th>Nom</th> 
+                <th>Prénom</th> 
+                <th>Sexe</th>
+                <th>Âge</th>
+                <th>Nationalité</th>
+                <th>Situation Matrimoniale</th>
+                <th>Type de Personne</th>
+                <th>Groupe Sanguin</th>
+                <th>Date de suppression</th> 
+                <th>Actions</th> 
+            </tr> 
+        </thead> 
+        <tbody id="patientsTable"> 
+            {% for patient in patients_deleted %} 
+            <tr> 
+                <td>{{ patient.nom }}</td> 
+                <td>{{ patient.prenom }}</td>
+                <td>{{ patient.get_sexe_display }}</td>
+                <td>{{ patient.age }}</td>
+                <td>{{ patient.nationalite }}</td>
+                <td>{{ patient.get_situation_matrimoniale_display }}</td>
+                <td>{{ patient.get_type_personne_display }}</td>
+                <td>{{ patient.groupe_sanguin }}</td>
+                <td>{{ patient.deleted_at|date:"d/m/Y H:i" }}</td> 
+                <td> 
+                    <a href="{% url 'patient:patient_restore' patient.id %}" class="btn btn-success btn-sm">Restaurer</a> 
+                </td> 
+            </tr> 
+            {% empty %} 
+            <tr> 
+                <td colspan="10" class="text-center">Aucun patient supprimé.</td> 
+            </tr> 
+            {% endfor %} 
+        </tbody> 
+    </table> 
+</div> 
+
+<div class="text-center mt-4"> 
+    <a href="{% url 'patient:patient_list' %}" class="btn btn-primary btn-lg">Retour à la liste des patients</a> 
+</div> 
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#patientsTable tr');
+
+        rows.forEach(row => {
+            let nameCell = row.querySelector('td:nth-child(1)'); // Sélectionne la première colonne (Nom)
+            if (nameCell) {
+                let name = nameCell.textContent.toLowerCase();
+                row.style.display = name.includes(filter) ? '' : 'none';
+            }
+        });
+    });
+</script>
+
+{% endblock %}

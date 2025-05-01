@@ -1,0 +1,95 @@
+{% extends 'pharmacie/baseGesPh.html' %}
+
+{% block content %}
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Liste des Commandes</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'pharmacie:commande_create' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-circle"></i> Nouvelle commande
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher une commande...">
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table id="basicExample" class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Fournisseur</th>
+                                    <th>Quantité</th>
+                                    <th>Prix Unitaire d'Achat (FCFA)</th>
+                                    <th>Total Achat (FCAF)</th>
+                                    <th>Date de Commande</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="commandeTable">
+                                {% for commande in commandes %}
+                                <tr>
+                                    <td class="produit">{{ commande.produit.nom_produit }}</td>
+                                    <td class="fournisseur">{{ commande.fournisseur.nom_fournisseur }}</td>
+                                    <td class="quantite">{{ commande.quantite_commande }}</td>
+                                    <td class="prix">{{ commande.prix|floatformat:2 }}</td>
+                                    <td class="total-achat">{{ commande.total_achat|floatformat:2 }}</td>
+                                    <td>{{ commande.date_commande|date:"d/m/Y H:i" }}</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a href="{% url 'pharmacie:commande_detail' commande.pk %}" class="btn btn-outline-info btn-sm">
+                                                <i class="bi bi-eye"></i> Voir
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" class="text-center">Aucune commande trouvée.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#commandeTable tr');
+        
+        rows.forEach(row => {
+            let produit = row.querySelector('.produit').textContent.toLowerCase();
+            let fournisseur = row.querySelector('.fournisseur').textContent.toLowerCase();
+            let quantite = row.querySelector('.quantite').textContent.toLowerCase();
+            let prix = row.querySelector('.prix').textContent.toLowerCase();
+            let totalAchat = row.querySelector('.total-achat').textContent.toLowerCase();
+
+            if (
+                produit.includes(filter) || 
+                fournisseur.includes(filter) || 
+                quantite.includes(filter) || 
+                prix.includes(filter) || 
+                totalAchat.includes(filter)
+            ) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+{% endblock %}

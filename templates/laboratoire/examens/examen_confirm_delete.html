@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Êtes-vous sûr de vouloir supprimer cet Examen ?</h2>
+    <p><strong>Patient :</strong> {{ examen.patient.nom }} {{ examen.patient.prenom }}</p>
+    <p><strong>Numéro de dossier :</strong> {{ examen.numero_dossier }}</p>
+    <p><strong>Examen :</strong> {{ examen.examen }}</p>
+    <p><strong>Prix :</strong> {{ examen.prix }} FCFA</p>
+    <p><strong>Date et heure :</strong> {{ examen.date|date:"d/m/Y H:i" }}</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+        <a href="{% url 'laboratoire:examen_list' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+{% endblock %}

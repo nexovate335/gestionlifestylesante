@@ -1,0 +1,89 @@
+{% extends "personnels/basePers.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Liste du Personnel</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'register' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-circle"></i> Ajouter un Personnel
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un nom...">
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Email</th>
+                                    <th>Fonction</th>
+                                    <th>Sexe</th>
+                                    <th>Téléphone</th>
+                                    <th>Adresse</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="personnelTable">
+                                {% for personnel in personnels %}
+                                <tr>
+                                    <td>{{ personnel.id }}</td>
+                                    <td class="personnel-nom">{{ personnel.last_name }}</td>
+                                    <td class="personnel-prenom">{{ personnel.first_name }}</td>
+                                    <td>{{ personnel.email }}</td>
+                                    <td>{{ personnel.fonction }}</td>
+                                    <td>{{ personnel.sexe }}</td>
+                                    <td>{{ personnel.telephone }}</td>
+                                    <td>{{ personnel.adresse }}</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a href="{% url 'personnel_detail' personnel.pk %}" class="btn btn-outline-info btn-sm">
+                                                <i class="bi bi-eye"></i> Voir
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="8" class="text-center">Aucun personnel trouvé.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#personnelTable tr');
+        
+        rows.forEach(row => {
+            let name = row.querySelector('.personnel-nom').textContent.toLowerCase();
+            if (name.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "laboratoire/baseLab.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary">🧪 Détails du Patient</h1>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="bg-light">Nom</th>
+                        <td>{{ patient.nom }} {{ patient.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Téléphone</th>
+                        <td>{{ patient.telephone }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Âge</th>
+                        <td>{{ patient.age }} ans</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Nationalité</th>
+                        <td>{{ patient.nationalite }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Sexe</th>
+                        <td><span class="badge bg-info">{{ patient.get_sexe_display }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Situation matrimoniale</th>
+                        <td>{{ patient.get_situation_matrimoniale_display }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Type de personne</th>
+                        <td>{{ patient.get_type_personne_display }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Niveau d'instruction</th>
+                        <td><span class="badge bg-info">{{ patient.get_niveau_instruction_display }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Pièce d'identité n°</th>
+                        <td><span class="badge bg-info">{{ patient.get_piece_identite_display }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Groupe sanguin</th>
+                        <td><strong class="text-danger">{{ patient.groupe_sanguin }}</strong></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Adresse</th>
+                        <td>{{ patient.adresse }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Numéro de dossier</th>
+                        <td><span class="badge bg-primary">{{ patient.numero_dossier }}</span></td>
+                    </tr>
+                   
+                    <tr>
+                        <th class="bg-light">Personne à contacter si besoin</th>
+                        <td><span class="badge bg-info">{{ patient.get_personne_contacter_display }}</span></td>
+                    </tr>
+
+                    <tr>
+                        <th class="bg-light">Adresse pour la  personne à contacter si besoin</th>
+                        <td><span class="badge bg-info">{{ patient.get_adresse_personne_contacter_display }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Téléphone pour la personne à contacter si besoin</th>
+                        <td><span class="badge bg-info">{{ patient.get_telephone_personne_contacter_display }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Lien avec la personne à contacter si besoin</th>
+                        <td><span class="badge bg-info">{{ patient.get_lien_display }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Date d'enregistrement</th>
+                        <td><span class="badge bg-success">{{ patient.date|date:"d/m/Y H:i" }}</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'patient:patient_lab_update' patient.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Modifier
+        </a>
+        <a href="{% url 'patient:patient_lab_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "reception/baseRec.html" %}
+
+{% block content %}
+<h2>Modifier l'Échographie</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Mettre à jour</button>
+</form>
+
+<a href="{% url 'echographie:echographie_list' %}">Annuler</a>
+{% endblock %}

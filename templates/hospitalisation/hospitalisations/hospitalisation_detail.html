@@ -1,0 +1,54 @@
+{% extends "reception/baseRec.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary">🏥 Détails de l'Hospitalisation</h1>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="bg-light">Patient</th>
+                        <td><span class="badge bg-primary">{{ hospitalisation.patient.nom }} {{ hospitalisation.patient.prenom }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Montant</th>
+                        <td><span class="badge bg-success">{{ hospitalisation.montant }} FCFA</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Date d'admission</th>
+                        <td><span class="badge bg-warning">{{ hospitalisation.date_admission|date:"d/m/Y H:i" }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Date de sortie</th>
+                        <td><span class="badge bg-danger">{{ hospitalisation.date_sortie|date:"d/m/Y H:i" }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Nombre de jours</th>
+                        <td>{{ hospitalisation.nombre_jours }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Commentaire</th>
+                        <td>{{ hospitalisation.commentaire|default:"Aucun commentaire" }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Date de création</th>
+                        <td><span class="badge bg-info">{{ hospitalisation.date|date:"d/m/Y H:i" }}</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'hospitalisation:hospitalisation_update' pk=hospitalisation.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Modifier
+        </a>
+        <a href="{% url 'hospitalisation:hospitalisation_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    
+    </div>
+</div>
+{% endblock %}

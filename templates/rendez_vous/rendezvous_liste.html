@@ -1,0 +1,87 @@
+{% extends "reception/baseRec.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Liste des Rendez-vous</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'rendezvous:rendezvous_create' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-circle"></i> Ajouter un Rendez-vous
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un rendez-vous...">
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Nom Personne</th>
+                                    <th>Nom Docteur</th>
+                                    <th>Date et Heure</th>
+                                    <th>Statut</th>
+                                    <th>Commentaire</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rendezvousTable">
+                                {% for rendezvous in rendezvous %}
+                                <tr>
+                                    <td>{{ rendezvous.nom_personne }}</td>
+                                    <td>{{ rendezvous.nom_docteur }}</td>
+                                    <td>{{ rendezvous.jour_rdv }}/{{ rendezvous.mois_rdv }}/{{ rendezvous.annee_rdv }} à {{ rendezvous.heure_rdv }}</td>
+                                    <td>{{ rendezvous.statut }}</td>
+                                    <td>{{ rendezvous.commentaire|truncatechars:50 }}</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a href="{% url 'rendezvous:rendezvous_detail' pk=rendezvous.pk %}" class="btn btn-outline-info btn-sm">
+                                                <i class="bi bi-eye"></i> Voir
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">Aucun rendez-vous trouvé.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#rendezvousTable tr');
+
+        rows.forEach(row => {
+            let nameCell = row.querySelector('td:nth-child(1)'); // La première colonne correspond à nom_personne
+            if (nameCell) {
+                let name = nameCell.textContent.toLowerCase();
+                if (name.includes(filter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+    });
+</script>
+
+{% endblock %}

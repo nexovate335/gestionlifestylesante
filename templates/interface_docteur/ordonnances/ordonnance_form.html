@@ -1,0 +1,99 @@
+{% extends "interface_docteur/baseIntDoc.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary">
+        📝 {% if ordonnance.pk %}Modifier{% else %}Nouvelle{% endif %} Ordonnance
+    </h1>
+
+    <div class="card shadow-lg border-0 mt-4">
+        <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                <!-- Formulaire Ordonnance -->
+                <h5 class="text-secondary mb-3">📋 Informations générales</h5>
+                <div class="row">
+                    {% for field in ordonnance_form %}
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="text-danger small">{{ field.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <hr>
+                <h5 class="text-secondary mb-3">💊 Traitements</h5>
+
+                <!-- Formset des traitements -->
+                <div id="traitement-formset">
+                    {{ formset.management_form }}
+                    {% for form in formset %}
+                        <div class="border rounded p-3 mb-3 position-relative traitement-form bg-light">
+                            <button type="button" class="btn-close position-absolute top-0 end-0 remove-form" aria-label="Supprimer"></button>
+                            <div class="row">
+                                {% for field in form %}
+                                    {% if field.name != 'deleted_at' %}
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                            {{ field }}
+                                            {% if field.errors %}
+                                                <div class="text-danger small">{{ field.errors|striptags }}</div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    <button type="button" id="add-form" class="btn btn-outline-primary">
+                        <i class="bi bi-plus-circle"></i> Ajouter un traitement
+                    </button>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success me-2">
+                        <i class="bi bi-save"></i> Enregistrer
+                    </button>
+                    <a href="{% url 'consultation:ordonnance_list' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Script JS -->
+<script>
+    const formsetDiv = document.getElementById('traitement-formset');
+    const addFormBtn = document.getElementById('add-form');
+    let formIndex = {{ formset.total_form_count }};
+
+    addFormBtn.addEventListener('click', () => {
+        const emptyFormHtml = `{{ formset.empty_form.as_p|escapejs }}`.replace(/__prefix__/g, formIndex);
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('border', 'rounded', 'p-3', 'mb-3', 'position-relative', 'traitement-form', 'bg-light');
+        wrapper.innerHTML = `<button type="button" class="btn-close position-absolute top-0 end-0 remove-form" aria-label="Supprimer"></button>` + emptyFormHtml;
+        formsetDiv.appendChild(wrapper);
+        formIndex++;
+        document.getElementById("id_traitement-TOTAL_FORMS").value = formIndex;
+    });
+
+    formsetDiv.addEventListener('click', function(event) {
+        if (event.target.classList.contains('remove-form')) {
+            const form = event.target.closest('.traitement-form');
+            form.remove();
+            formIndex--;
+            document.getElementById("id_traitement-TOTAL_FORMS").value = formIndex;
+        }
+    });
+</script>
+{% endblock %}

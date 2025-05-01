@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2 class="text-center mb-4">Corbeille des Vaccins</h2>
+
+  <!-- Barre de recherche -->
+  <div class="d-flex justify-content-end mb-3">
+    <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un patient...">
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Nom du Patient</th>
+          <th>Type de Vaccin</th>
+          <th>Date de Création</th>
+          <th>Date de Suppression</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="vaccinTable">
+        {% for vaccin in vaccins_deleted %}
+          <tr>
+            <td class="patient-name">{{ vaccin.patient.nom }} {{ vaccin.patient.prenom }}</td>
+            <td>{{ vaccin.type_vaccin }}</td>
+            <td>{{ vaccin.date|date:"d/m/Y H:i" }}</td>
+            <td>{{ vaccin.deleted_at|date:"d/m/Y H:i" }}</td>
+            <td>
+              <form method="post" action="{% url 'vaccin:vaccin_restore' pk=vaccin.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-sm">Restaurer</button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5" class="text-center">Aucun vaccin supprimé.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="{% url 'vaccin:vaccin_list' %}" class="btn btn-primary btn-lg">Retour à la liste des Vaccins</a>
+  </div>
+
+  <!-- Script de recherche -->
+  <script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#vaccinTable tr');
+
+        rows.forEach(row => {
+            let patientTd = row.querySelector('.patient-name');
+            if (patientTd) {
+                let name = patientTd.textContent.toLowerCase();
+                row.style.display = name.includes(filter) ? '' : 'none';
+            }
+        });
+    });
+  </script>
+{% endblock %}

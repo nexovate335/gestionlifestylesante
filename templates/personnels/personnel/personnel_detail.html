@@ -1,0 +1,71 @@
+{% extends "personnels/basePers.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary">👤 Détails du Personnel</h1>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="bg-light">Nom</th>
+                        <td>{{ personnel.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Prénom</th>
+                        <td>{{ personnel.first_name }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Sexe</th>
+                        <td><span class="badge bg-info">{{ personnel.get_sexe_display }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Date de naissance</th>
+                        <td>{{ personnel.date_naissance|date:"d/m/Y" }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Lieu de naissance</th>
+                        <td>{{ personnel.lieu_naissance }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Nationalité</th>
+                        <td>{{ personnel.nationalite }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Adresse</th>
+                        <td>{{ personnel.adresse }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Téléphone</th>
+                        <td>{{ personnel.telephone }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Fonction</th>
+                        <td><span class="badge bg-primary">{{ personnel.fonction }}</span></td>
+                    </tr>
+                    {% if personnel.date_embauche %}
+                    <tr>
+                        <th class="bg-light">Date d'embauche</th>
+                        <td><span class="badge bg-success">{{ personnel.date_embauche|date:"d/m/Y" }}</span></td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <th class="bg-light">Email</th>
+                        <td>{{ personnel.email }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'personnel_update' personnel.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Modifier
+        </a>
+        <a href="{% url 'personnel_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+{% endblock %}

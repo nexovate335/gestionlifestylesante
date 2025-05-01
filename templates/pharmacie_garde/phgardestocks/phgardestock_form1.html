@@ -1,0 +1,16 @@
+{% extends 'pharmacie_garde/baseGesPhGarde.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Mise à jour du Stock - {{ form.instance.produit.nom_produit }}</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a href="{% url 'pharmacie_garde:phgardegestion_stock_list' %}" class="btn btn-secondary">Retour à la liste des stocks</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

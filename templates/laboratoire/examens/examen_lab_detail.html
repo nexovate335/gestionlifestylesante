@@ -1,0 +1,73 @@
+{% extends "laboratoire/baseLab.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary">🩺 Détails de l'Examen</h1>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="bg-light">Numéro de dossier</th>
+                        <td><span class="badge bg-dark text-white">{{ examen.patient.numero_dossier }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Patient</th>
+                        <td>{{ examen.patient.nom }} {{ examen.patient.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Examen</th>
+                        <td>{{ examen.examen }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Prix</th>
+                        <td><span class="badge bg-success">{{ examen.prix }} FCFA</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Nature de l'examen</th>
+                        <td>
+                            {% if examen.nature_examen == 'Examen fait maison' %}
+                                <span class="badge bg-success">Examen fait maison</span>
+                            {% elif examen.nature_examen == "Examen fait à l'extérieur" %}
+                                <span class="badge bg-warning">Examen fait à l'extérieur</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Non spécifié</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Prescripteur</th>
+                        <td>{{ examen.prescripteur }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Préleveur</th>
+                        <td>{{ examen.preleveur }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Technicien(ne)</th>
+                        <td>{{ examen.technicien }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Commentaire</th>
+                        <td>{{ examen.comentaire }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Date et heure de création</th>
+                        <td><span class="badge bg-info">{{ examen.date|date:"d/m/Y H:i" }}</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'laboratoire:examen_lab_update' pk=examen.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Modifier
+        </a>
+        <a href="{% url 'laboratoire:examen_lab_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+{% endblock %}

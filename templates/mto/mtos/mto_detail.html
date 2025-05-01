@@ -1,0 +1,61 @@
+{% extends "reception/baseRec.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary">🩺 Détails du Mto</h1>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="bg-light">Numéro de dossier</th>
+                        <td><span class="badge bg-primary">{{ mto.patient.numero_dossier }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Patient</th>
+                        <td>{{ mto.patient.nom }} {{ mto.patient.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Demandeur</th>
+                        <td>{{ mto.demandeur }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Pratiqueur</th>
+                        <td>{{ mto.pratiqueur }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Assistant(e)</th>
+                        <td>{{ mto.assistant }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Montant</th>
+                        <td>{{ mto.montant }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Résultat</th>
+                        <td>{{ mto.resultat }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Commentaire</th>
+                        <td>{{ mto.commentaire }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Date de création</th>
+                        <td><span class="badge bg-success">{{ mto.date|date:"d/m/Y H:i" }}</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'mto:mto_update' pk=mto.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Modifier
+        </a>
+        <a href="{% url 'mto:mto_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+{% endblock %}

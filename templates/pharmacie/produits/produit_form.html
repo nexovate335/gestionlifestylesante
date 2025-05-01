@@ -1,0 +1,16 @@
+{% extends 'pharmacie/baseGesPh.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Ajouter un Produit</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success">Ajouter</button>
+            <a href="{% url 'pharmacie:produit_list' %}" class="btn btn-primary">Retour</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

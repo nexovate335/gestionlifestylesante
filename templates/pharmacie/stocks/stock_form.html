@@ -1,0 +1,17 @@
+{% extends 'pharmacie/baseGesPh.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">{{ form.instance.pk|yesno:"Modifier Stock,Ajouter un Stock" }}</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Enregistrer</button>
+    </form>
+
+    <div class="mt-3">
+        <a href="{% url 'pharmacie:gestion_stock_list' %}" class="btn btn-secondary">Retour à la liste des stocks</a>
+    </div>
+</div>
+{% endblock %}

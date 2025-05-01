@@ -1,0 +1,74 @@
+{% extends 'pharmacie/baseGesPh.html' %}
+
+{% block content %}
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Liste des Stocks</h5>
+                </div>
+
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un stock...">
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="basicExample" class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Quantité réelle</th>
+                                    <th>Prix unitaire de vente</th>
+                                    <th>Prix total</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stockTable">
+                                {% for stock in stocks %}
+                                <tr>
+                                    <td>{{ stock.produit.nom_produit }}</td>
+                                    <td>{{ stock.quantite_reelle }}</td>
+                                    <td>{{ stock.prix_unitaire }} FCFA</td>
+                                    <td>{{ stock.prix_total }} FCFA</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a href="{% url 'pharmacie:stock_detail' stock.pk %}" class="btn btn-outline-info btn-sm">
+                                                <i class="bi bi-eye"></i> Voir
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">Aucun stock trouvé.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#stockTable tr');
+        
+        rows.forEach(row => {
+            let name = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+            if (name.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

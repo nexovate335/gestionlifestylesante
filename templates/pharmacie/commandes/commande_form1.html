@@ -1,0 +1,37 @@
+{% extends 'pharmacie/baseGesPh.html' %}
+
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Modifier la Commande</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="row g-3">
+            {% for field in form %}
+                <div class="col-md-6">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {% if field.name == 'produit' %}
+                        <!-- Personnalisation du champ Produit -->
+                        {{ field }}
+                    {% elif field.name == 'fournisseur' %}
+                        <!-- Personnalisation du champ Fournisseur -->
+                        {{ field }}
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Boutons -->
+        <div class="d-flex justify-content-end mt-4">
+            <a href="{% url 'pharmacie:commande_list' %}" class="btn btn-secondary me-2">Retour à la liste</a>
+            <button type="submit" class="btn btn-primary">Sauvegarder les modifications</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

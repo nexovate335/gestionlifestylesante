@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2 class="text-center mb-4">Liste des échographies supprimées</h2>
+
+  <!-- Barre de recherche -->
+  <div class="d-flex justify-content-end mb-3">
+    <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un patient...">
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Patient</th>
+          <th>Pratiqueur</th>
+          <th>Demandeur</th>
+          <th>Résultat</th>
+          <th>Date</th>
+          <th>Date de suppression</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="echographiesTable">
+        {% for echographie in echographies_deleted %}
+          <tr>
+            <td class="patient-name">{{ echographie.patient.nom }} {{ echographie.patient.prenom }}</td>
+            <td>{{ echographie.pratiqueur }}</td>
+            <td>{{ echographie.demandeur }}</td>
+            <td>{{ echographie.resultat|truncatewords:10 }}</td>
+            <td>{{ echographie.date|date:"d/m/Y H:i" }}</td>
+            <td>{{ echographie.deleted_at|date:"d/m/Y H:i" }}</td>
+            <td>
+              <form method="post" action="{% url 'echographie:echographie_restore' echographie.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-sm">Restaurer</button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7" class="text-center">Aucune échographie supprimée.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="{% url 'echographie:echographie_list' %}" class="btn btn-primary btn-lg">
+      Retour à la liste des échographies
+    </a>
+  </div>
+
+  <!-- Script de recherche -->
+  <script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+      let filter = this.value.toLowerCase();
+      let rows = document.querySelectorAll('#echographiesTable tr');
+
+      rows.forEach(row => {
+        let nameCell = row.querySelector('.patient-name'); // Sélectionne la cellule du nom du patient
+        if (nameCell) {
+          let name = nameCell.textContent.toLowerCase();
+          row.style.display = name.includes(filter) ? '' : 'none';
+        }
+      });
+    });
+  </script>
+
+{% endblock %}

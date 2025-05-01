@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirmer la suppression</title>
+</head>
+<body>
+    <h1>Supprimer le produit</h1>
+    <p>Êtes-vous sûr de vouloir supprimer le produit <strong>{{ produit.nom_produit }}</strong> ?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmer la suppression</button>
+    </form>
+
+    <a href="{% url 'pharmacie:produit_list' %}">Annuler</a>
+</body>
+</html>

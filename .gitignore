@@ -1,0 +1,24 @@
+myenv/*
+.env
+.env/*
+
+# Environnement virtuel
+env/
+venv/
+
+# Fichiers Python compilés
+__pycache__/
+*.py[cod]
+
+# Fichiers de base de données
+*.sqlite3
+
+# Fichiers secrets
+*.env
+
+# Fichiers de l'IDE
+.vscode/
+.idea/
+
+# Dossier de migration auto
+*/migrations/__pycache__/

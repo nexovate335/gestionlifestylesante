@@ -1,0 +1,104 @@
+{% extends 'pharmacie_garde/basePhGarde.html' %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Créer une Facture</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- Formulaire principal -->
+        <div class="card mb-3 p-3">
+            <h4 class="mb-3">Informations du Patient</h4>
+            {{ form.as_p }}  
+        </div>        
+
+        <!-- Ventes Associées -->
+        <div class="card mb-3 p-3">
+            <h4 class="mb-3">Ventes Associées</h4>
+            <div id="formset">
+                {{ formset.management_form }}
+                {% for form in formset %}
+                    <div class="vente-form row gx-3 mb-3 border p-3 rounded d-flex align-items-center">
+                        <div class="col-lg-10 col-sm-12">
+                            <div class="mb-2">
+                                {{ form.produit.label_tag }} {{ form.produit }}
+                            </div>
+                            <div class="mb-2">
+                                {{ form.quantite_vendue.label_tag }} {{ form.quantite_vendue }}
+                            </div>
+                            
+                        </div>
+                        <div class="col-lg-2 d-flex align-items-center">
+                            <button type="button" class="btn btn-danger remove-form">Supprimer</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="d-flex justify-content-between mt-3">
+                <div></div>  <!-- Espacement à gauche -->
+                <button type="button" id="add-form" class="btn btn-primary">Ajouter une Vente</button>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 justify-content-end">
+            <button type="submit" class="btn btn-success">Enregistrer la Facture</button>
+            <a href="{% url 'pharmacie_garde:liste_factures_phgarde' %}" class="btn btn-outline-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let formsetContainer = document.getElementById("formset");
+        let addButton = document.getElementById("add-form");
+        let totalForms = document.querySelector("#id_{{ formset.prefix }}-TOTAL_FORMS");
+        let formPrefix = "{{ formset.prefix }}";
+
+        function updateFormIndices() {
+            let forms = document.querySelectorAll(".vente-form");
+            forms.forEach((form, index) => {
+                form.querySelectorAll("input, select, textarea").forEach(input => {
+                    if (input.name.includes(formPrefix)) {
+                        let newName = input.name.replace(/\d+/, index);
+                        input.setAttribute("name", newName);
+                        let newId = input.id.replace(/\d+/, index);
+                        input.setAttribute("id", newId);
+                    }
+                });
+            });
+            totalForms.value = forms.length;  // Mise à jour du total de formulaires
+        }
+
+        addButton.addEventListener("click", function () {
+            let formNum = parseInt(totalForms.value);
+            let newForm = document.querySelector(".vente-form").cloneNode(true);
+
+            // Réinitialisation des champs du formulaire cloné
+            newForm.querySelectorAll("input, select, textarea").forEach(input => {
+                input.value = "";  // Réinitialise les champs
+                let newName = input.name.replace(/\d+/, formNum);
+                let newId = input.id.replace(/\d+/, formNum);
+                input.setAttribute("name", newName);
+                input.setAttribute("id", newId);
+            });
+
+            formsetContainer.appendChild(newForm);
+            updateFormIndices();
+        });
+
+        document.addEventListener("click", function (e) {
+            if (e.target && e.target.classList.contains("remove-form")) {
+                let formItem = e.target.closest(".vente-form");
+                if (formItem) {
+                    formItem.remove();
+                    updateFormIndices();
+                }
+            }
+        });
+    });
+</script>
+
+{% endblock %}

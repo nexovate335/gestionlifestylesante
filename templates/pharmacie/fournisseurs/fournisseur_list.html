@@ -1,0 +1,79 @@
+{% extends 'pharmacie/baseGesPh.html' %}
+
+{% block content %}
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Liste des Fournisseurs</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'pharmacie:fournisseur_create' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-circle"></i> Ajouter un Fournisseur
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un fournisseur...">
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table id="basicExample" class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Numéro du fournisseur</th>
+                                    <th>Nom du fournisseur</th>
+                                    <th>Ville</th>
+                                    <th>Téléphone</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fournisseurTable">
+                                {% for fournisseur in fournisseurs %}
+                                <tr>
+                                    <td>{{ fournisseur.num_four }}</td>
+                                    <td>{{ fournisseur.nom_fournisseur }}</td>
+                                    <td>{{ fournisseur.ville }}</td>
+                                    <td>{{ fournisseur.telephone }}</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a href="{% url 'pharmacie:fournisseur_detail' fournisseur.pk %}" class="btn btn-outline-info btn-sm">
+                                                <i class="bi bi-eye"></i> Voir
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">Aucun fournisseur trouvé.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#fournisseurTable tr');
+        
+        rows.forEach(row => {
+            let name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            if (name.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

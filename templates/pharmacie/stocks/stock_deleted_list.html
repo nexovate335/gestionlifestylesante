@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Liste des Stocks Supprimés</h2>
+
+    <!-- Barre de recherche -->
+    <div class="d-flex justify-content-end mb-3">
+        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un stock...">
+    </div>
+
+    {% if stocks %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Quantité réelle</th>
+                <th>Date de suppression</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="stockTable">
+            {% for stock in stocks %}
+            <tr>
+                <td class="produit">{{ stock.produit.nom_produit }}</td>
+                <td class="quantite">{{ stock.quantite_reelle }}</td>
+                <td class="date-suppression">{{ stock.deleted_at|date:"d/m/Y" }}</td>
+                <td>
+                    <a href="{% url 'pharmacie:stock_restore' stock.pk %}" class="btn btn-success btn-sm">Restaurer</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-center text-muted">Aucun stock supprimé.</p>
+    {% endif %}
+
+    <div class="mt-3">
+        <a href="{% url 'pharmacie:gestion_stock_list' %}" class="btn btn-primary">Retour à la liste des stocks</a>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#stockTable tr');
+        
+        rows.forEach(row => {
+            let produit = row.querySelector('.produit').textContent.toLowerCase();
+            let quantite = row.querySelector('.quantite').textContent.toLowerCase();
+            let dateSuppression = row.querySelector('.date-suppression').textContent.toLowerCase();
+
+            if (
+                produit.includes(filter) || 
+                quantite.includes(filter) || 
+                dateSuppression.includes(filter)
+            ) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'pharmacie_garde/baseGesPhGarde.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary">📦 Détails du Produit</h1>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="bg-light">Nom du produit</th>
+                        <td>{{ produit.nom_produit }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <!-- Modifier le produit -->
+        <a href="{% url 'pharmacie_garde:phgardeproduit_update' produit.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Modifier
+        </a>
+        
+        <!-- Retour à la liste -->
+        <a href="{% url 'pharmacie_garde:phgardeproduit_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "reception/baseRec.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Liste des Hospitalisations</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'hospitalisation:hospitalisation_create' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-circle"></i> Ajouter une Hospitalisation
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher par patient...">
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table id="hospitalisationTable" class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Patient</th>
+                                    <th>Numéro de dosssier</th>
+                                    <th>Date d'Admission</th>
+                                    <th>Date de Sortie</th>
+                                    <th>Nombre de jours</th>
+                                    <th>Montant</th>
+                                    <th>Commentaire</th>
+                                    <th>Date de création</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hospitalisationBody">
+                                {% for hospitalisation in hospitalisations %}
+                                <tr>
+                                    <td>{{ hospitalisation.id }}</td>
+                                    <td class="hospitalisation-patient">{{ hospitalisation.patient.nom }} {{ hospitalisation.patient.prenom }}</td>
+                                    <td>{{ hospitalisation.patient.numero_dossier }}</td>
+                                    <td>{{ hospitalisation.date_admission|date:"d/m/Y H:i" }}</td>
+                                    <td>{{ hospitalisation.date_sortie|date:"d/m/Y H:i" }}</td>
+                                    <td>{{ hospitalisation.nombre_jours }}</td>
+                                    <td>{{ hospitalisation.montant }}</td>
+                                    <td>{{ hospitalisation.commentaire|truncatechars:50 }}</td>
+                                    <td>{{ hospitalisation.date|date:"d/m/Y H:i" }}</td>
+                                    <td>
+                                      <div class="d-inline-flex gap-1">
+                                        <a href="{% url 'hospitalisation:hospitalisation_detail' pk=hospitalisation.pk %}" class="btn btn-outline-info btn-sm">
+                                            <i class="bi bi-eye"></i> Voir
+                                        </a>
+                                      </div>                                  
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="9" class="text-center">Aucune hospitalisation disponible.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#hospitalisationBody tr');
+        
+        rows.forEach(row => {
+            let patientName = row.querySelector('.hospitalisation-patient').textContent.toLowerCase();
+            let admissionDate = row.cells[2].textContent.toLowerCase();  // Date d'admission
+            let dischargeDate = row.cells[3].textContent.toLowerCase();  // Date de sortie
+            
+            if (patientName.includes(filter) || admissionDate.includes(filter) || dischargeDate.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

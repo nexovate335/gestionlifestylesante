@@ -1,0 +1,88 @@
+{% extends "reception/baseRec.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Liste des Échographies</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'echographie:echographie_create' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-circle"></i> Ajouter une Échographie
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un patient par nom...">
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="basicExample" class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Numérode dossier</th>
+                                    <th>Patient</th>
+                                    <th>Demandeur</th>
+                                    <th>Pratiqueur</th>
+                                    <th>Assistant(e)</th>
+                                    <th>Montant</th>
+                                    <th>Résultat</th>
+                                    <th>Commentaire</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="echographieTable">
+                                {% for echographie in echographies %}
+                                <tr>
+                                    <td>{{ echographie.id}}</td>
+                                    <td>{{ echographie.patient.numero_dossier}}</td>
+                                    <td>{{ echographie.patient.nom }} {{ echographie.patient.prenom }}</td>
+                                    <td>{{ echographie.demandeur }}</td>
+                                    <td>{{ echographie.pratiqueur }}</td>
+                                    <td>{{ echographie.assistant }}</td>
+                                    <td>{{ echographie.montant }}</td>
+                                    <td>{{ echographie.resultat }}</td>
+                                    <td>{{ echographie.commentaire|truncatechars:50 }}</td>
+
+                                    <td>{{ echographie.date|date:"d/m/Y H:i" }}</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a href="{% url 'echographie:echographie_detail' echographie.pk %}" class="btn btn-outline-info btn-sm">
+                                                <i class="bi bi-eye"></i> Voir
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">Aucune échographie trouvée.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#echographieTable tr');
+        
+        rows.forEach(row => {
+            let name = row.querySelector('td:first-child').textContent.toLowerCase();
+            row.style.display = name.includes(filter) ? '' : 'none';
+        });
+    });
+</script>
+{% endblock %}

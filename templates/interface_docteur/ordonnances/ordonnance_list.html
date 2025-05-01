@@ -1,0 +1,101 @@
+{% extends "interface_docteur/baseIntDoc.html" %}
+{% load static %}
+
+{% block content %}
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Liste des Ordonnances avec Traitements</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'consultation:ordonnance_create' %}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Nouveau Traitement
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un patient par nom...">
+                    </div>
+
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Patient</th>
+                                    <th>Consultation</th>
+                                    <th>Prescripteur</th>
+                                    <th>Date</th>
+                                    <th>Commentaire Ordonnance</th>
+                                    <th>Médicaments prescrits</th>
+                                    <th>Actions</th>  {# <-- Nouvelle colonne #}
+                                </tr>
+                            </thead>
+                            <tbody id="ordonnanceBody">
+                                {% for ordonnance in ordonnances %}
+                                <tr>
+                                    <td>{{ ordonnance.id }}</td>
+                                    <td class="patient-name">
+                                        {{ ordonnance.consultation.patient.nom }} {{ ordonnance.consultation.patient.prenom }}
+                                    </td>
+                                    <td>{{ ordonnance.consultation.id }}</td>
+                                    <td>{{ ordonnance.prescripteur|default:"-" }}</td>
+                                    <td>{{ ordonnance.date|date:"d/m/Y H:i" }}</td>
+                                    <td>{{ ordonnance.commentaire|default:"" }}</td>
+                                    <td>
+                                        {% if ordonnance.traitements.all %}
+                                            <ul class="list-unstyled mb-0">
+                                                {% for traitement in ordonnance.traitements.all %}
+                                                <li>
+                                                    <strong>{{ traitement.medicament }}</strong><br>
+                                                    <small>
+                                                        Posologie : {{ traitement.posologie }} <br>
+                                                        Durée : {{ traitement.duree }} <br>
+                                                        Commentaire : {{ traitement.commentaire|default:"-" }}<br>
+                                                        Date : {{ traitement.date_prescription|date:"d/m/Y" }}
+                                                    </small>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <em>Aucun traitement</em>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'consultation:ordonnance_detail' ordonnance.pk %}" class="btn btn-sm btn-outline-info">
+                                            Voir
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="8" class="text-center">Aucune ordonnance enregistrée.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function () {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#ordonnanceBody tr');
+
+        rows.forEach(row => {
+            let patientName = row.querySelector('.patient-name')?.textContent.toLowerCase();
+            row.style.display = patientName && patientName.includes(filter) ? '' : 'none';
+        });
+    });
+</script>
+{% endblock %}

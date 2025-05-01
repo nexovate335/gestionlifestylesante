@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="text-center mb-4">Liste des Pansements Supprimés</h2>
+
+<!-- Barre de recherche -->
+<div class="d-flex justify-content-end mb-3">
+    <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un patient...">
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Nom du Patient</th>
+                <th>Description</th>
+                <th>Montant</th>
+                <th>Penseur</th>
+                <th>Date de suppression</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="pansementsTable">
+            {% for pansement in pansements_deleted %}
+            <tr>
+                <td class="patient-name">{{ pansement.patient.nom }} {{ pansement.patient.prenom }}</td>
+                <td>{{ pansement.observation }}</td>
+                <td>{{ pansement.montant }} FCFA</td>
+                <td>{{ pansement.penseur }}</td>
+                <td>{{ pansement.date|date:"d/m/Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'pansement:pansement_restore' pansement.pk %}" class="btn btn-success btn-sm">Restaurer</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">Aucun pansement supprimé.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="text-center mt-4">
+    <a href="{% url 'pansement:pansement_list' %}" class="btn btn-primary btn-lg">Retour à la liste des pansements</a>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#pansementsTable tr');
+
+        rows.forEach(row => {
+            let nameCell = row.querySelector('.patient-name'); // Sélectionne la colonne du nom du patient
+            if (nameCell) {
+                let name = nameCell.textContent.toLowerCase();
+                row.style.display = name.includes(filter) ? '' : 'none';
+            }
+        });
+    });
+</script>
+
+{% endblock %}

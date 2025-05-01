@@ -1,0 +1,92 @@
+{% extends 'blocoperatoire/baseBloc.html' %} 
+
+{% load static %}
+
+{% block content %}
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Liste des actes opératifs</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un bloc par nom...">
+                    </div>
+                    <div class="table-responsive">
+                        <table id="blocTable" class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Numéro de dossier</th>
+                                    <th>Patient</th>  
+                                    <th>Actes</th>
+                                    <th>Montant</th>
+                                    <th>Médecin</th>
+                                    <th>Aides médecins</th>
+                                    <th>Instrumentiste</th>
+                                    <th>Panseur</th>
+                                    <th>Anesthésiste</th>
+                                    <th>Observation</th>
+                                    <th>Commentaire</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for bloc in blocs %}
+                                    <tr>
+                                        <td>{{ bloc.id }}</td>
+                                        <td>{{ bloc.patient.numero_dossier }}</td>
+                                        <td>{{ bloc.patient.nom }} {{ bloc.patient.prenom }}</td>  <!-- Ajout du patient -->
+                                        <td>{{ bloc.actes }}</td>
+                                        <td>{{ bloc.montant }}</td>
+                                        <td>{{ bloc.medecin }}</td>
+                                        <td>{{ bloc.aides }}</td>
+                                        <td>{{ bloc.instrumentiste }}</td>
+                                        <td>{{ bloc.panseur }}</td>
+                                        <td>{{ bloc.anesthesiste }}</td>
+                                        <td>{{ bloc.observation }}</td>
+                                        <td>{{ bloc.commentaire|truncatechars:50 }}</td> 
+                                        <td>{{ bloc.date|date:"d/m/Y H:i" }}</td>
+                                        <td>
+                                            <div class="d-inline-flex gap-1">
+                                                <a href="{% url 'blocoperatoire:blocoperatoire_update_user' bloc.pk %}" class="btn btn-outline-info btn-sm">
+                                                    <i class="bi bi-eye"></i> Modifier
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="13" class="text-center">Aucun bloc opératoire trouvé.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>                            
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#blocTable tbody tr');
+        rows.forEach(row => {
+            let name = row.querySelector('.bloc-name') ? row.querySelector('.bloc-name').textContent.toLowerCase() : "";
+            if (name.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends 'caisse/baseCai.html' %}
+
+{% block content %}
+
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-0">Liste des Factures Pharmacie</h5>
+                        {% if not affichage_total %}
+                            <small class="text-muted">Factures créées aujourd'hui (payées et non payées)</small>
+                        {% else %}
+                            <small class="text-muted">Toutes les factures (peu importe la date)</small>
+                        {% endif %}
+                    </div>
+                    {% if not affichage_total %}
+                        <a href="?all=1" class="btn btn-sm btn-outline-secondary">
+                            Voir toutes les factures
+                        </a>
+                    {% else %}
+                        <a href="?" class="btn btn-sm btn-outline-secondary">
+                            Voir uniquement celles du jour
+                        </a>
+                    {% endif %}
+                </div>
+
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher une facture...">
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="basicExample" class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Numéro de dossier</th>
+                                    <th>Patient</th>
+                                    <th>Date de création</th>
+                                    <th>Montant Total</th>
+                                    <th>Total somme versée</th>
+                                    <th>Avance</th>
+                                    <th>Reste à payer</th>
+                                    <th>Statut</th>
+                                    <th>Commentaire</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="factureTable">
+                                {% for facture in factures %}
+                                <tr>
+                                    <td>{{ facture.numero_facture }}</td>
+                                    <td>{{ facture.patient.numero_dossier }}</td>
+                                    <td>{{ facture.patient.nom }} {{ facture.patient.prenom }}</td>
+                                    <td>{{ facture.facture_date_time|date:"d/m/Y H:i" }}</td>
+                                    <td>{{ facture.total }} FCFA</td>
+                                    <td>{{ facture.total_somme_verse }} FCFA</td>
+                                    <td>{{ facture.avance }} FCFA</td>
+                                    <td>{{ facture.reste_a_payer }} FCFA</td>
+                                    <td class="{% if facture.paye %}text-success{% else %}text-danger{% endif %}">
+                                        {% if facture.paye %} Payée {% else %} Non payée {% endif %}
+                                    </td>
+                                    <td>{{ facture.commentaire|default:"Aucun commentaire" }}</td>
+                                    <td>
+                                        {% if not facture.paye %}
+                                            <a href="{% url 'pharmacie:modifier_facture_caisse' facture.pk %}" class="btn btn-outline-info btn-sm">
+                                                <i class="bi bi-eye"></i> Paiement
+                                            </a>
+                                        {% else %}
+                                            <button class="btn btn-outline-secondary btn-sm" disabled style="opacity: 0.6; cursor: not-allowed;" title="Facture déjà payée">
+                                                <i class="bi bi-eye-slash"></i> Payée
+                                            </button>
+                                        {% endif %}
+                                        <a href="{% url 'pharmacie:voir_facture_pharmacie' facture.numero_facture %}" class="btn btn-outline-info btn-sm">
+                                            <i class="bi bi-eye"></i> Facture
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="11" class="text-center">Aucune facture trouvée.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#factureTable tr');
+        
+        rows.forEach(row => {
+            let numeroDossier = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            let nomPatient = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+
+            if (numeroDossier.includes(filter) || nomPatient.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+{% endblock %}

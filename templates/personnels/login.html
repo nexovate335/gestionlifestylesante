@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lifestyle Santé - Connexion</title>
+
+    <!-- Meta -->
+    <meta name="description" content="Connexion à Lifestyle Santé">
+    <meta property="og:title" content="Connexion - Lifestyle Santé">
+    <meta property="og:description" content="Accédez à votre espace personnel">
+    <meta property="og:type" content="Website">
+    <link rel="shortcut icon" href="{% static 'images/logo_lifestyle.jpg' %}">
+
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'fonts/remix/remixicon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.min.css' %}">
+
+    <style>
+        .login-bg {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .auth-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        .btn-toggle-password {
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+
+        .login-logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin-top: -30px;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-logo img {
+            width: 70px;
+            height: 70px;
+        }
+    </style>
+</head>
+<body class="login-bg">
+
+    <!-- Container -->
+    <div class="container">
+
+        <!-- Auth Wrapper -->
+        <div class="auth-wrapper">
+
+            <!-- Form -->
+            <form method="POST">
+                {% csrf_token %}
+                <div class="auth-box text-center">
+                    <!-- Logo -->
+                    <div class="login-logo">
+                        <img src="{% static 'images/logo_lifestyle.jpg' %}" alt="Logo">
+                    </div>
+                    <a href="{% url 'home' %}" class="auth-logo mb-4">
+                        <h4 style="color: rgb(62, 148, 218);">Retour au menu principal</h4>
+                    </a>
+
+                    <h4 class="mt-3">Connexion à votre compte</h4>
+                    <p class="text-muted">Bienvenue, veuillez vous connecter pour continuer.</p>
+
+                    
+                    <!-- Affichage des messages d'erreur -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <!-- Gestion des erreurs générales -->
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Nom d'utilisateur -->
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.username.id_for_label }}">
+                            Nom d'utilisateur <span class="text-danger">*</span>
+                        </label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="text-danger">
+                                {% for error in form.username.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Mot de passe -->
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.password.id_for_label }}">
+                            Mot de passe <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                            {{ form.password }}
+                            <button class="btn btn-outline-secondary btn-toggle-password" type="button">
+                                <i class="ri-eye-line text-primary"></i>
+                            </button>
+                        </div>
+                        {% if form.password.errors %}
+                            <div class="text-danger">
+                                {% for error in form.password.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Mot de passe oublié -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <a href="#" class="text-decoration-underline"></a>
+                    </div>
+
+                    <!-- Boutons -->
+                    <div class="mb-3 d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Se connecter</button>
+                    </div>
+                </div>
+            </form>
+            <!-- Fin Form -->
+        </div>
+        <!-- Fin Auth Wrapper -->
+
+    </div>
+    <!-- Fin Container -->
+
+    <!-- Script pour afficher/masquer le mot de passe -->
+    <script>
+        document.querySelector(".btn-toggle-password").addEventListener("click", function () {
+            let passwordField = document.getElementById("id_password");
+            let icon = this.querySelector("i");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                icon.classList.replace("ri-eye-line", "ri-eye-off-line");
+            } else {
+                passwordField.type = "password";
+                icon.classList.replace("ri-eye-off-line", "ri-eye-line");
+            }
+        });
+    </script>
+
+</body>
+</html>

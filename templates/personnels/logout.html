@@ -1,0 +1,16 @@
+<!-- logout.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Déconnexion</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Vous êtes déconnecté</h1>
+        <p>Vous avez bien été déconnecté. Vous pouvez maintenant <a href="{% url 'login' %}">vous reconnecter</a>.</p>
+    </div>
+</body>
+</html>

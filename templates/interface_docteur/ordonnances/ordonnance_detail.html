@@ -1,0 +1,54 @@
+{% extends "interface_docteur/baseIntDoc.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary">📝 Détails de l'Ordonnance</h1>
+
+    <div class="card shadow-lg border-0 mt-4">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <!-- Informations générales -->
+                    <tr><th class="bg-light">Patient</th><td>{{ ordonnance.consultation.patient.numero_dossier }}-{{ ordonnance.consultation.patient.nom }}</td></tr>
+                    <tr><th class="bg-light">numero de consultation</th><td><span class="badge bg-success">{{ ordonnance.consultation.id }}</span></td></tr>
+                    <tr><th class="bg-light">Prescripteur</th><td>{{ ordonnance.prescripteur|default:"-" }}</td></tr>
+                    <tr><th class="bg-light">Commentaire</th><td>{{ ordonnance.commentaire|default:"Aucun" }}</td></tr>
+                    <tr><th class="bg-light">Date de création</th><td><span class="badge bg-info">{{ ordonnance.date|date:"d/m/Y H:i" }}</span></td></tr>
+                </tbody>
+            </table>
+
+            <hr>
+            <h5 class="text-secondary">💊 Traitements associés</h5>
+            {% if traitements %}
+                <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
+                    {% for traitement in traitements %}
+                        <div class="col">
+                            <div class="card border-info h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary">
+                                        <i class="bi bi-capsule-pill"></i> Médicament prescrit : <span class="fw-bold">{{ traitement.medicament }}</span>
+                                    </h5>
+                                    <p class="mb-1"><strong>🕒 Posologie :</strong> {{ traitement.posologie }}</p>
+                                    <p class="mb-1"><strong>📅 Durée :</strong> {{ traitement.duree }}</p>
+                                    <p class="mb-1"><strong>📝 Commentaire :</strong> {{ traitement.commentaire|default:"-" }}</p>
+                                    <p class="mb-0"><strong>📆 Date de prescription :</strong> {{ traitement.date_prescription|date:"d/m/Y" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-warning mt-3">Aucun traitement associé à cette ordonnance.</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'consultation:ordonnance_update' ordonnance.pk %}" class="btn btn-warning me-2">
+            <i class="bi bi-pencil-square"></i> Modifier
+        </a>
+        <a href="{% url 'consultation:ordonnance_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+{% endblock %}

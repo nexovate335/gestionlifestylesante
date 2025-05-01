@@ -1,0 +1,75 @@
+{% extends 'pharmacie/baseGesPh.html' %}
+
+{% block content %}
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Liste des Produits</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'pharmacie:produit_create' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-circle"></i> Ajouter un Produit
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un produit...">
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table id="basicExample" class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Numéro de produit</th>
+                                    <th>Nom du produit</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="produitTable">
+                                {% for produit in produits %}
+                                <tr>
+                                    <td>{{ produit.num_prod }}</td>
+                                    <td>{{ produit.nom_produit }}</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a href="{% url 'pharmacie:produit_detail' produit.pk %}" class="btn btn-outline-info btn-sm">
+                                                <i class="bi bi-eye"></i> Voir
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center">Aucun produit trouvé.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#produitTable tr');
+        
+        rows.forEach(row => {
+            let name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            if (name.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

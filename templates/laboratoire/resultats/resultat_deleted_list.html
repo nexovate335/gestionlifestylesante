@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary">Liste des Résultats Supprimés</h2>
+
+    <!-- Barre de recherche -->
+    <div class="d-flex justify-content-end mb-3">
+        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un patient...">
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nom du Patient</th>
+                    <th>Examen</th>
+                    <th>Résultat</th>
+                    <th>Date de Suppression</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="resultatsTable">
+                {% for resultat in resultats_deleted %}
+                <tr>
+                    <td class="patient-name">{{ resultat.patient.nom }} {{ resultat.patient.prenom }}</td>
+                    <td>{{ resultat.examen }}</td>
+                    <td>{{ resultat.resultat }}</td>
+                    <td>{{ resultat.deleted_at|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <a href="{% url 'laboratoire:resultat_restore' resultat.pk %}" class="btn btn-success btn-sm">Restaurer</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">Aucun résultat supprimé.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'laboratoire:resultat_list' %}" class="btn btn-primary btn-lg">
+            <i class="bi bi-arrow-left"></i> Retour à la liste des résultats
+        </a>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#resultatsTable tr');
+
+        rows.forEach(row => {
+            let nameCell = row.querySelector('.patient-nom'); // Sélectionne la colonne du nom du patient
+            if (nameCell) {
+                let name = nameCell.textContent.toLowerCase();
+                row.style.display = name.includes(filter) ? '' : 'none';
+            }
+        });
+    });
+</script>
+
+{% endblock %}

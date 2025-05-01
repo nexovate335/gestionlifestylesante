@@ -1,0 +1,17 @@
+{% extends "personnels/basePers.html" %}
+
+
+{% block title %}Confirmation de suppression{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>Supprimer un membre du personnel</h2>
+    <p>Êtes-vous sûr de vouloir supprimer {{ personnel.nom }} {{ personnel.prenom }} ?</p>
+    
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Confirmer</button>
+      <a href="{% url 'personnel_list' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+  </div>
+{% endblock %}

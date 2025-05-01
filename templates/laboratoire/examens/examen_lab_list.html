@@ -1,0 +1,100 @@
+{% extends "laboratoire/baseLab.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Liste des Examens</h5>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un examen par patient...">
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table id="basicExample" class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Numéro de dossier</th>
+                                    <th>Patient</th>
+                                    <th>Examen</th>
+                                    <th>Prix</th>
+                                    <th>Nature de l'examen</th>
+                                    <th>Prescripteur</th>
+                                    <th>Préleveur</th>
+                                    <th>Technicien</th>
+                                    <th>Commentaire</th>
+                                    <th>Date et heure</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="examenTable">
+                                {% for examen in examens %}
+                                <tr>
+                                    <td>{{ examen.id }}</td>
+                                    <td>{{ examen.patient.numero_dossier }}</td>
+                                    <td class="patient-name">{{ examen.patient.nom }} {{ examen.patient.prenom }}</td>
+                                    <td>{{ examen.examen }}</td>
+                                    <td>{{ examen.prix }} FCFA</td>
+                                    <td>
+                                        {% if examen.nature_examen == 'Examen fait maison' %}
+                                            Examen fait maison
+                                        {% elif examen.nature_examen == 'Examen fait à l\'extérieur' %}
+                                            Examen fait à l'extérieur
+                                        {% else %}
+                                            Non spécifié
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ examen.prescripteur }}</td>
+                                    <td>{{ examen.preleveur }}</td>
+                                    <td>{{ examen.technicien }}</td>
+                                    <td>{{ examen.commentaire|truncatechars:50 }}</td>
+                                    <td>{{ examen.date|date:"d/m/Y H:i" }}</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a href="{% url 'laboratoire:examen_lab_detail' examen.pk %}" class="btn btn-outline-info btn-sm">
+                                                <i class="bi bi-eye"></i> Voir
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">Aucun examen trouvé.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#factureTable tr');
+        
+        rows.forEach(row => {
+            let numeroDossier = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            let nomPatient = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+
+            if (numeroDossier.includes(filter) || nomPatient.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

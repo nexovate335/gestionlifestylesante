@@ -1,0 +1,49 @@
+{% extends "reception/baseRec.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary">🩹 Détails du Pansement</h1>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="bg-light">Nom du Patient</th>
+                        <td>{{ pansement.patient.nom }} {{ pansement.patient.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Description</th>
+                        <td>{{ pansement.observation }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Montant</th>
+                        <td><strong class="text-success">{{ pansement.montant }} FCFA</strong></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Panseur</th>
+                        <td>{{ pansement.panseur }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Commentaire</th>
+                        <td>{{ pansement.commentaire|default:"/" }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Date d'enregistrement</th>
+                        <td><span class="badge bg-success">{{ pansement.date|date:"d/m/Y H:i" }}</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'pansement:pansement_update' pk=pansement.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Modifier
+        </a>
+        <a href="{% url 'pansement:pansement_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+{% endblock %}

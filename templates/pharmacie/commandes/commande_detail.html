@@ -1,0 +1,74 @@
+{% extends 'pharmacie/baseGesPh.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary">📦 Détails de la Commande #{{ commande.id }}</h1>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="bg-light">Produit</th>
+                        <td>{{ commande.produit.nom_produit }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Quantité commandée</th>
+                        <td><span class="badge bg-dark text-white">{{ commande.quantite_commande }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Type de produit</th>
+                        <td>{{ commande.type_produit }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Fournisseur</th>
+                        <td>{{ commande.fournisseur.nom_fournisseur }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Prix unitaire</th>
+                        <td><span class="badge bg-success">{{ commande.prix|floatformat:2 }} FCFA</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Total Achat</th>
+                        <td><span class="badge bg-danger">{{ commande.total_achat|floatformat:2 }} FCFA</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Date de la commande</th>
+                        <td><span class="badge bg-info">{{ commande.date_commande|date:"d/m/Y H:i" }}</span></td>
+                    </tr>
+                    <!-- Affichage des dates d'admission et d'expiration -->
+                    <tr>
+                        <th class="bg-light">Date d'admission</th>
+                        <td>
+                            {% if commande.date_admission %}
+                                <span class="badge bg-primary">{{ commande.date_admission|date:"d/m/Y" }}</span>
+                            {% else %}
+                                <span class="badge bg-warning">Non renseignée</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Date d'expiration</th>
+                        <td>
+                            {% if commande.date_expiration %}
+                                <span class="badge bg-danger">{{ commande.date_expiration|date:"d/m/Y" }}</span>
+                            {% else %}
+                                <span class="badge bg-warning">Non renseignée</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'pharmacie:commande_update' commande.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Modifier
+        </a>
+        <a href="{% url 'pharmacie:commande_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+{% endblock %}

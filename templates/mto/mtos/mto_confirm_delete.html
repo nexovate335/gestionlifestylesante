@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmer la suppression</title>
+</head>
+<body>
+    <header>
+        <h1>Confirmer la suppression</h1>
+    </header>
+    <main>
+        <p>Êtes-vous sûr de vouloir supprimer le Mto "{{ mto.name }}" ?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Confirmer la suppression</button>
+            <a href="{% url 'mto_list' %}">Annuler</a>
+        </form>
+    </main>
+</body>
+</html>

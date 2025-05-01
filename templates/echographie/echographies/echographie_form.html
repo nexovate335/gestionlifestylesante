@@ -1,0 +1,43 @@
+{% extends "reception/baseRec.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Créer une Échographie</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="row g-3">
+            <!-- Affichage des erreurs et des champs -->
+            {% for field in form %}
+                <div class="col-md-6">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {% if field.name == 'patient' %}
+                        <div class="form-group">
+                            {{ field }}
+                        </div>
+                    {% elif field.name == 'demandeur' or field.name == 'pratiqueur' %}
+                        <div class="form-group">
+                            {{ field }}
+                        </div>
+                    {% elif field.name == 'resultat' %}
+                        <div class="form-group">
+                            {{ field }}
+                        </div>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Boutons -->
+        <div class="d-flex justify-content-end mt-4">
+            <a href="{% url 'echographie:echographie_list' %}" class="btn btn-secondary me-2">Annuler</a>
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

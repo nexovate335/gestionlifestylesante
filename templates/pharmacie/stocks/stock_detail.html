@@ -1,0 +1,45 @@
+{% extends 'pharmacie/baseGesPh.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center text-primary">🛒 Détails du Stock - {{ stock.produit.nom_produit }}</h2>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="bg-light">Produit</th>
+                        <td>{{ stock.produit.nom_produit }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Quantité réelle</th>
+                        <td>{{ stock.quantite_reelle }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Prix unitaire</th>
+                        <td>{{ stock.prix_unitaire }} FCFA</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Prix total</th>
+                        <td>{{ stock.prix_total }} FCFA</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Date de stockage</th>
+                        <td>{{ stock.date_stock|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'pharmacie:stock_update' stock.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Modifier
+        </a>
+        <a href="{% url 'pharmacie:gestion_stock_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste des stocks
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "paramedicale/basePara.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Liste des Consultations</h5>
+                </div>
+
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un patient par nom...">
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="consultationTable" class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Numéro de Dossier</th>
+                                    <th>Patient</th>
+                                    <th>Type de Consultation</th>
+                                    <th>Médecin</th>
+                                    <th>Assistant(e)</th>
+                                    <th>Montant</th>
+                                    <th>Commentaire</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="consultationBody">
+                                {% for consultation in consultations %}
+                                <tr>
+                                    <td>{{ consultation.id }}</td>
+                                    <td>{{ consultation.patient.numero_dossier }}</td>
+                                    <td class="patient-name">{{ consultation.patient.nom }} {{ consultation.patient.prenom }}</td>
+                                    <td>{{ consultation.type_consultation }}</td>
+                                    <td>{{ consultation.medecin|default:"N/A" }}</td>
+                                    <td>{{ consultation.assistant|default:"N/A" }}</td>
+                                    <td>{{ consultation.montant }} FCFA </td>
+                                    <td>{{ consultation.commentaire|truncatechars:50  }}</td>
+                                    <td>{{ consultation.date|date:"d/m/Y H:i" }}</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a href="{% url 'consultation:suiteconsultation_detail' consultation.pk %}" class="btn btn-outline-info btn-sm">
+                                                <i class="bi bi-eye"></i> Voir
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="9" class="text-center">Aucune consultation disponible.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#consultationBody tr');
+
+        rows.forEach(row => {
+            let patientName = row.querySelector('.patient-name').textContent.toLowerCase();
+            row.style.display = patientName.includes(filter) ? '' : 'none';
+        });
+    });
+</script>
+{% endblock %}

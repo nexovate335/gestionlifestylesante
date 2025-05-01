@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Êtes-vous sûr de vouloir supprimer cette hospitalisation ?</h2>
+  <p><strong>Patient :</strong> {{ hospitalisation.patient.nom }} {{ hospitalisation.patient.prenom }}</p>
+  <p><strong>Montant :</strong> {{ hospitalisation.montant }} FCFA</p>
+  <p><strong>Nombre de jours :</strong> {{ hospitalisation.nombre_jours }}</p>
+  <p><strong>Date et heure de création :</strong> {{ hospitalisation.date|date:"d/m/Y H:i" }}</p>
+  
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+    <a href="{% url 'hospitalisation:hospitalisation_list' %}" class="btn btn-secondary">Annuler</a>
+  </form>
+{% endblock %}

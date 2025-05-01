@@ -1,0 +1,81 @@
+{% extends "laboratoire/baseLab.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary">🧪 Détails de l'Examen Cytologie PV</h1>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="bg-light">Patient</th>
+                        <td>{{ examen.patient.nom }} {{ examen.patient.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Numéro de dossier</th>
+                        <td>{{ examen.patient.numero_dossier }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">PV Sécrétion</th>
+                        <td>{{ examen.pv_secretion }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">PV Couleur</th>
+                        <td>{{ examen.pv_couleur }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">PV Odeur</th>
+                        <td>{{ examen.pv_odeur }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Cyto CE</th>
+                        <td>{{ examen.cyto_ce }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Cyto Leuco</th>
+                        <td>{{ examen.cyto_leuco }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Cyto CC</th>
+                        <td>{{ examen.cyto_cc }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Cyto Levure</th>
+                        <td>{{ examen.cyto_levure }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Cyto H</th>
+                        <td>{{ examen.cyto_h }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Cyto TV</th>
+                        <td>{{ examen.cyto_tv }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Cyto Gram</th>
+                        <td>{{ examen.cyto_gram }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Commentaire</th>
+                        <td>{{ examen.commentaire }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Date de création</th>
+                        <td><span class="badge bg-info">{{ examen.date|date:"d/m/Y H:i" }}</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'laboratoire:examencytopv_update' examen.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Modifier
+        </a>
+        <a href="{% url 'laboratoire:examencytopv_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+{% endblock %}

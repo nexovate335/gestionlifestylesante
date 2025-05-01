@@ -1,0 +1,11 @@
+{% extends "laboratoire/baseLab.html" %}
+
+{% block content %}
+<h2>{% if form.instance.pk %}Modifier{% else %}Créer{% endif %} un Résultat (Formulaire alternatif)</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enregistrer</button>
+</form>
+<a href="{% url 'laboratoire:resultat_list' %}">Retour à la liste</a>
+{% endblock %}

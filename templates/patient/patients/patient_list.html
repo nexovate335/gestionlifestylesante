@@ -1,0 +1,97 @@
+{% extends "reception/baseRec.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Liste des Patients</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'patient:patient_create' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-circle"></i> Ajouter un Patient
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un patient par nom...">
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table id="basicExample" class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID </th>
+                                    <th>Numero de dossier</th>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Sexe</th>
+                                    <th>Age</th>
+                                    <th>Groupe Sanguin</th>
+                                    <th>Nationalité</th>
+                                    <th>Téléphone</th>
+                                    <th>Situation Matrimoniale</th>
+                                    <th>Type Personne</th>
+                                    <th>Adresse</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="patientTable">
+                                {% for patient in patients %}
+                                <tr>
+                                    <td>{{ patient.id }}</td>
+                                    <td>{{ patient.numero_dossier }}</td>
+                                    <td class="patient-name">{{ patient.nom }}</td>
+                                    <td>{{ patient.prenom }}</td>
+                                    <td>{{ patient.sexe }}</td>
+                                    <td>{{ patient.age }} ans</td>
+                                    <td>{{ patient.groupe_sanguin }}</td>
+                                    <td>{{ patient.nationalite }}</td>
+                                    <td>{{ patient.telephone }}</td>
+                                    <td>{{ patient.situation_matrimoniale }}</td>
+                                    <td>{{ patient.type_personne }}</td>
+                                    <td>{{ patient.adresse }}</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a href="{% url 'patient:patient_detail' patient.pk %}" class="btn btn-outline-info btn-sm">
+                                                <i class="bi bi-eye"></i> Voir
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="12" class="text-center">Aucun patient trouvé.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#patientTable tr');
+        
+        rows.forEach(row => {
+            let name = row.querySelector('.patient-name').textContent.toLowerCase();
+            if (name.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

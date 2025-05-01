@@ -1,0 +1,64 @@
+{% extends "pharmacie_garde/basePhGarde.html" %}
+
+{% block content %}
+
+<!-- Styles CSS améliorés -->
+<style>
+    .app-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 10px;
+        overflow: hidden;
+        width: 90%; /* Réduction de la largeur */
+        height: 140px; /* Hauteur ajustée */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: auto;
+    }
+    .app-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .app-icon {
+        font-size: 25px;
+        color: #0d6efd; /* Bleu médical */
+    }
+    .btn-success {
+        border-radius: 30px;
+        padding: 4px 12px;
+        font-size: 13px;
+    }
+    h6 {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+</style>
+
+<div class="container mt-4">
+    <h1 class="text-center text-primary fw-bold mb-3">Gestion de la Pharmacie de Garde</h1>
+
+    <div class="row justify-content-center">
+        {% for app in applications %}
+        <div class="col-lg-4 col-md-4 col-sm-6 mb-2">
+            <div class="card app-card shadow-lg border-0">
+                <div class="card-body text-center p-2">
+                    <div class="app-icon mb-1">
+                        <i class="ri-capsule-line"></i>
+                    </div>
+                    <h6 class="card-title text-dark fw-bold">{{ app.nom }}</h6>
+                    <a href="{% url app.url %}" class="btn btn-success btn-sm">
+                        Accéder
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center text-muted">😕 Aucune fonctionnalité disponible pour la pharmacie.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

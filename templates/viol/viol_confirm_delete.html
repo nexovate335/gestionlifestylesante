@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Confirmation de suppression</h1>
+
+  <p>Êtes-vous sûr de vouloir supprimer ce Viol ?</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirmer la suppression</button>
+  </form>
+
+  <p><a href="{% url 'viol_list' %}">Annuler</a></p>
+{% endblock %}

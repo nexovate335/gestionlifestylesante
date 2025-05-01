@@ -1,0 +1,78 @@
+{% extends 'caisse/baseCai.html' %}
+
+{% block content %}
+
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Rapports Journaliers de Caisse</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'caisse:rapport_journalier_create' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-circle"></i> Nouveau Rapport
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher par caissier...">
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Caissier(ère)</th>
+                                    <th>Total encaissé</th>
+                                    <th>Dépense</th>
+                                    <th>Reste</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rapportsTable">
+                                {% for rapport in rapports %}
+                                <tr>
+                                    <td>{{ rapport.id }}</td>
+                                    <td>{{ rapport.caissier }}</td>
+                                    <td>{{ rapport.total_encaisse }} FCFA</td>
+                                    <td>{{ rapport.depense }} FCFA</td>
+                                    <td>{{ rapport.reste }} FCFA</td>
+                                    <td>{{ rapport.date|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" class="text-center">Aucun rapport disponible.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#rapportsTable tr');
+        
+        rows.forEach(row => {
+            let caissier = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            if (caissier.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+{% endblock %}

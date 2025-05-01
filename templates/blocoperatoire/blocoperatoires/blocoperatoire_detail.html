@@ -1,0 +1,80 @@
+{% extends "reception/baseRec.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary">🛑 Détails du acte Opératoire</h1>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="bg-light">ID</th>
+                        <td>{{ blocoperatoire.id }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Patient</th>
+                        <td>{{ blocoperatoire.patient.nom }} {{ blocoperatoire.patient.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Numéro de dossier</th>
+                        <td>{{ blocoperatoire.patient.numero_dossier }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Actes</th>
+                        <td>{{ blocoperatoire.actes }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Montant</th>
+                        <td><strong class="text-success">{{ blocoperatoire.montant }} FCFA</strong></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Médecin</th>
+                        <td>{{ blocoperatoire.medecin }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Aides médecins</th>
+                        <td>{{ blocoperatoire.aides }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Instrumentiste</th>
+                        <td>{{ blocoperatoire.instrumentiste|default:"N/A" }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Panseur</th>
+                        <td>{{ blocoperatoire.panseur|default:"N/A" }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Anesthésiste</th>
+                        <td>{{ blocoperatoire.anesthesiste|default:"N/A" }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Observation</th>
+                        <td>{{ blocoperatoire.observation }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Commentaire</th>
+                        <td>{{ blocoperatoire.commentaire }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Date de création</th>
+                        <td>
+                            <span class="badge bg-primary">{{ blocoperatoire.date|date:"d/m/Y H:i" }}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'blocoperatoire:blocoperatoire_update' blocoperatoire.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Modifier
+        </a>
+        
+        <a href="{% url 'blocoperatoire:blocoperatoire_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+{% endblock %}

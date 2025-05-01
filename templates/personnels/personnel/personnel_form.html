@@ -1,0 +1,32 @@
+{% extends "personnels/basePers.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">
+        {% if object.pk %}Modifier{% else %}Créer{% endif %} un membre du personnel
+    </h2>
+
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="row">
+            {% for field in form %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <div class="form-text">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-success">Enregistrer</button>
+            <a href="{% url 'personnel_list' %}" class="btn btn-secondary ms-2">Retour</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

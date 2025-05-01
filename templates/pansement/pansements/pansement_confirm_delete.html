@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Supprimer le Pansement</h2>
+<p>Es-tu sûr de vouloir supprimer "{{ pansement.patient.nom }} {{ pansement.patient.prenom }}" ?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+</form>
+<a href="{% url 'pansement:pansement_list' %}" class="btn btn-secondary">Annuler</a>
+{% endblock %}

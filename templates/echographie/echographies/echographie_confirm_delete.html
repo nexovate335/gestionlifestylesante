@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Supprimer l'Échographie</h2>
+<p>Es-tu sûr de vouloir supprimer "{{ echographie.patient.nom }} {{ echographie.patient.prenom }}" ?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+</form>
+
+<a href="{% url 'echographie:echographie_list' %}" class="btn btn-secondary">Annuler</a>
+{% endblock %}

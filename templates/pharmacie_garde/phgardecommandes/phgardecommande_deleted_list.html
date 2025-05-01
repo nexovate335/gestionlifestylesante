@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-danger">Commandes Supprimées</h2>
+
+    <!-- Barre de recherche -->
+    <div class="d-flex justify-content-end mb-3">
+        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un produit...">
+    </div>
+
+    {% if commandes_deleted %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Numéro de commande</th>
+                        <th>Produit</th>
+                        <th>Fournisseur</th>
+                        <th>Quantité</th>
+                        <th>Prix Unitaire (FCFA)</th>
+                        <th>Total Achat (FCFA)</th>
+                        <th>Date de suppression</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="commandesTable">
+                    {% for commande in commandes_deleted %}
+                    <tr>
+                        <td>{{ commande.num_com }}</td>
+                        <td class="produit-nom">{{ commande.produit.nom_produit }}</td>
+                        <td>{{ commande.fournisseur.nom_fournisseur }}</td>
+                        <td>{{ commande.quantite_commande }}</td>
+                        <td>{{ commande.prix }}</td>
+                        <td>{{ commande.total_achat }}</td>
+                        <td>{{ commande.deleted_at|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            <a href="{% url 'pharmacie_garde:phgardecommande_restore' commande.pk %}" class="btn btn-success btn-sm">Restaurer</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">Aucune commande supprimée.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-center text-muted">Aucune commande supprimée.</p>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{% url 'pharmacie:commande_list' %}" class="btn btn-primary btn-lg">
+            <i class="bi bi-arrow-left"></i> Retour à la liste des commandes
+        </a>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#commandesTable tr');
+
+        rows.forEach(row => {
+            let produitCell = row.querySelector('.produit-nom'); // Sélectionne la cellule du produit
+            if (produitCell) {
+                let produit = produitCell.textContent.toLowerCase();
+                row.style.display = produit.includes(filter) ? '' : 'none';
+            }
+        });
+    });
+</script>
+
+{% endblock %}

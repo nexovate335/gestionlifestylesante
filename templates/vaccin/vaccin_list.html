@@ -1,0 +1,85 @@
+{% extends "reception/baseRec.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Liste des Vaccins</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'vaccin:vaccin_create' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-circle"></i> Ajouter un Vaccin
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un vaccin...">
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Nom du dossier</th>
+                                    <th>Nom du Patient</th>
+                                    <th>Type de Vaccin</th>
+                                    <th>Montant</th>
+                                    <th>Commentaire</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vaccinTable">
+                                {% for vaccin in vaccins %}
+                                <tr>
+                                    <td>{{ vaccin.numero_dossier}}</td>
+                                    <td class="patient-name">{{ vaccin.patient.nom }} {{ vaccin.patient.prenom }}</td>
+                                    <td>{{ vaccin.type_vaccin }}</td>
+                                    <td>{{ vaccin.montant }}</td>
+                                    <td>{{ vaccin.commentaire|truncatechars:50 }}</td>
+                                    <td>{{ vaccin.date }}</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a href="{% url 'vaccin:vaccin_detail' pk=vaccin.pk %}" class="btn btn-outline-warning btn-sm">
+                                                <i class="bi bi-pencil"></i> Voir
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">Aucun vaccin trouvé.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#vaccinTable tr');
+
+        rows.forEach(row => {
+            let patientTd = row.querySelector('td.patient-name');
+            if (patientTd) {
+                let name = patientTd.textContent.toLowerCase();
+                row.style.display = name.includes(filter) ? '' : 'none';
+            }
+        });
+    });
+</script>
+
+{% endblock %}

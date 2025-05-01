@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="text-center mb-4">Consultations supprimées</h2>
+
+<!-- Barre de recherche -->
+<div class="d-flex justify-content-end mb-3">
+    <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un patient...">
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Nom du Patient</th>
+                <th>Type de Consultation</th>
+                <th>Numéro de Dossier</th>
+                <th>Montant</th>
+                <th>Médecin</th>
+                <th>Assistant(e)</th>
+                <th>Date de consultation</th>
+                <th>Supprimé le</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="consultationsTable">
+            {% for consultation in consultation_deleted %}
+            <tr>
+                <td class="patient-name">{{ consultation.patient.nom }} {{ consultation.patient.prenom }}</td>
+                <td>{{ consultation.get_type_consultation_display }}</td>
+                <td>{{ consultation.numero_dossier }}</td>
+                <td>{{ consultation.montant|floatformat:2 }} FCFA</td>
+                <td>{{ consultation.medecin }}</td>
+                <td>{{ consultation.assistant }}</td>
+                <td>{{ consultation.date|date:"d/m/Y H:i" }}</td>
+                <td>{{ consultation.deleted_at|date:"d/m/Y H:i" }}</td>
+                <td class="text-center">
+                    <a href="{% url 'consultation:consultation_restore' consultation.pk %}" class="btn btn-success btn-sm">
+                        Restaurer
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="9" class="text-center">Aucune consultation supprimée.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="text-center mt-4">
+    <a href="{% url 'consultation:consultation_list' %}" class="btn btn-primary btn-lg">
+        Retour à la liste des consultations
+    </a>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#consultationsTable tr');
+
+        rows.forEach(row => {
+            let nameCell = row.querySelector('.patient-name'); // Sélectionne la cellule du nom du patient
+            if (nameCell) {
+                let name = nameCell.textContent.toLowerCase();
+                row.style.display = name.includes(filter) ? '' : 'none';
+            }
+        });
+    });
+</script>
+
+{% endblock %}

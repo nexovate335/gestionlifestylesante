@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="text-center mb-4">Liste des produits supprimés</h2>
+
+<!-- Barre de recherche -->
+<div class="d-flex justify-content-end mb-3">
+    <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un produit...">
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Nom du produit</th>
+                <th>Date de suppression</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="produitsTable">
+            {% for produit in produits_deleted %}
+            <tr>
+                <td class="produit-nom">{{ produit.nom_produit }}</td>
+                <td>{{ produit.deleted_at|date:"d/m/Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'pharmacie:produit_restore' produit.num_prod %}" class="btn btn-success btn-sm">Restaurer</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center">Aucun produit supprimé.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="text-center mt-4">
+    <a href="{% url 'pharmacie:produit_list' %}" class="btn btn-primary btn-lg">Retour à la liste des produits</a>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#produitsTable tr');
+
+        rows.forEach(row => {
+            let nameCell = row.querySelector('.produit-nom'); // Sélectionne la cellule du nom du produit
+            if (nameCell) {
+                let name = nameCell.textContent.toLowerCase();
+                row.style.display = name.includes(filter) ? '' : 'none';
+            }
+        });
+    });
+</script>
+
+{% endblock %}

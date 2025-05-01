@@ -1,0 +1,61 @@
+{% extends "reception/baseRec.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary">🩻 Détails de l'Échographie</h1>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="bg-light">Numéro de dossier</th>
+                        <td><span class="badge bg-primary">{{ echographie.patient.numero_dossier }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Patient</th>
+                        <td><span class="badge bg-primary">{{ echographie.patient.nom }} {{ echographie.patient.prenom }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Demandeur</th>
+                        <td>{{ echographie.demandeur }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Pratiqueur</th>
+                        <td>{{ echographie.pratiqueur }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Assistant(e)</th>
+                        <td>{{ echographie.assistant }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Montant</th>
+                        <td>{{ echographie.montant }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Résultat</th>
+                        <td><span class="badge bg-success">{{ echographie.resultat }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Commentaire</th>
+                        <td><span class="badge bg-success">{{ echographie.commentaire }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Date de l'échographie</th>
+                        <td><span class="badge bg-info">{{ echographie.date|date:"d/m/Y H:i" }}</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'echographie:echographie_update' pk=echographie.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Modifier
+        </a>
+        <a href="{% url 'echographie:echographie_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+{% endblock %}

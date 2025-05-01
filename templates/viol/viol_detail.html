@@ -1,0 +1,54 @@
+{% extends "reception/baseRec.html" %}
+
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary">🚨 Détails du Viol</h1>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="bg-light">Numéro du dossier</th>
+                        <td>{{ viol.numero_dossier }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Patient</th>
+                        <td>{{ viol.patient.nom }} {{ viol.patient.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Médecin</th>
+                        <td>{{ viol.medecin }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Observation</th>
+                        <td>{{ viol.observation }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Montant</th>
+                        <td>{{ viol.montant }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Commentaire</th>
+                        <td>{{ viol.commentaire }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Date</th>
+                        <td>{{ viol.date|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'viol:viol_update' viol.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Modifier
+        </a>
+        <a href="{% url 'viol:viol_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+{% endblock %}

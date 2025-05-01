@@ -1,0 +1,62 @@
+{% extends "interface_docteur/baseIntDoc.html" %} 
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary">🩺 Détails de la Consultation</h1>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <!-- Informations générales -->
+                    <tr><th class="bg-light">Type de consultation</th><td>{{ consultation.type_consultation }}</td></tr>
+                    <tr><th class="bg-light">Patient</th><td>{{ consultation.patient.nom }} {{ consultation.patient.prenom }}</td></tr>
+                    <tr><th class="bg-light">Numéro de dossier</th><td><span class="badge bg-primary">{{ consultation.patient.numero_dossier }}</span></td></tr>
+                    <tr><th class="bg-light">Montant</th><td><span class="badge bg-success">{{ consultation.montant }} FCFA</span></td></tr>
+
+                    <!-- Champs personnels -->
+                    <tr><th class="bg-light">Médecin</th><td>{{ consultation.medecin }}</td></tr>
+                    <tr><th class="bg-light">Assistant(e)</th><td>{{ consultation.assistant }}</td></tr>
+                    <tr><th class="bg-light">Commentaire</th><td>{{ consultation.commentaire }}</td></tr>
+                    <tr><th class="bg-light">Motif de consultation</th><td>{{ consultation.motif_consultation }}</td></tr>
+
+                    <!-- Signes vitaux -->
+                    <tr><th class="bg-light">Température (°C)</th><td>{{ consultation.temperature }}</td></tr>
+                    <tr><th class="bg-light">Tension artérielle</th><td>{{ consultation.tension_arterielle }}</td></tr>
+                    <tr><th class="bg-light">Pouls (bpm)</th><td>{{ consultation.pouls }}</td></tr>
+                    <tr><th class="bg-light">Saturation (%)</th><td>{{ consultation.saturation }}</td></tr>
+                    <tr><th class="bg-light">Poids (kg)</th><td>{{ consultation.poids }}</td></tr>
+                    <tr><th class="bg-light">Taille (m)</th><td>{{ consultation.taille }}</td></tr>
+                    <tr><th class="bg-light">IMC</th><td>{{ consultation.imc }}</td></tr>
+
+                    <!-- Bilan préliminaire -->
+                    <tr><th class="bg-light">TDR positif (si fièvre)</th><td>{{ consultation.tdr|yesno:"Oui,Non" }}</td></tr>
+                    <tr><th class="bg-light">Glycémie</th><td>{{ consultation.glycemie }}</td></tr>
+                    <tr><th class="bg-light">Alb/Sucre (si grossesse)</th><td>{{ consultation.alb_sucre }}</td></tr>
+
+                    <!-- Antécédents -->
+                    <tr><th class="bg-light">Situation socioéconomique difficile</th><td>{{ consultation.atcd_socioeconomique|yesno:"Oui,Non" }}</td></tr>
+                    <tr><th class="bg-light">Chômage</th><td>{{ consultation.atcd_chomage|yesno:"Oui,Non" }}</td></tr>
+                    <tr><th class="bg-light">Violence domestique</th><td>{{ consultation.atcd_violence_domestique|yesno:"Oui,Non" }}</td></tr>
+                    <tr><th class="bg-light">Passage en prison</th><td>{{ consultation.atcd_prison|yesno:"Oui,Non" }}</td></tr>
+                    <tr><th class="bg-light">Arrêt de la scolarisation</th><td>{{ consultation.atcd_arret_ecole|yesno:"Oui,Non" }}</td></tr>
+                    <tr><th class="bg-light">Victime de guerre</th><td>{{ consultation.atcd_victime_guerre|yesno:"Oui,Non" }}</td></tr>
+                    <tr><th class="bg-light">Suivi du médecin</th><td>{{ consultation.suivi_medecin }}</td></tr>
+
+                    <!-- Date -->
+                    <tr><th class="bg-light">Date et heure de création</th><td><span class="badge bg-info">{{ consultation.date|date:"d/m/Y H:i" }}</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'consultation:suiviconsultation_update' consultation.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Modifier
+        </a>
+        <a href="{% url 'consultation:suiviconsultation_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+{% endblock %}

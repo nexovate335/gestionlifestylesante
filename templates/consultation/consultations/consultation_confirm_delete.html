@@ -1,0 +1,24 @@
+{% extends "base.html" %}  <!-- Si vous avez un template de base -->
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h2>Confirmer la suppression</h2>
+                </div>
+                <div class="card-body">
+                    <p class="text-center">Voulez-vous vraiment supprimer cette consultation ?</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+                            <a href="{% url 'consultation:consultation_list' %}" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

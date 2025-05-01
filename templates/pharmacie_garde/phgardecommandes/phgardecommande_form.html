@@ -1,0 +1,37 @@
+{% extends 'pharmacie_garde/baseGesPhGarde.html' %}
+
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Ajouter une Commande</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="row g-3">
+            {% for field in form %}
+                <div class="col-md-6">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {% if field.name == 'produit' %}
+                        <!-- Personnalisation du champ Produit -->
+                        {{ field }}
+                    {% elif field.name == 'fournisseur' %}
+                        <!-- Personnalisation du champ Fournisseur -->
+                        {{ field }}
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Boutons -->
+        <div class="d-flex justify-content-end mt-4">
+            <a href="{% url 'pharmacie_garde:phgardecommande_list' %}" class="btn btn-primary me-2">Retour à la liste</a>
+            <button type="submit" class="btn btn-success">Ajouter</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "reception/baseRec.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary">🩺 Détails du Rendez-vous</h1>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="bg-light">Docteur</th>
+                        <td>{{ rendez_vous.nom_docteur }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Patient</th>
+                        <td>{{ rendez_vous.nom_personne }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Jour</th>
+                        <td>{{ rendez_vous.jour_rdv }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Mois</th>
+                        <td>{{ rendez_vous.mois_rdv }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Année</th>
+                        <td>{{ rendez_vous.annee_rdv }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Heure</th>
+                        <td>{{ rendez_vous.heure_rdv }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Statut</th>
+                        <td>{{ rendez_vous.statut }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Commentaire</th>
+                        <td>{{ rendez_vous.commentaire }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'rendezvous:rendezvous_update' rendez_vous.id %}" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Modifier
+        </a>
+        {% if not rendez_vous.deleted_at %}
+        {% endif %}
+        <a href="{% url 'rendezvous:rendezvous_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+{% endblock %}
