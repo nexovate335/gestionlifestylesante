@@ -110,7 +110,7 @@ else:
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'gestionlifestylesante_db',
             'USER': 'debian',
-            'PASSWORD': 'db@2025',
+            'PASSWORD': 'db@2024',
             'HOST': 'localhost',
             'PORT': '3306',
         }
