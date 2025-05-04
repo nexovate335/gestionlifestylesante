@@ -1,4 +1,4 @@
-{% extends 'caisse_garde/baseCaiGar.html' %}
+{% extends 'reception/baseRec.html' %}
 
 {% block content %}
 
@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <div>
-                        <h5 class="card-title mb-0">Liste des Factures Pharmacie</h5>
+                        <h5 class="card-title mb-0">Liste des Factures Pharmacie de Garde</h5>
                         {% if not affichage_total %}
                             <small class="text-muted">Factures créées aujourd'hui (payées et non payées)</small>
                         {% else %}

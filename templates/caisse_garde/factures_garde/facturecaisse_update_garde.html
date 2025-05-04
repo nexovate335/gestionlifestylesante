@@ -1,10 +1,9 @@
 {% extends 'caisse_garde/baseCaiGar.html' %}
-
 {% block content %}
 
 <div class="container mt-5">
   <h2 class="text-center mb-4 text-primary">
-    Paiement de la Facteure
+    Paiement de la Facture
   </h2>
 
   <div class="card shadow-sm border-0">
@@ -31,7 +30,7 @@
               <div class="col-12">
                   <div class="d-flex gap-2 justify-content-end"> 
                       <button type="submit" class="btn btn-primary">Payer</button>
-                      <a href="{% url 'pharmacie_garde:liste_factures_phgarde_caisse' %}" class="btn btn-outline-secondary">Annuler</a>
+                      <a href="{% url 'caisse:liste_factures_caisse' %}" class="btn btn-outline-secondary">Annuler</a>
                   </div>
               </div>
           </div>
@@ -40,5 +39,7 @@
   </div>
 </div>
   
-
   {% endblock %}
+
+
+  

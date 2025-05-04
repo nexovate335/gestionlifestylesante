@@ -241,6 +241,27 @@ class PhGardeFacturePharmacieCaisseListView(ListView):
         context['affichage_total'] = self.request.GET.get('all') == '1'
         return context
 
+
+@method_decorator(login_required, name='dispatch')
+class PhGardeFacturePharmacieRecepListView(ListView):
+    model = PhGardeFacturePharmacie
+    template_name = "pharmacie_garde/phgardefactures/phgarderecep_facture_list_pharmacie.html"
+    context_object_name = "factures"
+
+    def get_queryset(self):
+        queryset = PhGardeFacturePharmacie.objects.all()
+        if self.request.GET.get('all') == '1':
+            return queryset.order_by('-facture_date_time')
+        else:
+            today = now().date()
+            return queryset.filter(facture_date_time__date=today)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['affichage_total'] = self.request.GET.get('all') == '1'
+        return context
+
+
 # Création d'une facture (remplace `creer_facturepharmacie`)
 @method_decorator(login_required, name='dispatch')
 class PhGardeFacturePharmacieCreateView(CreateView):

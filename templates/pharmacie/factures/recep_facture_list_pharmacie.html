@@ -1,4 +1,4 @@
-{% extends 'caisse_garde/baseCaiGar.html' %}
+{% extends 'reception/baseRec.html' %}
 
 {% block content %}
 
@@ -66,7 +66,7 @@
                                     <td>{{ facture.commentaire|default:"Aucun commentaire" }}</td>
                                     <td>
                                         {% if not facture.paye %}
-                                            <a href="{% url 'pharmacie_garde:modifier_facture_phgarde' facture.pk %}" class="btn btn-outline-info btn-sm">
+                                            <a href="{% url 'pharmacie:modifier_facture_caisse' facture.pk %}" class="btn btn-outline-info btn-sm">
                                                 <i class="bi bi-eye"></i> Paiement
                                             </a>
                                         {% else %}
@@ -74,7 +74,7 @@
                                                 <i class="bi bi-eye-slash"></i> Payée
                                             </button>
                                         {% endif %}
-                                        <a href="{% url 'pharmacie_garde:voir_facture_phgarde' facture.numero_facture %}" class="btn btn-outline-info btn-sm">
+                                        <a href="{% url 'pharmacie:voir_facture_pharmacie' facture.numero_facture %}" class="btn btn-outline-info btn-sm">
                                             <i class="bi bi-eye"></i> Facture
                                         </a>
                                     </td>

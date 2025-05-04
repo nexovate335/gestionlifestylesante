@@ -48,6 +48,7 @@ urlpatterns = [
     # URLs pour Factures Pharmacie
     path("factures/caisse/", FacturePharmacieCaisseListView.as_view(), name="liste_factures_pharmacie_caisse"),
     path("factures/", FacturePharmacieListView.as_view(), name="liste_factures_pharmacie"),
+    path("factures/recep/", FacturePharmacieRecepListView.as_view(), name="liste_factures_pharmacie_recep"),
     path("factures/creer/", FacturePharmacieCreateView.as_view(), name="creer_facture_pharmacie"),
     path("factures/<int:pk>/paiement/", FacturePharmacieUpdateView.as_view(), name="modifier_facture_Pharmacie"),
     path("factures/<str:numero_facture>/", FacturePharmacieDetailView.as_view(), name="voir_facture_pharmacie"),

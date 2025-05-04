@@ -2,13 +2,14 @@
 
 {% block content %}
 
+
 <div class="app-body">
     <div class="row gx-3">
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <div>
-                        <h5 class="card-title mb-0">Liste des Factures Pharmacie</h5>
+                        <h5 class="card-title mb-0">Liste des Factures Hôpital</h5>
                         {% if not affichage_total %}
                             <small class="text-muted">Factures créées aujourd'hui (payées et non payées)</small>
                         {% else %}
@@ -24,8 +25,12 @@
                             Voir uniquement celles du jour
                         </a>
                     {% endif %}
-                </div>
-
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'caisse_garde:creer_facture_caisse_garde' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-circle"></i>Créer une nouvelle facture
+                        </a>
+                    </div>
+                </div> 
                 <div class="card-body">
                     <!-- Barre de recherche -->
                     <div class="d-flex justify-content-end mb-3">
@@ -66,7 +71,7 @@
                                     <td>{{ facture.commentaire|default:"Aucun commentaire" }}</td>
                                     <td>
                                         {% if not facture.paye %}
-                                            <a href="{% url 'pharmacie_garde:modifier_facture_phgarde' facture.pk %}" class="btn btn-outline-info btn-sm">
+                                            <a href="{% url 'caisse_garde:modifier_facture_caisse_garde' facture.pk %}" class="btn btn-outline-info btn-sm">
                                                 <i class="bi bi-eye"></i> Paiement
                                             </a>
                                         {% else %}
@@ -74,7 +79,8 @@
                                                 <i class="bi bi-eye-slash"></i> Payée
                                             </button>
                                         {% endif %}
-                                        <a href="{% url 'pharmacie_garde:voir_facture_phgarde' facture.numero_facture %}" class="btn btn-outline-info btn-sm">
+
+                                        <a href="{% url 'caisse_garde:voir_facture_caisse_garde' facture.numero_facture %}" class="btn btn-outline-info btn-sm">
                                             <i class="bi bi-eye"></i> Facture
                                         </a>
                                     </td>

@@ -1,0 +1,16 @@
+{% extends 'caisse_garde/baseCaiGar.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>{% if object %}Modifier{% else %}Ajouter{% endif %} une Dépense</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn btn-success">Enregistrer</button>
+        <a href="{% url 'caisse_garde:autres_depenses_list_garde' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

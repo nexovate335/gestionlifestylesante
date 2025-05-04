@@ -33,6 +33,10 @@ REDIRECTION_PAGES = {
     'Infirmier(e)': 'paramedicale',
     'Aides-soignante': 'paramedicale', 
     'Medecin': 'paramedicale',
+    'Infirmier(e)': 'caisse_gare',
+    'Aides-soignante': 'caisse_garde', 
+    
+    
     
     
     
@@ -209,7 +213,12 @@ class ReceptionView(View):
              {'nom': 'Examens', 'url': 'laboratoire:examen_list'},
             {'nom': 'Bloc Operatoire', 'url': 'blocoperatoire:blocoperatoire_list_recep'},
             {'nom': 'Rendez-vous', 'url': 'rendezvous:rendezvous_list'},
-            {'nom': 'Factures', 'url': 'caisse:liste_factures_caisse_recep'},  
+            {'nom': 'Factures  caisse', 'url': 'caisse:liste_factures_caisse_recep'}, 
+            {'nom': 'Factures caisse de Garde', 'url': 'caisse_garde:liste_factures_caisse_recep_garde'},
+            {'nom': 'Factures Pharmacie', 'url': 'pharmacie:liste_factures_pharmacie_recep'},  
+            {'nom': 'Factures Pharmaie de Garde', 'url': 'pharmacie_garde:liste_factures_phgarde_recep'},  
+              
+             
               
             
               
@@ -224,7 +233,6 @@ class CaisseView(View):
         applications_caisse = [
             {'nom': 'Facture Hôpital', 'url': 'caisse:liste_factures_caisse'},  
             {'nom': 'Facture Pharmacie', 'url': 'pharmacie:liste_factures_pharmacie_caisse'}, 
-            {'nom': 'Facture Pharmacie de garde', 'url': 'pharmacie_garde:liste_factures_phgarde_caisse'},  
              
             {'nom': 'Autre Depenses', 'url': 'caisse:autres_depenses_list'},
             {'nom': 'Rapports Journaliers de Caisse', 'url': 'caisse:rapport_journalier_list'},
@@ -234,6 +242,24 @@ class CaisseView(View):
         print("Applications caisse :", applications_caisse)  # Debug
 
         return render(request, 'caisse/caisse.html', {'applications': applications_caisse})
+
+#Caisse de garde
+@method_decorator([login_required, fonction_required('Infirmier(e)','Aides-soignante')], name='dispatch')
+class CaisseGardeView(View):
+    def get(self, request):
+        applications_caisse_garde = [
+            {'nom': 'Facture Hôpital de Garde ', 'url': 'caisse_garde:liste_factures_caisse_garde'},  
+            {'nom': 'Facture Pharmacie de Garde', 'url': 'pharmacie_garde:liste_factures_phgarde_caisse'},  
+             
+            {'nom': 'Autre Depenses de Garde', 'url': 'caisse_garde:autres_depenses_list_garde'},
+            {'nom': 'Rapports Journaliers de Caisse de Garde', 'url': 'caisse_garde:rapport_journalier_list_garde'},
+                
+
+        ]
+        print("Applications caisse de garde :", applications_caisse_garde)  # Debug
+
+        return render(request, 'caisse_garde/caisse_garde.html', {'applications_garde': applications_caisse_garde})
+
 
 #Pharmacie
 @method_decorator([login_required, fonction_required('Pharmacien(ne)', 'Gestionnaire-phamarcie')], name='dispatch')

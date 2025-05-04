@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Réception{% endblock %}</title>
+    <title>{% block title %}Caisse de Garde{% endblock %}</title>
 
     <!-- Meta -->
     <meta name="description" content="Marketplace for Bootstrap Admin Dashboards">
@@ -73,10 +73,10 @@
 
         <!-- App brand starts -->
         <div class="app-brand ms-3">
-          <a href="{% url 'reception' %}" class="d-lg-block d-none">
+          <a href="{% url 'caisse_garde' %}" class="d-lg-block d-none">
             <h4 style="color: aliceblue;">Lifestyle Santé</h4>
           </a>
-          <a href="{% url 'reception' %}" class="d-lg-none d-md-block">
+          <a href="{% url 'caisse_garde' %}" class="d-lg-none d-md-block">
             <h4 style="color: aliceblue;">Lifestyle Santé</h4>
             
           </a>
@@ -164,86 +164,30 @@
           <div class="sidebarMenuScroll">
             <ul class="sidebar-menu">
               <li>
-                <a href="{% url 'consultation:consultation_list' %}">
+                <a href="{% url 'caisse_garde:liste_factures_caisse_garde' %}">
                   <i class="ri-home-6-line"></i>
-                  <span class="menu-text">consultation</span>
-                </a> 
+                  <span class="menu-text">Facture Hôpital Garde</span>
+                </a>   
               </li>
               <li>
-                <a href="{% url 'echographie:echographie_list' %}">
-                  <i class="ri-home-6-line"></i>
-                  <span class="menu-text">Echographie</span>
-                </a>
+                  <a href="{% url 'pharmacie_garde:liste_factures_phgarde_caisse' %}">
+  
+                    <i class="ri-home-6-line"></i>
+                    <span class="menu-text">Facture Pharmacie de garde</span>
+                  </a>
               </li>
               <li>
-                <a href="{% url 'mto:mto_list' %}">
+                <a href="{% url 'caisse_garde:autres_depenses_list_garde' %}">
                   <i class="ri-home-6-line"></i>
-                  <span class="menu-text">MTO</span>
+                  <span class="menu-text">Autres Dépenses Garde</span>
                 </a>
-              </li>
+              </li>  
               <li>
-                <a href="{% url 'laboratoire:examen_list' %}">
+                <a href="{% url 'caisse_garde:rapport_journalier_list_garde' %}">
                   <i class="ri-home-6-line"></i>
-                  <span class="menu-text">Laboratoire</span>
+                  <span class="menu-text">Rapports Journaliers Caisse Garde </span>
                 </a>
-              </li>
-              <li>
-                <a href="{% url 'hospitalisation:hospitalisation_list' %}">
-                  <i class="ri-home-6-line"></i>
-                  <span class="menu-text">Hospitalisation</span>
-                </a>
-              </li>
-              <li>
-                <a href="{% url 'pansement:pansement_list' %}">
-                  <i class="ri-home-6-line"></i>
-                  <span class="menu-text">Pansement</span>
-                </a>
-              </li>
-              <li>
-                <a href="{% url 'patient:patient_list' %}">
-                  <i class="ri-home-6-line"></i>
-                  <span class="menu-text">Patients</span>
-                </a>
-              </li>
-              <li>
-                <a href="{% url 'rendezvous:rendezvous_list' %}">
-                  <i class="ri-home-6-line"></i>
-                  <span class="menu-text">Rendez-vous</span>
-                </a>
-              </li>
-              <li>
-                <a href="{% url 'blocoperatoire:blocoperatoire_list' %}">
-                  <i class="ri-home-6-line"></i>
-                  <span class="menu-text">Bloc operatoire</span>
-                </a>
-              </li>
-              <li>
-                <a href="{% url 'viol:viol_list' %}">
-                  <i class="ri-home-6-line"></i>
-                  <span class="menu-text">Viol</span>
-                </a>
-              </li>
-              <li>
-                <a href="{% url 'vaccin:vaccin_list' %}">
-                  <i class="ri-home-6-line"></i>
-                  <span class="menu-text">Vaccin</span>
-                </a>
-              </li>
-              <li>
-                <a href="{% url 'caisse:liste_factures_caisse_recep' %}">
-                  <i class="ri-home-6-line"></i>
-                  <span class="menu-text">Facture de caisse</span>
-                </a>
-              </li>
-              <li>
-                <a href="{% url 'caisse_garde:liste_factures_caisse_recep_garde' %}">
-                  <i class="ri-home-6-line"></i>
-                  <span class="menu-text">Facture de caisse Garde</span>
-                </a>
-              </li>
-
-
-              
+              </li>  
             </ul>
           </div>
           <!-- Sidebar menu ends -->
@@ -269,20 +213,21 @@
             <ol class="breadcrumb">
               <li class="breadcrumb-item">
                 <i class="ri-home-8-line lh-1 pe-3 me-3 border-end"></i>
-                <a href="{% url 'reception' %}">Réception</a>
-              </li> 
+                <a href="{% url 'caisse_garde' %}">Caisse de Garde</a>
+              </li>
+              
             </ol>
             <!-- Breadcrumb ends -->
+
+           
           </div>
           <!-- App Hero header ends -->
 
           {% block content %}
 
 
-          
 
           {% endblock %}
-          
           <!-- App footer starts -->
           <div class="app-footer bg-white">
             <span>© lifestyle sante 2025</span>

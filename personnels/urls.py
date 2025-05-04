@@ -14,6 +14,7 @@ urlpatterns = [
     
     path('reception/', ReceptionView.as_view(), name='reception'),
     path('caisse/', CaisseView.as_view(), name='caisse'),
+    path('caisse/garde/', CaisseGardeView.as_view(), name='caisse_garde'),
     path('pharmacie/', PharmacieView.as_view(), name='pharmacie'),
     path('pharmacieGarde/', PharmacieGardeView.as_view(), name='pharmaciegarde'),
     path('laboratoire/', LaboratoireView.as_view(), name='laboratoire'),

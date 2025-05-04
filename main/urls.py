@@ -4,13 +4,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .views import home
 
-urlpatterns = [
+urlpatterns = [ 
     path('',home,name='home'),
     path('accounts/', include('personnels.urls')),
     path('conixgest/', admin.site.urls),
     path('pharmacie/',include('pharmacie.urls', namespace='pharmacie')),
     path('pharmacieGarde/',include('pharmacie_garde.urls', namespace='pharmacie_garde')),
     path('caisse/',include('caisse.urls', namespace='caisse')),
+    path('caisse/garde/',include('caisse_garde.urls', namespace='caisse_garde')),
     path('patient/',include('patients.urls', namespace='patient')),
     path('pansement/',include('pansement.urls', namespace='pansement')),
     path('viol/',include('viol.urls', namespace='Viol')),

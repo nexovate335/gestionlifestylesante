@@ -1,0 +1,74 @@
+{% extends 'caisse_garde/baseCaiGar.html' %}
+
+{% block content %}
+
+<div class="app-body">
+    <div class="row gx-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Liste des Dépenses</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'caisse_garde:autres_depenses_create_garde' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-circle"></i> Ajouter une Dépense
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher une dépense...">
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="basicExample" class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Motif</th>
+                                    <th>Montant</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="depensesTable">
+                                {% for depense in depenses %}
+                                <tr>
+                                    <td>{{ depense.id }}</td>
+                                    <td>{{ depense.motif }}</td>
+                                    <td>{{ depense.montant }} FCFA</td>
+                                    <td>{{ depense.date|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">Aucune dépense enregistrée.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de recherche -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#depensesTable tr');
+        
+        rows.forEach(row => {
+            let motif = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            if (motif.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+{% endblock %}

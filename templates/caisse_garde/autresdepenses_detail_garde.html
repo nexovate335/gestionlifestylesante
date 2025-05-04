@@ -1,0 +1,9 @@
+{% comment %} autresdepenses_detail.html {% endcomment %}
+{% extends "base.html" %}
+{% block content %}
+<h2>Détails de la Dépense</h2>
+<p>ID: {{ depense.id }}</p>
+<p>Description: {{ depense.description }}</p>
+<p>Montant: {{ depense.montant }}</p>
+<a href="{% url 'autresdepenses_list' %}">Retour</a>
+{% endblock %}

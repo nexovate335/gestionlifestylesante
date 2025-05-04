@@ -1,0 +1,95 @@
+{% extends "caisse_garde/baseCaiGar.html" %}
+
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Créer une Facture</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- Formulaire principal -->
+        <div class="card mb-3 p-3">
+            <h4 class="mb-3">Informations du Patient</h4>
+            {{ form.as_p }}  
+        </div>
+
+        <!-- Motifs Associés -->
+        <div class="card mb-3 p-3">
+            <h4 class="mb-3">Motifs Associés</h4>
+            <div id="formset">
+                {{ formset.management_form }}
+                {% for form in formset %}
+                    <div class="motif-item row gx-3 caisse-form mb-3 border p-3 rounded d-flex align-items-center">
+                        <div class="col-lg-10 col-sm-12">
+                            {{ form.as_p }}
+                        </div>
+                        <div class="col-lg-2 d-flex align-items-center">
+                            <button type="button" class="btn btn-danger remove-form">Supprimer</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="d-flex justify-content-between mt-3">
+                <div></div>  <!-- Espacement à gauche -->
+                <button type="button" id="add-form" class="btn btn-primary">Ajouter un Motif</button>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 justify-content-end">
+            <button type="submit" class="btn btn-success">Enregistrer la Facture</button>
+            <a href="{% url 'caisse:liste_factures_caisse_recep' %}" class="btn btn-outline-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let formsetContainer = document.getElementById("formset");
+        let addButton = document.getElementById("add-form");
+        let totalForms = document.querySelector("#id_{{ formset.prefix }}-TOTAL_FORMS");
+        let formPrefix = "{{ formset.prefix }}";
+
+        function updateFormIndices() {
+            let forms = document.querySelectorAll(".motif-item");
+            forms.forEach((form, index) => {
+                form.querySelectorAll("input, select, textarea").forEach(input => {
+                    let name = input.name.replace(/\d+/, index);
+                    let id = input.id.replace(/\d+/, index);
+                    input.setAttribute("name", name);
+                    input.setAttribute("id", id);
+                });
+            });
+            totalForms.value = forms.length;  // Mise à jour du total de formulaires
+        }
+
+        addButton.addEventListener("click", function () {
+            let formNum = parseInt(totalForms.value);
+            let newForm = document.querySelector(".motif-item").cloneNode(true);
+
+            // Réinitialisation des champs du formulaire cloné
+            newForm.querySelectorAll("input, select, textarea").forEach(input => {
+                input.value = "";
+                let newName = input.name.replace(/\d+/, formNum);
+                let newId = input.id.replace(/\d+/, formNum);
+                input.setAttribute("name", newName);
+                input.setAttribute("id", newId);
+            });
+
+            formsetContainer.appendChild(newForm);
+            totalForms.value = formNum + 1;
+        });
+
+        document.addEventListener("click", function (e) {
+            if (e.target && e.target.classList.contains("remove-form")) {
+                let motifItem = e.target.closest(".motif-item");
+                if (motifItem) {
+                    motifItem.remove();
+                    updateFormIndices();
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
