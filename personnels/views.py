@@ -21,6 +21,8 @@ User = get_user_model()
 # Dictionnaire de redirection en fonction du rôle de l'utilisateur
 REDIRECTION_PAGES = {
     'Réceptioniste': 'reception',
+    'Infirmier(e)': 'reception',
+    'Aides-soignante': 'reception',
     'Cassier(e)': 'caisse',
     'Pharmacien(ne)': 'pharmacieuser',
     'Laborantin(ne)': 'laboratoire',
@@ -34,7 +36,11 @@ REDIRECTION_PAGES = {
     'Aides-soignante': 'paramedicale', 
     'Medecin': 'paramedicale',
     'Infirmier(e)': 'caisse_gare',
-    'Aides-soignante': 'caisse_garde', 
+    'Aides-soignante': 'caisse_garde',
+    'Aides-soignante': 'pharmaciegarde', 
+    'Infirmier(e)': 'pharmaciegarde', 
+    
+     
     
     
     
@@ -197,7 +203,7 @@ class GestionPharmacieView(View):
         return render(request, 'pharmacie/gestionpharmacie.html' ,{'applications': applications_gestion_pharmacie})
 
 #Recepteur
-@method_decorator([login_required, fonction_required('Réceptioniste')], name='dispatch')
+@method_decorator([login_required, fonction_required('Réceptioniste','Infirmier(e)','Aides-soignante')], name='dispatch')
 class ReceptionView(View):
     def get(self, request):
         # Liste des applications à afficher
@@ -301,7 +307,7 @@ class BlocOperatoireView(View):
     
 
 #Pharmacie
-@method_decorator([login_required, fonction_required('Pharmacien(ne)', 'Gestionnaire-phamarcie')], name='dispatch')
+@method_decorator([login_required, fonction_required('Aides-soignante', 'Infirmier(e)')], name='dispatch')
 class PharmacieGardeView(View):
     def get(self, request):
         applications_pharmacie_garde = [    

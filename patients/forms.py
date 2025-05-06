@@ -10,6 +10,7 @@ class PatientForm(forms.ModelForm):
             'sexe': forms.RadioSelect(choices=Patient.SEXE_CHOICES, attrs={'class': 'form-check-inline'}),
             'nom': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom de famille'}),
             'prenom': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le prénom'}),
+            'profession': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez la profession'}),
             'piece_identite': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le numéro pièce d\'identité'}),
             'niveau_instruction': forms.Select(attrs={'class': 'form-select'}),
             'age': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Entrez l\'âge'}),

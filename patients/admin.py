@@ -146,20 +146,20 @@ class BaseAdmin(admin.ModelAdmin):
 @admin.register(Patient)
 class PatientAdmin(BaseAdmin):
     list_display = (
-        'nom', 'prenom', 'age', 'sexe', 'nationalite',
+        'nom', 'prenom','profession', 'age', 'sexe', 'nationalite',
         'piece_identite', 'niveau_instruction', 'groupe_sanguin',
         'situation_matrimoniale', 'type_personne', 'adresse', 'telephone',
         'numero_dossier', 'personne_contacter', 'adresse_personne_contacter',
         'telephone_personne_contacter', 'lien', 'medecin', 'assistant', 'date',
     )
-    list_filter = ('sexe', 'situation_matrimoniale', 'type_personne', 'nationalite')
+    list_filter = ('sexe', 'profession', 'situation_matrimoniale', 'type_personne', 'nationalite')
     search_fields = ('nom', 'prenom', 'telephone', 'adresse')
     ordering = ('nom', 'prenom')
 
     fieldsets = (
         ("Informations personnelles", {
             'fields': (
-                'numero_dossier', 'nom', 'prenom', 'age', 'sexe',
+                'numero_dossier', 'nom', 'prenom', 'profession', 'age', 'sexe',
                 'situation_matrimoniale', 'type_personne', 'groupe_sanguin',
                 'piece_identite', 'niveau_instruction'
             )
