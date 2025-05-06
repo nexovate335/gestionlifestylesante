@@ -15,7 +15,7 @@ class Viol(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.PROTECT, verbose_name="Patient")
     montant = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Montant")
     medecin = models.CharField(max_length=100, verbose_name="Médecin")
-    observation = models.TextField(verbose_name="Obseration")
+    observation = models.TextField(verbose_name="Obseration",null=True,blank=True)
     commentaire = models.TextField(null=True, max_length=1000, blank=True, verbose_name="Commentaire")
     date = models.DateTimeField(auto_now_add=True, verbose_name="Date et heure de création")  # Date définie par défaut lors de la création
     deleted_at = models.DateTimeField(null=True, blank=True, verbose_name="Date de suppression")

@@ -39,7 +39,7 @@
                             <tbody id="violTable">
                                 {% for viol in viols %}
                                 <tr>
-                                    <td>{{ viol.numero_dossier }}</td>
+                                    <td>{{ viol.patient.numero_dossier }}</td>
                                     <td class="patient-name">{{ viol.patient.nom }} {{ viol.patient.prenom }}</td>
                                     <td>{{ viol.medecin }}</td>
                                     <td>{{ viol.observation }}</td>
