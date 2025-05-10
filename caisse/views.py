@@ -52,7 +52,7 @@ class FactureCaisseCreateView(CreateView):
     model = FactureCaisse
     form_class = FactureCaisseForm
     template_name = "caisse/factures/creer_facture_caisse.html"
-    success_url = reverse_lazy("caisse:liste_factures_caisse_recep")  # Redirection après création
+    success_url = reverse_lazy("caisse:liste_factures_caisse")  # Redirection après création
 
     def form_valid(self, form):
         facture = form.save(commit=False)
