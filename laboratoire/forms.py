@@ -8,9 +8,10 @@ class ExamenForm(forms.ModelForm):
     
     class Meta:
         model = Examen
-        fields = ['patient', 'examen', 'prix','nature_examen', 'prescripteur', 'preleveur', 'technicien', 'commentaire']
+        fields = ['patient','nom_personne', 'examen', 'prix','nature_examen', 'prescripteur', 'preleveur', 'technicien', 'commentaire']
         widgets = {
             'patient': forms.Select(attrs={'class': 'form-select'}),
+            'nom_personne': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom de la personne'}),
             'prix': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le montant'}),
             'nature_examen': forms.Select(attrs={'class': 'form-select', "placeholder": "Entrez la nature de l'examen"}),  
             'prescripteur': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom du prescripteur'}),
@@ -23,9 +24,10 @@ class ExamenForm(forms.ModelForm):
 class ResultatForm(forms.ModelForm):
     class Meta:
         model = Resultat
-        fields = ['patient','examen', 'resultat','commentaire']
+        fields = ['patient','nom_personne','examen', 'resultat','commentaire']
         widgets = {
             'patient': forms.Select(attrs={'class': 'form-select'}),
+            'nom_personne': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom de la personne'}),
             'examen': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, "placeholder": "Entrez l'examen"}), 
             'resultat': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, "placeholder": "Entrez le résultat"}), 
             'commentaire': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Entrez un commentaire'}),  
@@ -105,6 +107,7 @@ class ExamenCytologiePvForm(forms.ModelForm):
         model = ExamenCytologiePv
         fields = [
             'patient',
+            'nom_personne',
             'pv_secretion',
             'pv_couleur',
             'pv_odeur',
@@ -119,6 +122,8 @@ class ExamenCytologiePvForm(forms.ModelForm):
         ]
         widgets = {
             'patient': forms.Select(attrs={'class': 'form-select'}),
+            'nom_personne': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom de la personne'}),
+            
         }
 
 
@@ -127,6 +132,7 @@ class ExamenCytologieEcbuForm(forms.ModelForm):
         model = ExamenCytologieEcbu
         fields = [
             'patient',
+            'nom_personne',
             'ecbu_culot',
             'ecbu_couleur',
             'cyto_ce',
@@ -139,6 +145,7 @@ class ExamenCytologieEcbuForm(forms.ModelForm):
         ]
         widgets = {
             'patient': forms.Select(attrs={'class': 'form-select'}),
+            'nom_personne': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom de la personne'}),
             'ecbu_culot': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le culot'}),
             'ecbu_couleur': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez la couleur'}),
             'cyto_ce': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Cyto CE'}),

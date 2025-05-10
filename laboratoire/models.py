@@ -16,7 +16,8 @@ class Examen(models.Model):
         ('Examen fait maison', 'Examen fait maison'),
         ('Examen fait à l\'extérieur', 'Examen fait à l\'extérieur'),
     ]
-    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, verbose_name="Patient")
+    patient = models.ForeignKey(Patient, on_delete=models.PROTECT,null=True, blank=True, verbose_name="Patient")
+    nom_personne = models.CharField(max_length=255,null=True, blank=True, verbose_name="Nom complet de la personne concernée")
     examen = models.CharField(max_length=255,verbose_name="Examen")
     prix = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Montant")
     nature_examen = models.CharField(max_length=50,null=True, blank=True, choices=NATURE_EXAMEN_CHOICES, verbose_name="Nature de l'examen ")
@@ -56,7 +57,8 @@ class ResultatManager(models.Manager):
 
 
 class Resultat(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, verbose_name="Patient")
+    patient = models.ForeignKey(Patient, on_delete=models.PROTECT,null=True, blank=True, verbose_name="Patient")
+    nom_personne = models.CharField(max_length=255,null=True, blank=True, verbose_name="Nom complet de la personne concernée")
     examen = models.TextField(verbose_name="Examen")
     resultat = models.TextField(verbose_name="Résultat")
     commentaire = models.TextField(null=True, max_length=1000, blank=True, verbose_name="Commentaire")
@@ -92,7 +94,8 @@ class ExamenCytologiePvManager(models.Manager):
 
 
 class ExamenCytologiePv(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, verbose_name="Patient")
+    patient = models.ForeignKey(Patient, on_delete=models.PROTECT,null=True, blank=True, verbose_name="Patient")
+    nom_personne = models.CharField(max_length=255,null=True, blank=True, verbose_name="Nom complet de la personne concernée")
     pv_secretion = models.CharField(max_length=255, verbose_name="PV Sécrétion")
     pv_couleur = models.CharField(max_length=255, verbose_name="PV Couleur")
     pv_odeur = models.CharField(max_length=255, verbose_name="PV Odeur")
@@ -136,7 +139,8 @@ class ExamenCytologieEcbuManager(models.Manager):
 
 
 class ExamenCytologieEcbu(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, verbose_name="Patient")
+    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Patient")
+    nom_personne = models.CharField(max_length=255,null=True, blank=True, verbose_name="Nom complet de la personne concernée")
     ecbu_culot = models.CharField(max_length=255, verbose_name="ECBU Culot")
     ecbu_couleur = models.CharField(max_length=255, verbose_name="ECBU couleur")
     cyto_ce =  models.CharField(max_length=255, verbose_name="Cyto CE")

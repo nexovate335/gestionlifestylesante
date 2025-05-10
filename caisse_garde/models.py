@@ -27,7 +27,8 @@ class FactureCaisseGarde(models.Model):
         default=generate_unique_numero_facture, 
         verbose_name="Numéro de facture"
     )
-    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, verbose_name="Patient")
+    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, verbose_name="Patient",null=True, blank=True)
+    nom_personne = models.CharField(max_length=255,null=True, blank=True, verbose_name="Nom complet de la personne concernée")
     save_by = models.ForeignKey(Personnel, on_delete=models.PROTECT, verbose_name="Agent")
     facture_date_time = models.DateTimeField(auto_now_add=True, verbose_name="Date de création de la Facture")
     

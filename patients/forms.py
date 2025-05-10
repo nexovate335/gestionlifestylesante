@@ -4,7 +4,7 @@ from .models import Patient
 class PatientForm(forms.ModelForm):
     class Meta:
         model = Patient
-        fields = ['nom', 'prenom', 'age','nationalite', 'sexe', 'situation_matrimoniale', 'type_personne','niveau_instruction','piece_identite', 'telephone', 'adresse', 'groupe_sanguin','numero_dossier',
+        fields = ['nom', 'prenom','profession', 'age','nationalite', 'sexe', 'situation_matrimoniale', 'type_personne','niveau_instruction','piece_identite', 'telephone', 'adresse', 'groupe_sanguin','numero_dossier',
         'personne_contacter','adresse_personne_contacter','telephone_personne_contacter', 'lien','medecin','assistant']
         widgets = {
             'sexe': forms.RadioSelect(choices=Patient.SEXE_CHOICES, attrs={'class': 'form-check-inline'}),

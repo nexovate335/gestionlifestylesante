@@ -68,7 +68,7 @@ class Patient(models.Model):
     nom = models.CharField(max_length=100, verbose_name="Nom")
     prenom = models.CharField(max_length=100, verbose_name="Prénom")
     profession = models.CharField(max_length=100, verbose_name="Profession",null=True,blank=True)
-    age = models.PositiveIntegerField(verbose_name="Âge")
+    age = models.PositiveIntegerField(verbose_name="Âge",null=True,blank=True)
     nationalite = CountryField(verbose_name="Nationalité", default='CG')
     piece_identite = models.CharField(max_length=100,null=True, blank=True, verbose_name="Pièce d'identité n°")
     niveau_instruction =  models.CharField(

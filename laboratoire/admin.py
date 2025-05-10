@@ -159,35 +159,35 @@ class BaseAdmin(admin.ModelAdmin):
 
 @admin.register(Examen)
 class ExamenAdmin(BaseAdmin):
-    list_display = ('patient', 'examen', 'prix', 'date')
+    list_display = ('patient','nom_personne', 'examen', 'prix', 'date')
     search_fields = ('patient__nom', 'examen')
     ordering = ('-date',)
     readonly_fields = ('date',)
     fieldsets = (
-        ("Informations personnelles", {'fields': ('patient',)}),
+        ("Informations personnelles", {'fields': ('patient','nom_personne')}),
         ("Détails de l'examen", {'fields': ('examen', 'prix', 'date')}),
     )
 
 @admin.register(Resultat)
 class ResultatAdmin(BaseAdmin):
-    list_display = ('patient', 'examen', 'resultat', 'date')
+    list_display = ('patient','nom_personne', 'examen', 'resultat', 'date')
     search_fields = ('patient__nom',)
     ordering = ('-date',)
     readonly_fields = ('date',)
     fieldsets = (
-        ("Informations liées à l'examen", {'fields': ('patient',)}),
+        ("Informations liées à l'examen", {'fields': ('patient','nom_personne')}),
         ("Détails", {'fields': ('examen', 'resultat', 'date')}),
     )
 
 @admin.register(ExamenCytologiePv)
 class ExamenCytologiePvAdmin(BaseAdmin):
-    list_display = ('patient', 'pv_secretion', 'cyto_leuco', 'cyto_h', 'date')
+    list_display = ('patient','nom_personne', 'pv_secretion', 'cyto_leuco', 'cyto_h', 'date')
     search_fields = ('patient__nom', 'pv_secretion', 'cyto_leuco', 'cyto_h')
     ordering = ('-date',)
     readonly_fields = ('date',)
     list_filter = ('date', 'pv_couleur', 'cyto_h')
     fieldsets = (
-        ("Informations personnelles", {'fields': ('patient',)}),
+        ("Informations personnelles", {'fields': ('patient','nom_personne')}),
         ("PV", {'fields': ('pv_secretion', 'pv_couleur', 'pv_odeur')}),
         ("Cytologie", {'fields': (
             'cyto_ce', 'cyto_leuco', 'cyto_cc', 'cyto_levure',
@@ -199,14 +199,14 @@ class ExamenCytologiePvAdmin(BaseAdmin):
 @admin.register(ExamenCytologieEcbu)
 class ExamenCytologieEcbuAdmin(BaseAdmin):
     list_display = (
-        'patient', 'ecbu_culot', 'ecbu_couleur', 'cyto_ce', 'cyto_leuco',
+        'patient','nom_personne', 'ecbu_culot', 'ecbu_couleur', 'cyto_ce', 'cyto_leuco',
         'cyto_cylendre', 'cyto_cristaux', 'cyto_h', 'cyto_gram', 'date'
     )
     search_fields = ('patient__nom', 'patient__prenom')
     ordering = ('-date',)
     readonly_fields = ('date',)
     fieldsets = (
-        ("Patient", {'fields': ('patient',)}),
+        ("Patient", {'fields': ('patient','nom_personne')}),
         ("Résultats ECBU", {'fields': ('ecbu_culot', 'ecbu_couleur')}),
         ("Cytologie", {'fields': (
             'cyto_ce', 'cyto_leuco', 'cyto_cylendre', 'cyto_cristaux',

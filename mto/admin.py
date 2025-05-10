@@ -159,7 +159,7 @@ class BaseAdmin(admin.ModelAdmin):
 # Admin personnalisé pour MTO
 @admin.register(Mto)
 class MtoAdmin(BaseAdmin):
-    list_display = ('patient', 'demandeur', 'pratiqueur','assistant', 'montant', 'date')
+    list_display = ('patient','nom_personne', 'demandeur', 'pratiqueur','assistant', 'montant', 'date')
     list_filter = ('deleted_at', 'date')
     search_fields = ('patient__nom', 'patient__prenom', 'demandeur', 'pratiqueur')
     ordering = ('-date',)
@@ -167,7 +167,7 @@ class MtoAdmin(BaseAdmin):
 
     fieldsets = (
         ("Informations du patient", {
-            'fields': ('patient',)
+            'fields': ('patient','nom_personne')
         }),
         ("Détails de l'acte MTO", {
             'fields': ('demandeur', 'pratiqueur','assistant', 'montant', 'resultat', 'commentaire')

@@ -46,6 +46,7 @@
                                     <th>ID</th>
                                     <th>Numéro de dossier</th>
                                     <th>Patient</th>
+                                    <th>Nom Personne</th>
                                     <th>Date de création</th>
                                     <th>Montant Total</th>
                                     <th>Total somme versée</th>
@@ -61,6 +62,7 @@
                                     <td>{{ facture.numero_facture }}</td>
                                     <td>{{ facture.patient.numero_dossier }}</td>
                                     <td>{{ facture.patient.nom }} {{ facture.patient.prenom }}</td>
+                                    <td>{{ facture.nom_personne }}</td>
                                     <td>{{ facture.facture_date_time|date:"d/m/Y H:i" }}</td>
                                     <td>{{ facture.total }} FCFA</td>
                                     <td>{{ facture.total_somme_verse }} FCFA</td>

@@ -63,9 +63,15 @@
     <p><span class="bold">Date:</span> {{ facture.facture_date_time|date:"d/m/Y H:i" }}</p>
 </div>
 <div>
-    <p><span class="bold">Patient :</span><br>
-    {{ facture.patient.nom }} {{ facture.patient.prenom }}<br>
-    Dossier : {{ facture.patient.numero_dossier }}</p>
+{% if est_premier %}
+    <p>
+        <span class="bold">Patient :</span><br>
+        {{ facture.patient.nom }} {{ facture.patient.prenom }}<br>
+        Dossier : {{ facture.patient.numero_dossier }}
+    </p>
+{% else %}
+    <p>Nom Personne :{{ facture.nom_personne }}</p>
+{% endif %}
 </div>
 
 <table>

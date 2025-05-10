@@ -92,9 +92,15 @@
 </div>
 
 <div class="border-top">
-    <p><span class="bold">Patient :</span><br>
-    {{ facture.patient.nom }} {{ facture.patient.prenom }}<br>
-    Dossier : {{ facture.patient.numero_dossier }}</p>
+{% if est_premier %}
+    <p>
+        <span class="bold">Patient :</span><br>
+        {{ facture.patient.nom }} {{ facture.patient.prenom }}<br>
+        Dossier : {{ facture.patient.numero_dossier }}
+    </p>
+{% else %}
+    <p>Nom Personne :{{ facture.nom_personne }}</p>
+{% endif %}
 </div>
 
 <div class="border-top">

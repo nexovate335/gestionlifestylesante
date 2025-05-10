@@ -10,7 +10,8 @@ class MtoManager(models.Manager):
         return super().get_queryset().filter(deleted_at__isnull=False)
 
 class Mto(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, verbose_name="Patient")
+    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, verbose_name="Patient",null=True, blank=True)
+    nom_personne = models.CharField(max_length=255,null=True, blank=True, verbose_name="Nom complet de la personne concernée")
     demandeur = models.CharField(max_length=100, null=True, blank=True, verbose_name="Demandeur")
     pratiqueur = models.CharField(max_length=100, null=True, blank=True, verbose_name="Pratiqueur")
     assistant = models.CharField(max_length=100, null=True, blank=True, verbose_name="Assistant(e)")

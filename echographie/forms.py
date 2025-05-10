@@ -33,7 +33,9 @@ class EchographieForm(forms.ModelForm):
     
     class Meta:
         model = Echographie
-        fields = ['patient', 'demandeur', 'pratiqueur', 'assistant', 'montant', 'resultat', 'commentaire']
+        fields = ['patient','nom_personne', 'demandeur', 'pratiqueur', 'assistant', 'montant', 'resultat', 'commentaire']
         widgets = {
             'patient': forms.Select(attrs={'class': 'form-select'}),
+            'nom_personne': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom de la personne'}),
+            
         }

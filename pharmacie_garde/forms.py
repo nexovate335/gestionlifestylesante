@@ -74,9 +74,11 @@ class PhGardeFacturePharmacieForm(forms.ModelForm):
     
     class Meta:
         model = PhGardeFacturePharmacie
-        fields = ['patient']  # Ajout du champ somme versée
+        fields = ['patient','nom_personne']  # Ajout du champ somme versée
         widgets = {
             'patient': forms.Select(attrs={'class': 'form-control'}),
+            'nom_personne': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom de la personne'}),
+            
         }
 
 PhGardeVenteFormSet = inlineformset_factory(PhGardeFacturePharmacie, PhGardeVente, form=PhGardeVenteForm, extra=1, can_delete=False)

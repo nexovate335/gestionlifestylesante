@@ -24,6 +24,7 @@
                                     <th>ID</th>
                                     <th>Numéro de dossier</th>
                                     <th>Patient</th>
+                                    <th>Nom Personne</th>
                                     <th>Examen</th>
                                     <th>Prix</th>
                                     <th>Nature de l'examen</th>
@@ -42,6 +43,7 @@
                                     <td>{{ examen.patient.numero_dossier }}</td>
                                     <td class="patient-name">{{ examen.patient.nom }} {{ examen.patient.prenom }}</td>
                                     <td>{{ examen.examen }}</td>
+                                    <td>{{ examen.nom_personne }}</td>
                                     <td>{{ examen.prix }} FCFA</td>
                                     <td>
                                         {% if examen.nature_examen == 'Examen fait maison' %}

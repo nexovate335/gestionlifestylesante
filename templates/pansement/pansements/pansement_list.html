@@ -29,6 +29,7 @@
                                     <th>ID</th>
                                     <th>Numéro de dossier</th>
                                     <th>Patient</th>
+                                    <th>Nom Personne</th>
                                     <th>Montant</th>
                                     <th>Panseur</th>
                                     <th>Observation</th>
@@ -43,6 +44,7 @@
                                     <td>{{ pansement.id }}</td>
                                     <td>{{ pansement.patient.numero_dossier }}</td>
                                     <td class="patient-name">{{ pansement.patient.nom }} {{ pansement.patient.prenom }}</td>
+                                    <td class="patient-name">{{ pansement.nom_personne }}</td>
                                     <td>{{ pansement.montant }} FCFA</td>
                                     <td>{{ pansement.panseur|default:"Non spécifié" }}</td>
                                     <td>{{ pansement.observation|truncatechars:50 }}</td>

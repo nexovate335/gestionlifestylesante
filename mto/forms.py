@@ -32,7 +32,9 @@ class MtoForm(forms.ModelForm):
 
     class Meta:
         model = Mto
-        fields = ['patient', 'demandeur', 'pratiqueur', 'assistant', 'montant', 'resultat', 'commentaire']  # Liste des champs à inclure
+        fields = ['patient','nom_personne', 'demandeur', 'pratiqueur', 'assistant', 'montant', 'resultat', 'commentaire']  # Liste des champs à inclure
         widgets = {
             'patient': forms.Select(attrs={'class': 'form-select'}),  # Sélection du patient
+            'nom_personne': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom de la personne'}),
+            
         }

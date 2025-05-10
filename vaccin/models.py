@@ -12,7 +12,8 @@ class VaccinManager(models.Manager):
 
 
 class Vaccin(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, verbose_name="Patient")
+    patient = models.ForeignKey(Patient, on_delete=models.PROTECT,null=True, blank=True, verbose_name="Patient")
+    nom_personne = models.CharField(max_length=255,null=True, blank=True, verbose_name="Nom complet de la personne concernée")
     type_vaccin = models.CharField(max_length=100, verbose_name="Type de vaccin")
     montant = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Montant")
     commentaire = models.TextField(null=True, max_length=1000, blank=True, verbose_name="Commentaire")
