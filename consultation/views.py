@@ -44,7 +44,12 @@ class ConsultationCreateView(CreateView):
     form_class = ConsultationForm
     template_name = "consultation/consultations/consultation_form.html"
     success_url = "/consultation/"
-    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['patients'] = Patient.objects.all()  # Récupère tous les patients et les envoie au template
+        return context
+
     def form_valid(self, form):
         # Assurez-vous que l'ID du patient correspond à un objet Patient
         patient_id = self.request.POST.get("patient")
