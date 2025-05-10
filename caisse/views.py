@@ -3,7 +3,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 from django.shortcuts import get_object_or_404
-from django.utils.timezone import now
+from django.utils.timezone import now, localdate
 from .models import FactureCaisse, Caisse, AutresDepenses, RapportJournalierCaisse
 from .forms import FactureCaisseForm, FactureCaisseFormUpdate, CaisseFormSet, AutresDepensesForm, RapportJournalierCaisseForm
 
@@ -19,9 +19,9 @@ class FactureCaisseRecepListView(ListView):
         if self.request.GET.get('all') == '1':
             return queryset.order_by('-facture_date_time')
         else:
-            today = now().date()
-            return queryset.filter(facture_date_time__date=today)
-
+            today = localdate()  # plus fiable que now().date()
+            return queryset.filter(facture_date_time__date=today).order_by('-facture_date_time')
+        
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['affichage_total'] = self.request.GET.get('all') == '1'
@@ -38,8 +38,8 @@ class FactureCaisseListView(ListView):
         if self.request.GET.get('all') == '1':
             return queryset.order_by('-facture_date_time')
         else:
-            today = now().date()
-            return queryset.filter(facture_date_time__date=today)
+            today = localdate()  # plus fiable que now().date()
+            return queryset.filter(facture_date_time__date=today).order_by('-facture_date_time')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -49,7 +49,6 @@ class FactureCaisseListView(ListView):
 #  Création d'une facture (remplace `creer_facturecaisse`)
 @method_decorator(login_required, name='dispatch')
 class FactureCaisseCreateView(CreateView):
-    
     model = FactureCaisse
     form_class = FactureCaisseForm
     template_name = "caisse/factures/creer_facture_caisse.html"
