@@ -16,11 +16,6 @@
                             <small class="text-muted">Toutes les factures (peu importe la date)</small>
                         {% endif %}
                     </div> 
-                    <div class="d-flex gap-2">
-                        <a href="{% url 'caisse:creer_facture_caisse' %}" class="btn btn-primary btn-sm">
-                            <i class="bi bi-plus-circle"></i>Créer une nouvelle facture
-                        </a>
-                    </div>
                     {% if not affichage_total %}
                         <a href="?all=1" class="btn btn-sm btn-outline-secondary">
                             Voir toutes les factures
