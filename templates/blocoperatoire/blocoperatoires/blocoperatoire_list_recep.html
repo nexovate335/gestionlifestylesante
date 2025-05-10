@@ -25,7 +25,8 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Numéro de dossier</th>
-                                    <th>Patient</th>  
+                                    <th>Patient</th>
+                                    <th>Nom Personne</th>  
                                     <th>Actes</th>
                                     <th>Montant</th>
                                     <th>Médecin</th>
@@ -45,6 +46,7 @@
                                         <td>{{ bloc.id }}</td>
                                         <td>{{ bloc.patient.numero_dossier }}</td>
                                         <td>{{ bloc.patient.nom }} {{ bloc.patient.prenom }}</td>  <!-- Ajout du patient -->
+                                        <td>{{ bloc.nom_personne }}</td>
                                         <td>{{ bloc.actes }}</td>
                                         <td>{{ bloc.montant }}</td>
                                         <td>{{ bloc.medecin }}</td>

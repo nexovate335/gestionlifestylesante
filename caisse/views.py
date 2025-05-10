@@ -49,6 +49,7 @@ class FactureCaisseListView(ListView):
 #  Création d'une facture (remplace `creer_facturecaisse`)
 @method_decorator(login_required, name='dispatch')
 class FactureCaisseCreateView(CreateView):
+    
     model = FactureCaisse
     form_class = FactureCaisseForm
     template_name = "caisse/factures/creer_facture_caisse.html"

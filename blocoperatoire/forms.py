@@ -41,11 +41,13 @@ class BlocOperatoireForm(forms.ModelForm):
     class Meta:
         model = BlocOperatoire
         fields = [
-            'patient', 'actes', 'montant', 'medecin',
+            'patient','nom_personne', 'actes', 'montant', 'medecin',
             'aides', 'instrumentiste', 'panseur', 'anesthesiste', 'observation'
         ]
         widgets = {
             'patient': forms.Select(attrs={'class': 'form-select'}),
+            'nom_personne': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom de la personne'}),
+            
         }
 
 

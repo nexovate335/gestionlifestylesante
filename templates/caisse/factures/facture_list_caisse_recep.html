@@ -88,12 +88,17 @@
     document.getElementById('searchInput').addEventListener('keyup', function() {
         let filter = this.value.toLowerCase();
         let rows = document.querySelectorAll('#factureTable tr');
-        
+
         rows.forEach(row => {
             let numeroDossier = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
             let nomPatient = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+            let nomPersonne = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
 
-            if (numeroDossier.includes(filter) || nomPatient.includes(filter)) {
+            if (
+                numeroDossier.includes(filter) ||
+                nomPatient.includes(filter) ||
+                nomPersonne.includes(filter)
+            ) {
                 row.style.display = '';
             } else {
                 row.style.display = 'none';
@@ -101,6 +106,7 @@
         });
     });
 </script>
+
 
 {% endblock %}
 

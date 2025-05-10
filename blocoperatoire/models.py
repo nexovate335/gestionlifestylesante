@@ -14,7 +14,8 @@ class BlocOperatoireManager(models.Manager):
         return super().get_queryset().filter(deleted_at__isnull=False)
 
 class BlocOperatoire(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, verbose_name="Patient")
+    patient = models.ForeignKey(Patient, on_delete=models.PROTECT,null=True, blank=True, verbose_name="Patient")
+    nom_personne = models.CharField(max_length=255,null=True, blank=True, verbose_name="Nom complet de la personne concernée")
     actes = models.CharField(max_length=255, verbose_name="Actes")
     montant = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Montant")
     medecin = models.CharField(max_length=100,null=True, blank=True, verbose_name="Médecin")

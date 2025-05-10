@@ -159,6 +159,7 @@ class BaseAdmin(admin.ModelAdmin):
 class BlocOperatoireAdmin(BaseAdmin):
     list_display = (
         'patient',
+        'nom_personne',
         'actes',
         'montant',
         'medecin',
@@ -173,7 +174,7 @@ class BlocOperatoireAdmin(BaseAdmin):
     readonly_fields = ('date',)
     fieldsets = (
         ("Informations personnelles", {
-            'fields': ('patient',)
+            'fields': ('patient','nom_personne')
         }),
         ("Détails de l'opération", {
             'fields': (
