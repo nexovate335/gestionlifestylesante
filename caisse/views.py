@@ -39,7 +39,7 @@ class FactureCaisseListView(ListView):
             return queryset.order_by('-facture_date_time')
         else:
             today = localdate()  # plus fiable que now().date()
-            return queryset.filter(facture_date_time__date=today).order_by('-facture_date_time')
+            return queryset.filter(facture_date_time=today).order_by('-facture_date_time')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

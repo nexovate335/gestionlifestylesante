@@ -10,13 +10,13 @@
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <div>
                         <h5 class="card-title mb-0">Liste des Factures Hôpital</h5>
-                        {% if not affichage_total %}
+                        {% if  affichage_total %}
                             <small class="text-muted">Factures créées aujourd'hui (payées et non payées)</small>
                         {% else %}
                             <small class="text-muted">Toutes les factures (peu importe la date)</small>
                         {% endif %}
                     </div> 
-                    {% if  affichage_total %}
+                    {% if   affichage_total %}
                         <a href="?all=1" class="btn btn-sm btn-outline-secondary">
                             Voir toutes les factures
                         </a>
