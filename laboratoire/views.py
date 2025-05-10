@@ -28,7 +28,7 @@ class ExamenCreateView(CreateView):
     model = Examen
     form_class = ExamenForm
     template_name = "laboratoire/examens/examen_form.html"
-    success_url = reverse_lazy("laboratoire:examen_list")
+    success_url = reverse_lazy("laboratoire:examen_lab_list")
 
 # Détails d'un examen
 class ExamenDetailView(DetailView):
