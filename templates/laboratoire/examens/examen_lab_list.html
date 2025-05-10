@@ -85,7 +85,7 @@
 <script>
     document.getElementById('searchInput').addEventListener('keyup', function() {
         let filter = this.value.toLowerCase();
-        let rows = document.querySelectorAll('#factureTable tr');
+        let rows = document.querySelectorAll('#examenTable tr');
 
         rows.forEach(row => {
             let numeroDossier = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
