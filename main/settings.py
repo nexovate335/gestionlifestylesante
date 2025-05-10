@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-=22v*82@a=faqy==j$pwkmjqn)1u3vho1v2c2jsg9se7lg2$mo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://gestion.lifestylesante.org', 'http://gestion.lifestylesante.org', 'https://www.gestion.lifestylesante.org', 'http://www.gestion.lifestylesante.org']   
@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'main.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-if  DEBUG:
+if not  DEBUG:
     # Environnement local => SQLite
     DATABASES = {
         'default': {
