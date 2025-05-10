@@ -29,6 +29,7 @@
                                     <th>ID</th>
                                     <th>Numéro de Dossier</th>
                                     <th>Patient</th>
+                                    <th>Nom Personne</th>
                                     <th>Type de Consultation</th>
                                     <th>Médecin</th>
                                     <th>Assistant(e)</th>
@@ -44,6 +45,7 @@
                                     <td>{{ consultation.id }}</td>
                                     <td>{{ consultation.patient.numero_dossier }}</td>
                                     <td class="patient-name">{{ consultation.patient.nom }} {{ consultation.patient.prenom }}</td>
+                                    <td>{{ consultation.nom_personne }}</td>
                                     <td>{{ consultation.type_consultation }}</td>
                                     <td>{{ consultation.medecin|default:"N/A" }}</td>
                                     <td>{{ consultation.assistant|default:"N/A" }}</td>

@@ -150,6 +150,7 @@ class BaseAdmin(admin.ModelAdmin):
 class ConsultationAdmin(BaseAdmin):
     list_display = (
         'patient',
+        'nom_personne',
         'type_consultation',
         'montant',
         'medecin',
