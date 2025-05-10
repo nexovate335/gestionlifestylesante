@@ -9,7 +9,7 @@ class ConsultationForm(forms.ModelForm):
     class Meta:
         model = Consultation
         fields = [
-            'type_consultation', 'patient','', 'montant', 'medecin', 'assistant', 'commentaire',
+            'type_consultation', 'patient','nom_personne', 'montant', 'medecin', 'assistant', 'commentaire',
         ]
 
         widgets = {
