@@ -14,18 +14,6 @@ class FactureCaisseRecepListView(ListView):
     template_name = "caisse/factures/facture_list_caisse_recep.html"
     context_object_name = "factures"
     
-    def get_queryset(self):
-        queryset = FactureCaisse.objects.all()
-        if self.request.GET.get('all') == '1':
-            return queryset.order_by('-facture_date_time')
-        else:
-            today = localdate()  # plus fiable que now().date()
-            return queryset.filter(facture_date_time__date=today).order_by('-facture_date_time')
-        
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['affichage_total'] = self.request.GET.get('all') == '1'
-        return context
     
 @method_decorator(login_required, name='dispatch')
 class FactureCaisseListView(ListView):
