@@ -162,6 +162,7 @@ class ConsultationAdmin(BaseAdmin):
     search_fields = (
         'patient__nom',
         'patient__prenom',
+        'nom_personne',
         'type_consultation',
         'medecin',
         'assistant',
@@ -172,7 +173,7 @@ class ConsultationAdmin(BaseAdmin):
 
     fieldsets = (
         ("Informations personnelles", {
-            'fields': ('patient', 'type_consultation', 'date')
+            'fields': ('patient','nom_personne', 'type_consultation', 'date')
         }),
         ("Personnel médical", {
             'fields': ('medecin', 'assistant', 'suivi_medecin')
