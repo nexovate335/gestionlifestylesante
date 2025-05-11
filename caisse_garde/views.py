@@ -14,17 +14,10 @@ class FactureCaisseRecepGardeListView(ListView):
     template_name = "caisse_garde/factures_garde/facture_list_caisse_recep_garde.html"
     context_object_name = "factures"
     
-    def get_queryset(self):
-        queryset = FactureCaisseGarde.objects.all()
-        if self.request.GET.get('all') == '1':
-            return queryset.order_by('-facture_date_time')
-        else:
-            today = now().date()
-            return queryset.filter(facture_date_time__date=today)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['affichage_total'] = self.request.GET.get('all') == '1'
+        today = now().date()
+        context["factures_du_jour"] = FactureCaisseGarde.objects.filter(facture_date_time__date=today)
         return context
     
 @method_decorator(login_required, name='dispatch')
@@ -33,17 +26,10 @@ class FactureCaisseGardeListView(ListView):
     template_name = "caisse_garde/factures_garde/facture_list_caisse_garde.html"
     context_object_name = "factures"
 
-    def get_queryset(self):
-        queryset = FactureCaisseGarde.objects.all()
-        if self.request.GET.get('all') == '1':
-            return queryset.order_by('-facture_date_time')
-        else:
-            today = now().date()
-            return queryset.filter(facture_date_time__date=today)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['affichage_total'] = self.request.GET.get('all') == '1'
+        today = now().date()
+        context["factures_du_jour"] = FactureCaisseGarde.objects.filter(facture_date_time__date=today)
         return context
 
 #  Création d'une facture (remplace `creer_facturecaisse`)

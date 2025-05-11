@@ -7,83 +7,114 @@
     <div class="row gx-3">
         <div class="col-sm-12">
             <div class="card">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <div>
-                        <h5 class="card-title mb-0">Liste des Factures Hôpital</h5>
-                        {% if  affichage_total %}
-                            <small class="text-muted">Factures créées aujourd'hui (payées et non payées)</small>
-                        {% else %}
-                            <small class="text-muted">Toutes les factures (peu importe la date)</small>
-                        {% endif %}
-                    </div> 
-                    {% if   affichage_total %}
-                        <a href="?all=1" class="btn btn-sm btn-outline-secondary">
-                            Voir toutes les factures
-                        </a>
-                    {% else %}
-                        <a href="?" class="btn btn-sm btn-outline-secondary">
-                            Voir uniquement celles du jour
-                        </a>
-                    {% endif %}
- 
-                </div>
-
                 <div class="card-body">
                     <!-- Barre de recherche -->
                     <div class="d-flex justify-content-end mb-3">
                         <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher une facture...">
                     </div>
 
-                    <div class="table-responsive">
-                        <table id="basicExample" class="table truncate m-0 align-middle">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Numéro de dossier</th>
-                                    <th>Patient</th>
-                                    <th>Nom Personne</th>
-                                    <th>Date de création</th>
-                                    <th>Montant Total</th>
-                                    <th>Somme versée</th>
-                                    <th>Avance</th>
-                                    <th>Reste à payer</th>
-                                    <th>Statut</th>
-                                    <th>Commentaire</th>
-                                </tr>
-                            </thead>
-                            <tbody id="factureTable">
-                                {% for facture in factures %}
-                                <tr>
-                                    <td>{{ facture.numero_facture }}</td>
-                                    <td>{{ facture.patient.numero_dossier }}</td>
-                                    <td>{{ facture.patient.nom }} {{ facture.patient.prenom }}</td>
-                                    <td>{{ facture.nom_personne }}</td>
-                                    <td>{{ facture.facture_date_time|date:"d/m/Y H:i" }}</td>
-                                    <td>{{ facture.total }} FCFA</td>
-                                    <td>{{ facture.somme_verse }} FCFA</td>
-                                    <td>{{ facture.avance }} FCFA</td>
-                                    <td>{{ facture.reste_a_payer }} FCFA</td>
-                                    <td class="{% if facture.paye %}text-success{% else %}text-danger{% endif %}">
-                                        {% if facture.paye %} Payée {% else %} Non payée {% endif %}
-                                    </td>
-                                    <td>{{ facture.commentaire|default:"Aucun commentaire" }}</td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="10" class="text-center">Aucune facture trouvée.</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    
+                    <!-- Onglets -->
+                    <ul class="nav nav-tabs mb-3" id="factureTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="jour-tab" data-bs-toggle="tab" data-bs-target="#jour" type="button" role="tab">Factures du jour</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="toutes-tab" data-bs-toggle="tab" data-bs-target="#toutes" type="button" role="tab">Toutes les factures</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="factureTabsContent">
+                        <!-- Tab: Factures du jour -->
+                        <div class="tab-pane fade show active" id="jour" role="tabpanel">
+                            <div class="table-responsive mt-3">
+                                <table class="table truncate m-0 align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Numéro de dossier</th>
+                                            <th>Patient</th>
+                                            <th>Nom Personne</th>
+                                            <th>Date de création</th>
+                                            <th>Montant Total</th>
+                                            <th>Reste à payer</th>
+                                            <th>Statut</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="factureTable">
+                                        {% for facture in factures_du_jour %}
+                                            <tr>
+                                                <td>{{ facture.numero_facture }}</td>
+                                                <td>{{ facture.patient.numero_dossier }}</td>
+                                                <td>{{ facture.patient.nom }} {{ facture.patient.prenom }}</td>
+                                                <td>{{ facture.nom_personne }}</td>
+                                                <td>{{ facture.facture_date_time|date:"d/m/Y H:i" }}</td>
+                                                <td>{{ facture.total }} FCFA</td>
+                                                <td>{{ facture.reste_a_payer }} FCFA</td>
+                                                <td class="{% if facture.paye %}text-success{% else %}text-danger{% endif %}">
+                                                    {% if facture.paye %} Payée {% else %} Non payée {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr><td colspan="12" class="text-center">Aucune facture créée aujourd’hui.</td></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Tab: Toutes les factures -->
+                        <div class="tab-pane fade" id="toutes" role="tabpanel">
+                            <div class="table-responsive mt-3">
+                                <table id="basicExample" class="table truncate m-0 align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Numéro de dossier</th>
+                                            <th>Patient</th>
+                                            <th>Nom Personne</th>
+                                            <th>Date de création</th>
+                                            <th>Montant Total</th>
+                                            <th>Total somme versée</th>
+                                            <th>Avance</th>
+                                            <th>Reste à payer</th>
+                                            <th>Statut</th>
+                                            <th>Commentaire</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="factureTable">
+                                        {% for facture in factures %}
+                                            <tr>
+                                                <td>{{ facture.numero_facture }}</td>
+                                                <td>{{ facture.patient.numero_dossier }}</td>
+                                                <td>{{ facture.patient.nom }} {{ facture.patient.prenom }}</td>
+                                                <td>{{ facture.nom_personne }}</td>
+                                                <td>{{ facture.facture_date_time|date:"d/m/Y H:i" }}</td>
+                                                <td>{{ facture.total }} FCFA</td>
+                                                <td>{{ facture.total_somme_verse }} FCFA</td>
+                                                <td>{{ facture.avance }} FCFA</td>
+                                                <td>{{ facture.reste_a_payer }} FCFA</td>
+                                                <td class="{% if facture.paye %}text-success{% else %}text-danger{% endif %}">
+                                                    {% if facture.paye %} Payée {% else %} Non payée {% endif %}
+                                                </td>
+                                                <td>{{ facture.commentaire|default:"Aucun commentaire" }}</td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="12" class="text-center">Aucune facture trouvée.</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div> <!-- end tab content -->
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Script de recherche -->
+<!-- Script de recherche (s'applique uniquement à l'onglet "Toutes les factures") -->
 <script>
     document.getElementById('searchInput').addEventListener('keyup', function() {
         let filter = this.value.toLowerCase();
@@ -107,6 +138,4 @@
     });
 </script>
 
-
 {% endblock %}
-

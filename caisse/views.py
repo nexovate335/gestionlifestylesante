@@ -14,13 +14,24 @@ class FactureCaisseRecepListView(ListView):
     template_name = "caisse/factures/facture_list_caisse_recep.html"
     context_object_name = "factures"
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = now().date()
+        context["factures_du_jour"] = FactureCaisse.objects.filter(facture_date_time__date=today)
+        return context
+    
     
 @method_decorator(login_required, name='dispatch')
 class FactureCaisseListView(ListView):
     model = FactureCaisse
     template_name = "caisse/factures/facture_list_caisse.html"
-    context_object_name = "factures"
+    context_object_name = "factures"  # toutes les factures
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = now().date()
+        context["factures_du_jour"] = FactureCaisse.objects.filter(facture_date_time__date=today)
+        return context
 
 #  Création d'une facture (remplace `creer_facturecaisse`)
 @method_decorator(login_required, name='dispatch')

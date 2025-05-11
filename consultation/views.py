@@ -38,31 +38,13 @@ class SuiviConsultationListView(ListView):
         return Consultation.objects.filter(deleted_at__isnull=True)  # Récupère uniquement les consultations actives
 
 
-# Création d'une consultation
+# Création d'une consultation   
 class ConsultationCreateView(CreateView):
     model = Consultation
     form_class = ConsultationForm
     template_name = "consultation/consultations/consultation_form.html"
-    success_url = "/consultation/"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['patients'] = Patient.objects.all()  # Récupère tous les patients et les envoie au template
-        return context
-
-    def form_valid(self, form):
-        # Assurez-vous que l'ID du patient correspond à un objet Patient
-        patient_id = self.request.POST.get("patient")
-        if patient_id:
-            try:
-                patient = Patient.objects.get(id=patient_id)
-                form.instance.patient = patient  # Associe l'objet Patient au formulaire
-            except Patient.DoesNotExist:
-                form.add_error('patient', 'Le patient sélectionné n\'existe pas.')
-                return self.form_invalid(form)
-        return super().form_valid(form)
+    success_url = reverse_lazy('consultation:consultation_list')
     
-
 # Détails d'une consultation
 class ConsultationDetailView(DetailView):
     model = Consultation

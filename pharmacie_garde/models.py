@@ -52,7 +52,7 @@ class PhGardeCommande(models.Model):
     produit = models.ForeignKey(PhGardeProduit, on_delete=models.PROTECT, verbose_name="Produit")
     quantite_commande = models.PositiveIntegerField(verbose_name="Quantité commande")
     type_produit = models.CharField(max_length=100, verbose_name="Type de produit")
-    fournisseur = models.ForeignKey(Fournisseur, on_delete=models.CASCADE, verbose_name="Fournisseur")
+    fournisseur = models.ForeignKey(Fournisseur,null=True, blank=True, on_delete=models.CASCADE, verbose_name="Fournisseur")
     prix = models.DecimalField(
         max_digits=10, decimal_places=2, 
         blank=True, null=True, 
