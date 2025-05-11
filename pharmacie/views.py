@@ -270,17 +270,10 @@ class FacturePharmacieListView(ListView):
     template_name = "pharmacie/factures/facture_list_pharmacie.html"
     context_object_name = "factures"
     
-    def get_queryset(self):
-        queryset = FacturePharmacie.objects.all()
-        if self.request.GET.get('all') == '1':
-            return queryset.order_by('-facture_date_time')
-        else:
-            today = now().date()
-            return queryset.filter(facture_date_time__date=today)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['affichage_total'] = self.request.GET.get('all') == '1'
+        today = now().date()
+        context["factures_du_jour"] = FacturePharmacie.objects.filter(facture_date_time__date=today)
         return context
     
 @method_decorator(login_required, name='dispatch')
@@ -289,17 +282,10 @@ class FacturePharmacieCaisseListView(ListView):
     template_name = "pharmacie/factures/caisse_facture_list_pharmacie.html"
     context_object_name = "factures"
 
-    def get_queryset(self):
-        queryset = FacturePharmacie.objects.all()
-        if self.request.GET.get('all') == '1':
-            return queryset.order_by('-facture_date_time')
-        else:
-            today = now().date()
-            return queryset.filter(facture_date_time__date=today)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['affichage_total'] = self.request.GET.get('all') == '1'
+        today = now().date()
+        context["factures_du_jour"] = FacturePharmacie.objects.filter(facture_date_time__date=today)
         return context
 
 
@@ -309,17 +295,10 @@ class FacturePharmacieRecepListView(ListView):
     template_name = "pharmacie/factures/recep_facture_list_pharmacie.html"
     context_object_name = "factures"
 
-    def get_queryset(self):
-        queryset = FacturePharmacie.objects.all()
-        if self.request.GET.get('all') == '1':
-            return queryset.order_by('-facture_date_time')
-        else:
-            today = now().date()
-            return queryset.filter(facture_date_time__date=today)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['affichage_total'] = self.request.GET.get('all') == '1'
+        today = now().date()
+        context["factures_du_jour"] = FacturePharmacie.objects.filter(facture_date_time__date=today)
         return context
 
 
