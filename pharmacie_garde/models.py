@@ -112,7 +112,6 @@ class PhGardeStockManager(models.Manager):
 # Table Stock
 class PhGardeStock(models.Model):
     produit = models.OneToOneField(PhGardeProduit, on_delete=models.PROTECT, related_name='stock', verbose_name="Produit")
-    type_produit = models.CharField(max_length=100, verbose_name="Type de produit")
     quantite_reelle = models.PositiveIntegerField(default=0, verbose_name="Quantité réelle")  # Déjà positif par défaut
     prix_unitaire = models.DecimalField(
         max_digits=10, decimal_places=2,

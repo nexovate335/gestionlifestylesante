@@ -165,7 +165,6 @@ class PhGardeCommandeAdmin(BaseAdmin):
     list_display = (
         'produit', 
         'quantite_commande', 
-        'type_produit', 
         'prix', 
         'total_achat', 
         'fournisseur', 

@@ -6,6 +6,9 @@
     <div class="row gx-3">
         <div class="col-sm-12">
             <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Liste des Factures Pharmacie</h5>
+                </div>
                 <div class="card-body">
                     <!-- Barre de recherche -->
                     <div class="d-flex justify-content-end mb-3">
@@ -115,24 +118,47 @@
 
 <!-- Script de recherche (s'applique uniquement à l'onglet "Toutes les factures") -->
 <script>
-    document.getElementById('searchInput').addEventListener('keyup', function() {
-        let filter = this.value.toLowerCase();
-        let rows = document.querySelectorAll('#factureTable tr');
+    const searchInput = document.getElementById('searchInput');
+
+    function updateSearchResults() {
+        const filter = searchInput.value.toLowerCase();
+        const activeTab = document.querySelector('.tab-pane.active');
+        const rows = activeTab.querySelectorAll('tbody tr');
+        let matchCount = 0;
 
         rows.forEach(row => {
-            let numeroDossier = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-            let nomPatient = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
-            let nomPersonne = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+            // Ne pas filtrer les lignes "Aucun résultat trouvé"
+            if (row.id && row.id.startsWith("noResults")) return;
 
-            if (
-                numeroDossier.includes(filter) ||
-                nomPatient.includes(filter) ||
-                nomPersonne.includes(filter)
-            ) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 4) {
+                const numeroDossier = cells[1].textContent.toLowerCase();
+                const nomPatient = cells[2].textContent.toLowerCase();
+                const nomPersonne = cells[3].textContent.toLowerCase();
+
+                const match =
+                    numeroDossier.includes(filter) ||
+                    nomPatient.includes(filter) ||
+                    nomPersonne.includes(filter);
+
+                row.style.display = match ? '' : 'none';
+                if (match) matchCount++;
             }
+        });
+
+        // Afficher ou masquer le message "Aucun résultat"
+        const noResultsRow = activeTab.querySelector('tr[id^="noResults"]');
+        if (noResultsRow) {
+            noResultsRow.style.display = matchCount === 0 ? '' : 'none';
+        }
+    }
+
+    searchInput.addEventListener('keyup', updateSearchResults);
+
+    document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function () {
+            searchInput.value = '';
+            updateSearchResults();
         });
     });
 </script>

@@ -176,7 +176,6 @@ class CommandeAdmin(BaseAdmin):
         'num_com',
         'produit',
         'quantite_commande',
-        'type_produit',
         'prix',
         'total_achat',
         'fournisseur',

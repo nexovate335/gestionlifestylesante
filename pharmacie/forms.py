@@ -31,11 +31,10 @@ class FournisseurForm(forms.ModelForm):
 class CommandeForm(forms.ModelForm):
     class Meta:
         model = Commande
-        fields = ['produit', 'quantite_commande', 'type_produit', 'prix', 'fournisseur', 'date_admission', 'date_expiration']
+        fields = ['produit', 'quantite_commande', 'prix', 'fournisseur', 'date_admission', 'date_expiration']
         labels = {
             'produit': 'Produit',
             'quantite_commande': 'Quantité commandée',
-            'type_produit': 'Type de produit',
             'prix': 'Prix unitaire d\'achat',
             'fournisseur': 'Fournisseur',
             'date_admission': 'Date d\'admission',
@@ -44,7 +43,6 @@ class CommandeForm(forms.ModelForm):
         widgets = {
             'produit': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Sélectionnez le produit'}),
             'quantite_commande': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Entrez la quantité commandée'}),
-            'type_produit': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le type de produit'}),
             'prix': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le prix unitaire', 'step': '0.01'}),
             'fournisseur': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Sélectionnez le fournisseur'}),
             # Champs date avec format de date adapté
@@ -56,16 +54,14 @@ class CommandeForm(forms.ModelForm):
 class StockForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ['produit', 'type_produit', 'quantite_reelle', 'prix_unitaire']
+        fields = ['produit', 'quantite_reelle', 'prix_unitaire']
         labels = {
             'produit': 'Produit',
-            'type_produit': 'Type de produit',
             'quantite_reelle': 'Quantité réelle',
             'prix_unitaire': 'Prix unitaire de vente',
         }
         widgets = {
             'produit': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Sélectionnez un produit'}),
-            'type_produit': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le type de produit'}),
             'quantite_reelle': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Entrez la quantité réelle'}),
             'prix_unitaire': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le prix unitaire', 'step': '0.01'}),
         }

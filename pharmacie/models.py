@@ -83,7 +83,6 @@ class Commande(models.Model):
     num_com = models.AutoField(primary_key=True)
     produit = models.ForeignKey(Produit, on_delete=models.PROTECT, verbose_name="Produit")
     quantite_commande = models.PositiveIntegerField(verbose_name="Quantité commande")
-    type_produit = models.CharField(max_length=100, verbose_name="Type de produit")
     fournisseur = models.ForeignKey(Fournisseur, on_delete=models.CASCADE,null=True,blank=True, verbose_name="Fournisseur")
     prix = models.DecimalField(
         max_digits=10, decimal_places=2, 
@@ -145,7 +144,6 @@ class StockManager(models.Manager):
 class Stock(models.Model):
     num_stock = models.AutoField(primary_key=True)
     produit = models.OneToOneField(Produit, on_delete=models.PROTECT, related_name='stock', verbose_name="Produit")
-    type_produit = models.CharField(max_length=100, verbose_name="Type de produit")
     quantite_reelle = models.PositiveIntegerField(default=0, verbose_name="Quantité réelle")  # Déjà positif par défaut
     prix_unitaire = models.DecimalField(
         max_digits=10, decimal_places=2,
