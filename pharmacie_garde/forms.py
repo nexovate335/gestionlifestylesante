@@ -20,7 +20,7 @@ class PhGardeCommandeForm(forms.ModelForm):
     class Meta:
         model = PhGardeCommande
         fields = [
-            'produit', 'quantite_commande', 'type_produit',
+            'produit', 'quantite_commande',
             'prix', 'fournisseur', 'date_admission', 'date_expiration'
         ]
         labels = {
