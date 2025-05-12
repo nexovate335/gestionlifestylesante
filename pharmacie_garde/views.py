@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.utils.timezone import now
+from django.utils.timezone import localtime
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, View
 from django.shortcuts import get_object_or_404, redirect,render
 from django.utils.decorators import method_decorator
@@ -211,7 +212,7 @@ class PhGardeFacturePharmacieListView(ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        today = now().date()
+        today = localtime().date()
         context["factures_du_jour"] = PhGardeFacturePharmacie.objects.filter(facture_date_time__date=today)
         return context
     
@@ -223,7 +224,7 @@ class PhGardeFacturePharmacieCaisseListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        today = now().date()
+        today = localtime().date()
         context["factures_du_jour"] = PhGardeFacturePharmacie.objects.filter(facture_date_time__date=today)
         return context
 
@@ -236,7 +237,7 @@ class PhGardeFacturePharmacieRecepListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        today = now().date()
+        today = localtime().date()
         context["factures_du_jour"] = PhGardeFacturePharmacie.objects.filter(facture_date_time__date=today)
         return context
     

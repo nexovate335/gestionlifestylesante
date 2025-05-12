@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
+from django.utils.timezone import localtime
 from .models import FactureCaisseGarde, CaisseGarde, AutresDepensesGarde, RapportJournalierCaisseGarde
 from .forms import FactureCaisseGardeForm, FactureCaisseGardeFormUpdate, CaisseFormSet, AutresDepensesGardeForm, RapportJournalierCaisseGardeForm
 
@@ -16,7 +17,7 @@ class FactureCaisseRecepGardeListView(ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        today = now().date()
+        today = localtime().date()
         context["factures_du_jour"] = FactureCaisseGarde.objects.filter(facture_date_time__date=today)
         return context
     
@@ -28,7 +29,7 @@ class FactureCaisseGardeListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        today = now().date()
+        today = localtime().date()
         context["factures_du_jour"] = FactureCaisseGarde.objects.filter(facture_date_time__date=today)
         return context
 

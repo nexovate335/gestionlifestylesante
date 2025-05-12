@@ -3,7 +3,8 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 from django.shortcuts import get_object_or_404
-from django.utils.timezone import now, localdate
+from django.utils.timezone import now
+from django.utils.timezone import localtime
 from .models import FactureCaisse, Caisse, AutresDepenses, RapportJournalierCaisse
 from .forms import FactureCaisseForm, FactureCaisseFormUpdate, CaisseFormSet, AutresDepensesForm, RapportJournalierCaisseForm
 
@@ -16,10 +17,10 @@ class FactureCaisseRecepListView(ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        today = now().date()
+        today = localtime().date()
         context["factures_du_jour"] = FactureCaisse.objects.filter(facture_date_time__date=today)
         return context
-    
+        
     
 @method_decorator(login_required, name='dispatch')
 class FactureCaisseListView(ListView):
@@ -29,7 +30,7 @@ class FactureCaisseListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        today = now().date()
+        today = localtime().date()
         context["factures_du_jour"] = FactureCaisse.objects.filter(facture_date_time__date=today)
         return context
 
