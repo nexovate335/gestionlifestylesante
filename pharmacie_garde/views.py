@@ -4,6 +4,7 @@ from django.utils.timezone import localtime
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, View
 from django.shortcuts import get_object_or_404, redirect,render
 from django.utils.decorators import method_decorator
+from django.urls import reverse 
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from .models import  PhGardeCommande, PhGardeStock, PhGardeFacturePharmacie, PhGardeFactureAvance, PhGardeVente
@@ -274,11 +275,13 @@ class PhGardeFacturePharmacieUpdateView(UpdateView):
     model = PhGardeFacturePharmacie
     form_class = PhGardeFacturePharmacieFormUpdate
     template_name = "pharmacie_garde/phgardefactures/phgardefacturepharmacie_update.html"
-    success_url = reverse_lazy("pharmacie_garde:liste_factures_phgarde_caisse")
-
+    
     def form_invalid(self, form):
         print(form.errors)
         return super().form_invalid(form)
+    
+    def get_success_url(self):
+            return reverse('pharmacie_garde:voir_facture_phgarde', args=[self.object.numero_facture])
 
 #  Détail d'une facture (remplace `voir_facture_pharmacie`)
 @method_decorator(login_required, name='dispatch')

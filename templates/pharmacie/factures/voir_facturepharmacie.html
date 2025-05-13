@@ -123,7 +123,7 @@
 <div class="no-print" style="margin-top: 10px;">
     <div class="d-flex justify-content-end gap-2">
         <button class="btn btn-outline-secondary" onclick="window.print()">Imprimer</button>
-        <button class="btn btn-outline-danger" onclick="window.history.back()">Annuler</button>
+        <a href="{% url 'pharmacie:liste_factures_pharmacie_caisse' %}" class="btn btn-outline-secondary">Annuler</a>
     </div>
 </div>
 
