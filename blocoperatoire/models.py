@@ -45,4 +45,4 @@ class BlocOperatoire(models.Model):
         self.save()
 
     def __str__(self):
-        return f"{self.patient.numero_dossier} {self.patient.nom} - Actes: {self.actes}"
+        return f"Actes: {self.actes}"
