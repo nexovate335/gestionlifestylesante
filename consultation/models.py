@@ -60,7 +60,7 @@ class Consultation(models.Model):
         verbose_name_plural = "Consultations"
 
     def __str__(self):
-        return f"{self.patient.nom} {self.patient.prenom} {self.patient.numero_dossier} - numero de consultation: {self.id}"
+        return f" numero de consultation: {self.id}-{self.type_consultation}"
 
     def delete(self):
         self.deleted_at = now()
