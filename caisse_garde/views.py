@@ -39,7 +39,7 @@ class FactureCaisseGardeCreateView(CreateView):
     model = FactureCaisseGarde
     form_class = FactureCaisseGardeForm
     template_name = "caisse_garde/factures_garde/creer_facture_caisse_garde.html"
-    success_url = reverse_lazy("caisse_garde:liste_factures_caisse_garde")  # Redirection après création
+    success_url = reverse_lazy("caisse_garde:modifier_facture_caisse_garde")  # Redirection après création
 
     def form_valid(self, form):
         facture = form.save(commit=False)
@@ -65,7 +65,7 @@ class FactureCaisseGardeUpdateView(UpdateView):
     model = FactureCaisseGarde
     form_class = FactureCaisseGardeFormUpdate
     template_name = "caisse_garde/factures_garde/facturecaisse_update_garde.html"
-    success_url = reverse_lazy("caisse_garde:liste_factures_caisse_garde")
+    success_url = reverse_lazy("caisse_garde:voir_facture_caisse_garde")
 
     def form_invalid(self, form):
         print(form.errors)

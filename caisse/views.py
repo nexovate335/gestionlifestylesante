@@ -3,6 +3,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from django.utils.timezone import now
 from django.utils.timezone import localtime
 from .models import FactureCaisse, Caisse, AutresDepenses, RapportJournalierCaisse
@@ -40,12 +41,13 @@ class FactureCaisseCreateView(CreateView):
     model = FactureCaisse
     form_class = FactureCaisseForm
     template_name = "caisse/factures/creer_facture_caisse.html"
-    success_url = reverse_lazy("caisse:modifier_facture_caisse")  # Redirection après création
 
     def form_valid(self, form):
         facture = form.save(commit=False)
-        facture.save_by = self.request.user.personnel  # Associe l'utilisateur connecté
+        facture.save_by = self.request.user.personnel
         facture.save()
+
+        self.object = facture  # Important : pour que get_success_url() ait accès à self.object
 
         formset = CaisseFormSet(self.request.POST)
         if formset.is_valid():
@@ -55,18 +57,22 @@ class FactureCaisseCreateView(CreateView):
                 caisse.save()
         return super().form_valid(form)
 
+    def get_success_url(self):
+        return reverse('caisse:modifier_facture_caisse', args=[self.object.pk])
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["formset"] = CaisseFormSet()
         return context
-
 #  Modification d'une facture (remplace `modifier_factureCaisse`)
 @method_decorator(login_required, name='dispatch')
 class FactureCaisseUpdateView(UpdateView):
     model = FactureCaisse
     form_class = FactureCaisseFormUpdate
     template_name = "caisse/factures/facturecaisse_update.html"
-    success_url = reverse_lazy("caisse:voir_facture_caisse")
+
+    def get_success_url(self):
+        return reverse("caisse:voir_facture_caisse", args=[self.object.numero_facture])
 
     def form_invalid(self, form):
         print(form.errors)
