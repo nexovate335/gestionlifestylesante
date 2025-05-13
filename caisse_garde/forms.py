@@ -49,7 +49,7 @@ class AutresDepensesGardeForm(forms.ModelForm):
 class RapportJournalierCaisseGardeForm(forms.ModelForm):
     class Meta:
         model = RapportJournalierCaisseGarde
-        fields = ['total_encaisse', 'depense']
+        fields = ['total_encaisse', 'depense', 'commentaire']
         widgets = {
             'total_encaisse': forms.NumberInput(attrs={
                 'class': 'form-control',
@@ -61,5 +61,6 @@ class RapportJournalierCaisseGardeForm(forms.ModelForm):
                 'min': '0',
                 'step': '0.01'
             }),
+            'commentaire': forms.TextInput(attrs={'class': 'form-control'}),
         }
  

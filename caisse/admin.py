@@ -215,7 +215,7 @@ class AutresDepensesAdmin(BaseAdmin):
 
 @admin.register(RapportJournalierCaisse)
 class RapportJournalierCaisseAdmin(BaseAdmin):
-    list_display = ('caissier', 'total_encaisse', 'depense', 'reste', 'date')
+    list_display = ('caissier', 'total_encaisse', 'depense', 'reste','commentaire', 'date')
     list_filter = ('date', 'caissier')
     search_fields = ('caissier',)
     actions = BaseAdmin.actions + ['restore_rapports']

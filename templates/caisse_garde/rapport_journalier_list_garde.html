@@ -30,6 +30,7 @@
                                     <th>Total encaissé</th>
                                     <th>Dépense</th>
                                     <th>Reste</th>
+                                    <th>Commentaire</th>
                                     <th>Date</th>
                                 </tr>
                             </thead>
@@ -41,6 +42,7 @@
                                     <td>{{ rapport.total_encaisse }} FCFA</td>
                                     <td>{{ rapport.depense }} FCFA</td>
                                     <td>{{ rapport.reste }} FCFA</td>
+                                    <td>{{ rapport.commentaire }}</td>
                                     <td>{{ rapport.date|date:"d/m/Y H:i" }}</td>
                                 </tr>
                                 {% empty %}
