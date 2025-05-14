@@ -37,7 +37,7 @@ class Examen(models.Model):
         verbose_name_plural = "Examens"
 
     def __str__(self):
-        return f"{self.patient.nom} {self.patient.prenom}-{self.patient.numero_dossier} - Examen: {self.examen}"
+        return f"Examen: {self.examen}"
 
     def delete(self):
         self.deleted_at = now()
@@ -74,7 +74,7 @@ class Resultat(models.Model):
         verbose_name_plural = "Resultats"
 
     def __str__(self):
-        return f"{self.patient.nom} {self.patient.prenom} -{self.patient.numero_dossier} "
+        return f"{self.examen}-{self.resultat} "
 
     def delete(self):
         self.deleted_at = now()
@@ -119,7 +119,7 @@ class ExamenCytologiePv(models.Model):
         verbose_name_plural = "ExamensCytologiePv"
 
     def __str__(self):
-        return f"{self.patient.nom} {self.info.patient.prenom} -{self.patient.numero_dossier}"
+        return f"{self.id}"
 
     def delete(self):
         self.deleted_at = now()
@@ -162,7 +162,7 @@ class ExamenCytologieEcbu(models.Model):
         verbose_name_plural = "ExamensCytologieEcbu"
 
     def __str__(self):
-        return f"{self.patient.nom} {self.info.patient.prenom} -{self.patient.numero_dossier}"
+        return f"{self.id}"
 
     def delete(self):
         self.deleted_at = now()
