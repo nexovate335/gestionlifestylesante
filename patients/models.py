@@ -27,11 +27,11 @@ class Patient(models.Model):
     ]
 
     SITUATION_MATRIMONIALE_CHOICES = [
-        ('C', 'Célibataire'),
-        ('M', 'Marié(e)'),
-        ('D', 'Divorcé(e)'),
-        ('V', 'Veuf/Veuve'),
-        ('S', 'Séparé(e)'),
+        ('Célibataire', 'Célibataire'),
+        ('Marié(e)', 'Marié(e)'),
+        ('Divorcé(e)', 'Divorcé(e)'),
+        ('Veuf/Veuve', 'Veuf/Veuve'),
+        ('Séparé(e)', 'Séparé(e)'),
     ]
 
     TYPE_PERSONNE_CHOICES = [
@@ -78,7 +78,7 @@ class Patient(models.Model):
     )
     sexe = models.CharField(max_length=1, choices=SEXE_CHOICES, verbose_name="Sexe")
     situation_matrimoniale = models.CharField(
-        max_length=1,
+        max_length=25,
         choices=SITUATION_MATRIMONIALE_CHOICES,
         verbose_name="Situation matrimoniale"
     )
