@@ -17,7 +17,45 @@
                 </div>
                 
                 <div class="card-body">
-                    <!-- Barre de recherche -->
+                    <!-- Formulaire de filtrage -->
+                    <form method="get" class="row g-2 align-items-end mb-3">
+                        <div class="col-md-2">
+                            <label for="jour" class="form-label mb-0">Jour</label>
+                            <input type="number" name="jour" id="jour" min="1" max="31" class="form-control form-control-sm"
+                                   value="{{ request.GET.jour }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="mois" class="form-label mb-0">Mois</label>
+                            <input type="number" name="mois" id="mois" min="1" max="12" class="form-control form-control-sm"
+                                   value="{{ request.GET.mois }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="annee" class="form-label mb-0">Année</label>
+                            <input type="number" name="annee" id="annee" class="form-control form-control-sm"
+                                   value="{{ request.GET.annee }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="statut" class="form-label mb-0">Statut</label>
+                            <select name="statut" id="statut" class="form-select form-select-sm">
+                                <option value="">Tous</option>
+                                <option value="confirmé" {% if request.GET.statut == "confirmé" %}selected{% endif %}>Confirmé</option>
+                                <option value="annulé" {% if request.GET.statut == "annulé" %}selected{% endif %}>Annulé</option>
+                                <option value="en_attente" {% if request.GET.statut == "en_attente" %}selected{% endif %}>En attente</option>
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-sm btn-primary">
+                                <i class="bi bi-filter"></i> Filtrer
+                            </button>
+                        </div>
+                        <div class="col-auto">
+                            <a href="{% url 'rendezvous:rendezvous_list' %}" class="btn btn-sm btn-secondary">
+                                Réinitialiser
+                            </a>
+                        </div>
+                    </form>
+
+                    <!-- Barre de recherche JS -->
                     <div class="d-flex justify-content-end mb-3">
                         <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un rendez-vous...">
                     </div>
@@ -52,7 +90,7 @@
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="5" class="text-center">Aucun rendez-vous trouvé.</td>
+                                    <td colspan="6" class="text-center">Aucun rendez-vous trouvé.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -64,21 +102,17 @@
     </div>
 </div>
 
-<!-- Script de recherche -->
+<!-- Script de recherche côté client -->
 <script>
     document.getElementById('searchInput').addEventListener('keyup', function() {
         let filter = this.value.toLowerCase();
         let rows = document.querySelectorAll('#rendezvousTable tr');
 
         rows.forEach(row => {
-            let nameCell = row.querySelector('td:nth-child(1)'); // La première colonne correspond à nom_personne
+            let nameCell = row.querySelector('td:nth-child(1)');
             if (nameCell) {
                 let name = nameCell.textContent.toLowerCase();
-                if (name.includes(filter)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+                row.style.display = name.includes(filter) ? '' : 'none';
             }
         });
     });

@@ -11,7 +11,24 @@ class RendezVousListView(ListView):
     context_object_name = "rendezvous"
 
     def get_queryset(self):
-        return RendezVous.objects.all()  # Affiche les rendez-vous actifs
+        queryset = RendezVous.objects.filter(deleted_at__isnull=True)
+
+        jour = self.request.GET.get("jour")
+        mois = self.request.GET.get("mois")
+        annee = self.request.GET.get("annee")
+        statut = self.request.GET.get("statut")
+
+        if jour:
+            queryset = queryset.filter(jour_rdv=int(jour))
+        if mois:
+            queryset = queryset.filter(mois_rdv=int(mois))
+        if annee:
+            queryset = queryset.filter(annee_rdv=int(annee))
+        if statut and statut in dict(RendezVous.STATUT_CHOICES):
+            queryset = queryset.filter(statut=statut)
+
+        return queryset.order_by("heure_rdv")
+
 
 # Création d'un rendez-vous
 class RendezVousCreateView(CreateView):
