@@ -77,13 +77,15 @@
 
 <!-- Script de recherche -->
 <script>
-    document.getElementById('searchInput').addEventListener('keyup', function() {
+    document.getElementById('searchInput').addEventListener('keyup', function () {
         let filter = this.value.toLowerCase();
         let rows = document.querySelectorAll('#patientTable tr');
-        
+
         rows.forEach(row => {
-            let name = row.querySelector('.patient-name').textContent.toLowerCase();
-            if (name.includes(filter)) {
+            let numeroDossier = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            let nomPatient = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+
+            if (numeroDossier.includes(filter) || nomPatient.includes(filter)) {
                 row.style.display = '';
             } else {
                 row.style.display = 'none';
@@ -91,4 +93,5 @@
         });
     });
 </script>
+
 {% endblock %}

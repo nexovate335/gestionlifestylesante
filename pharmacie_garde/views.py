@@ -78,7 +78,7 @@ class PhGardeCommandeListView(ListView):
     context_object_name = "commandes"
 
     def get_queryset(self):
-        return PhGardeCommande.objects.filter(deleted_at__isnull=True)
+        return PhGardeCommande.objects.filter(deleted_at__isnull=True).order_by('produit__nom_produit')
 
 # Création d'une commande
 class PhGardeCommandeCreateView(CreateView):
@@ -136,7 +136,7 @@ class PhGardeGestionStockListView(ListView):
     context_object_name = "stocks"
 
     def get_queryset(self):
-        return PhGardeStock.objects.filter(deleted_at__isnull=True)  # Produits non supprimés
+        return PhGardeStock.objects.filter(deleted_at__isnull=True).order_by('produit__nom_produit')  # Produits non supprimés
     
     
 class PhGardeStockListView(ListView):
@@ -145,7 +145,7 @@ class PhGardeStockListView(ListView):
     context_object_name = "stocks"
 
     def get_queryset(self):
-        return PhGardeStock.objects.filter(deleted_at__isnull=True)  # Produits non supprimés
+        return PhGardeStock.objects.filter(deleted_at__isnull=True).order_by('produit__nom_produit')  # Produits non supprimés
 
 
 class PhGardeStockCreateView(CreateView):

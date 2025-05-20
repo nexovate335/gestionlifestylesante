@@ -147,7 +147,7 @@ class BaseAdmin(admin.ModelAdmin):
 class RendezVousAdmin(BaseAdmin):
     list_display = (
         'nom_docteur', 'nom_personne', 'jour_rdv', 'mois_rdv',
-        'annee_rdv', 'heure_rdv', 'statut', 'numero_dossier', 'date', 'deleted_at'
+        'annee_rdv', 'heure_rdv', 'statut', 'numero_dossier','commentaire', 'acte','date', 'deleted_at'
     )
     list_filter = ('mois_rdv', 'annee_rdv', 'statut', 'deleted_at')
     search_fields = ('nom_docteur', 'nom_personne', 'numero_dossier')

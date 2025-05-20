@@ -1,6 +1,7 @@
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, View
+from django.db.models.functions import Lower
 from .models import RendezVous
 from .forms import RendezVousForm
 
@@ -17,6 +18,7 @@ class RendezVousListView(ListView):
         mois = self.request.GET.get("mois")
         annee = self.request.GET.get("annee")
         statut = self.request.GET.get("statut")
+        acte = self.request.GET.get("acte")  # attendu comme 'oui' ou 'non'
 
         if jour:
             queryset = queryset.filter(jour_rdv=int(jour))
@@ -26,6 +28,10 @@ class RendezVousListView(ListView):
             queryset = queryset.filter(annee_rdv=int(annee))
         if statut and statut in dict(RendezVous.STATUT_CHOICES):
             queryset = queryset.filter(statut=statut)
+        if acte == "oui":
+            queryset = queryset.filter(acte=True)
+        elif acte == "non":
+            queryset = queryset.filter(acte=False)
 
         return queryset.order_by("heure_rdv")
 

@@ -139,7 +139,7 @@ class CommandeListView(ListView):
     context_object_name = "commandes"
 
     def get_queryset(self):
-        return Commande.objects.filter(deleted_at__isnull=True)
+        return Commande.objects.filter(deleted_at__isnull=True).order_by('produit__nom_produit')
 
 # Création d'une commande
 class CommandeCreateView(CreateView):
@@ -197,7 +197,7 @@ class GestionStockListView(ListView):
     context_object_name = "stocks"
 
     def get_queryset(self):
-        return Stock.objects.filter(deleted_at__isnull=True)  # Produits non supprimés
+        return Stock.objects.filter(deleted_at__isnull=True).order_by('produit__nom_produit')  # Produits non supprimés
     
     
 class StockListView(ListView):
@@ -206,7 +206,7 @@ class StockListView(ListView):
     context_object_name = "stocks"
 
     def get_queryset(self):
-        return Stock.objects.filter(deleted_at__isnull=True)  # Produits non supprimés
+        return Stock.objects.filter(deleted_at__isnull=True).select_related('produit').order_by('produit__nom_produit') # Produits non supprimés
 
 
 class StockCreateView(CreateView):

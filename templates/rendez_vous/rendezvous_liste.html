@@ -1,5 +1,4 @@
 {% extends "reception/baseRec.html" %}
-
 {% load static %}
 
 {% block content %}
@@ -43,6 +42,14 @@
                                 <option value="en_attente" {% if request.GET.statut == "en_attente" %}selected{% endif %}>En attente</option>
                             </select>
                         </div>
+                        <div class="col-md-2">
+                            <label for="acte" class="form-label mb-0">Acte</label>
+                            <select name="acte" id="acte" class="form-select form-select-sm">
+                                <option value="">Tous</option>
+                                <option value="oui" {% if request.GET.acte == "oui" %}selected{% endif %}>Oui</option>
+                                <option value="non" {% if request.GET.acte == "non" %}selected{% endif %}>Non</option>
+                            </select>
+                        </div>
                         <div class="col-auto">
                             <button type="submit" class="btn btn-sm btn-primary">
                                 <i class="bi bi-filter"></i> Filtrer
@@ -69,6 +76,7 @@
                                     <th>Date et Heure</th>
                                     <th>Statut</th>
                                     <th>Commentaire</th>
+                                    <th>Acte</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -81,6 +89,13 @@
                                     <td>{{ rendezvous.statut }}</td>
                                     <td>{{ rendezvous.commentaire|truncatechars:50 }}</td>
                                     <td>
+                                        {% if rendezvous.acte %}
+                                            Oui
+                                        {% else %}
+                                            Non
+                                        {% endif %}
+                                    </td>
+                                    <td>
                                         <div class="d-inline-flex gap-1">
                                             <a href="{% url 'rendezvous:rendezvous_detail' pk=rendezvous.pk %}" class="btn btn-outline-info btn-sm">
                                                 <i class="bi bi-eye"></i> Voir
@@ -90,7 +105,7 @@
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="6" class="text-center">Aucun rendez-vous trouvé.</td>
+                                    <td colspan="7" class="text-center">Aucun rendez-vous trouvé.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

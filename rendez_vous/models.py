@@ -48,8 +48,11 @@ class RendezVous(models.Model):
     ]
     statut = models.CharField(max_length=15, choices=STATUT_CHOICES, default='en_attente', verbose_name="Statut du rendez-vous")
 
-    numero_dossier=models.CharField(max_length=100,null=True, blank=True, verbose_name="numero du dossier")
+    numero_dossier = models.CharField(max_length=100, null=True, blank=True, verbose_name="Numéro du dossier")
     commentaire = models.TextField(null=True, max_length=1000, blank=True, verbose_name="Commentaire")
+
+    acte = models.BooleanField(default=False, verbose_name="Actes réalisés ou prévus")  # Passage en booléen
+
     date = models.DateTimeField(auto_now_add=True, verbose_name="Date et heure de création")
     deleted_at = models.DateTimeField(null=True, blank=True, verbose_name="Date de suppression")
 
