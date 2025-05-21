@@ -35,7 +35,7 @@ class EchographieUpdateView(UpdateView):
     model = Echographie
     form_class = EchographieForm
     template_name = "echographie/echographies/echographie_form1.html"
-    success_url = "/echographies/"
+    success_url = reverse_lazy("echographie:echographie_list")
 
 # Suppression logique d'une échographie
 class EchographieDeleteView(View):
