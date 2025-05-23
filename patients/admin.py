@@ -150,7 +150,7 @@ class PatientAdmin(BaseAdmin):
         'piece_identite', 'niveau_instruction', 'groupe_sanguin',
         'situation_matrimoniale', 'type_personne', 'adresse', 'telephone',
         'numero_dossier', 'personne_contacter', 'adresse_personne_contacter',
-        'telephone_personne_contacter', 'lien', 'medecin', 'assistant', 'date',
+        'telephone_personne_contacter', 'lien', 'medecin', 'assistant', 'save_by', 'date',
     )
     list_filter = ('sexe', 'profession', 'situation_matrimoniale', 'type_personne', 'nationalite')
     search_fields = ('nom', 'prenom', 'telephone', 'adresse')
@@ -172,6 +172,6 @@ class PatientAdmin(BaseAdmin):
             )
         }),
         ("Infos supplémentaires", {
-            'fields': ('medecin', 'assistant')
+            'fields': ('medecin', 'assistant','save_by')
         }),
     )

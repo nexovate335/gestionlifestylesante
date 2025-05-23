@@ -1,7 +1,6 @@
 {% extends 'caisse/baseCai.html' %}
 
 {% block content %}
-
 <div class="app-body">
     <div class="row gx-3">
         <div class="col-sm-12">
@@ -49,7 +48,7 @@
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="factureTable">
+                                    <tbody id="factureTableJour">
                                         {% for facture in factures_du_jour %}
                                             <tr>
                                                 <td>{{ facture.numero_facture }}</td>
@@ -105,7 +104,7 @@
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="factureTable">
+                                    <tbody id="factureTableToutes">
                                         {% for facture in factures %}
                                             <tr>
                                                 <td>{{ facture.numero_facture }}</td>
@@ -135,7 +134,6 @@
                                                         <i class="bi bi-eye"></i> Facture
                                                     </a>
                                                 </td>
-                                                <td colspan="12" class="text-center">Aucun résultat trouvé.</td>
                                             </tr>
                                         {% empty %}
                                             <tr>
@@ -153,20 +151,19 @@
     </div>
 </div>
 
-<!-- Script de recherche (s'applique uniquement à l'onglet "Toutes les factures") -->
+<!-- Script de recherche -->
 <script>
     const searchInput = document.getElementById('searchInput');
 
     function updateSearchResults() {
         const filter = searchInput.value.toLowerCase();
         const activeTab = document.querySelector('.tab-pane.active');
-        const rows = activeTab.querySelectorAll('tbody tr');
+        const tbody = activeTab.querySelector('tbody');
+        if (!tbody) return;
+        const rows = tbody.querySelectorAll('tr');
         let matchCount = 0;
 
         rows.forEach(row => {
-            // Ne pas filtrer les lignes "Aucun résultat trouvé"
-            if (row.id && row.id.startsWith("noResults")) return;
-
             const cells = row.querySelectorAll('td');
             if (cells.length >= 4) {
                 const numeroDossier = cells[1].textContent.toLowerCase();
@@ -182,12 +179,6 @@
                 if (match) matchCount++;
             }
         });
-
-        // Afficher ou masquer le message "Aucun résultat"
-        const noResultsRow = activeTab.querySelector('tr[id^="noResults"]');
-        if (noResultsRow) {
-            noResultsRow.style.display = matchCount === 0 ? '' : 'none';
-        }
     }
 
     searchInput.addEventListener('keyup', updateSearchResults);

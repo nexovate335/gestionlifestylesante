@@ -2,6 +2,8 @@ from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, View
 from django.utils.timezone import now
+from django.contrib.auth.mixins import LoginRequiredMixin
+from personnels.mixins import SaveByPersonnelMixin
 from .models import Patient
 from .forms import PatientForm, PatientLabForm
 
@@ -24,7 +26,7 @@ class PatientLabListView(ListView):
         return Patient.objects.filter(deleted_at__isnull=True)  # Patients non supprimés
 
 # Création d'un patient
-class PatientCreateView(CreateView):
+class PatientCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView):
     model = Patient
     form_class = PatientForm
     template_name = "patient/patients/patient_form.html"

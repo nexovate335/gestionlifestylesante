@@ -3,9 +3,11 @@ from django.views.generic import (
 )
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.timezone import now
 from .models import Echographie
 from .forms import EchographieForm
+from personnels.mixins import SaveByPersonnelMixin
 
 # Liste des échographies
 class EchographieListView(ListView):
@@ -17,11 +19,12 @@ class EchographieListView(ListView):
         return Echographie.objects.filter(deleted_at__isnull=True)  
 
 # Création d'une échographie
-class EchographieCreateView(CreateView):
+class EchographieCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView):
     model = Echographie
     form_class = EchographieForm
     template_name = "echographie/echographies/echographie_form.html"
     success_url = reverse_lazy("echographie:echographie_list")
+
 
 # Détails d'une échographie
 class EchographieDetailView(DetailView):

@@ -1,8 +1,6 @@
 {% extends "reception/baseRec.html" %}
 
-
 {% block content %}
-
 <div class="app-body">
     <div class="row gx-3">
         <div class="col-sm-12">
@@ -10,6 +8,7 @@
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">Liste des Factures Caisse</h5>
                 </div>
+
                 <div class="card-body">
                     <!-- Barre de recherche -->
                     <div class="d-flex justify-content-end mb-3">
@@ -41,9 +40,10 @@
                                             <th>Montant Total</th>
                                             <th>Reste à payer</th>
                                             <th>Statut</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="factureTable">
+                                    <tbody id="factureTableJour">
                                         {% for facture in factures_du_jour %}
                                             <tr>
                                                 <td>{{ facture.numero_facture }}</td>
@@ -55,6 +55,11 @@
                                                 <td>{{ facture.reste_a_payer }} FCFA</td>
                                                 <td class="{% if facture.paye %}text-success{% else %}text-danger{% endif %}">
                                                     {% if facture.paye %} Payée {% else %} Non payée {% endif %}
+                                                </td>
+                                                <td>
+                                                    <a href="{% url 'caisse:voir_facture_caisse' facture.numero_facture %}" class="btn btn-outline-info btn-sm">
+                                                        <i class="bi bi-eye"></i> Voir
+                                                    </a>
                                                 </td>
                                             </tr>
                                         {% empty %}
@@ -82,9 +87,10 @@
                                             <th>Reste à payer</th>
                                             <th>Statut</th>
                                             <th>Commentaire</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="factureTable">
+                                    <tbody id="factureTableToutes">
                                         {% for facture in factures %}
                                             <tr>
                                                 <td>{{ facture.numero_facture }}</td>
@@ -100,6 +106,11 @@
                                                     {% if facture.paye %} Payée {% else %} Non payée {% endif %}
                                                 </td>
                                                 <td>{{ facture.commentaire|default:"Aucun commentaire" }}</td>
+                                                <td>
+                                                    <a href="{% url 'caisse:voir_facture_caisse' facture.numero_facture %}" class="btn btn-outline-info btn-sm">
+                                                        <i class="bi bi-eye"></i> Voir
+                                                    </a>
+                                                </td>
                                             </tr>
                                         {% empty %}
                                             <tr>
@@ -117,20 +128,18 @@
     </div>
 </div>
 
-<!-- Script de recherche (s'applique uniquement à l'onglet "Toutes les factures") -->
+<!-- Script de recherche -->
 <script>
     const searchInput = document.getElementById('searchInput');
 
     function updateSearchResults() {
         const filter = searchInput.value.toLowerCase();
         const activeTab = document.querySelector('.tab-pane.active');
-        const rows = activeTab.querySelectorAll('tbody tr');
-        let matchCount = 0;
+        const tbody = activeTab.querySelector('tbody');
+        if (!tbody) return;
+        const rows = tbody.querySelectorAll('tr');
 
         rows.forEach(row => {
-            // Ne pas filtrer les lignes "Aucun résultat trouvé"
-            if (row.id && row.id.startsWith("noResults")) return;
-
             const cells = row.querySelectorAll('td');
             if (cells.length >= 4) {
                 const numeroDossier = cells[1].textContent.toLowerCase();
@@ -143,15 +152,8 @@
                     nomPersonne.includes(filter);
 
                 row.style.display = match ? '' : 'none';
-                if (match) matchCount++;
             }
         });
-
-        // Afficher ou masquer le message "Aucun résultat"
-        const noResultsRow = activeTab.querySelector('tr[id^="noResults"]');
-        if (noResultsRow) {
-            noResultsRow.style.display = matchCount === 0 ? '' : 'none';
-        }
     }
 
     searchInput.addEventListener('keyup', updateSearchResults);
@@ -163,6 +165,4 @@
         });
     });
 </script>
-
-
 {% endblock %}

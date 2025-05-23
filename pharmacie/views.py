@@ -271,12 +271,19 @@ class FacturePharmacieListView(ListView):
     model = FacturePharmacie
     template_name = "pharmacie/factures/facture_list_pharmacie.html"
     context_object_name = "factures"
-    
+
+    def get_queryset(self):
+        # Toutes les factures triées par date décroissante
+        return FacturePharmacie.objects.all().order_by('-facture_date_time')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         today = localtime().date()
-        context["factures_du_jour"] = FacturePharmacie.objects.filter(facture_date_time__date=today)
+        context["factures_du_jour"] = FacturePharmacie.objects.filter(
+            facture_date_time__date=today
+        ).order_by('-facture_date_time')
         return context
+    
     
 @method_decorator(login_required, name='dispatch')
 class FacturePharmacieCaisseListView(ListView):
@@ -284,10 +291,16 @@ class FacturePharmacieCaisseListView(ListView):
     template_name = "pharmacie/factures/caisse_facture_list_pharmacie.html"
     context_object_name = "factures"
 
+    def get_queryset(self):
+        # Retourne toutes les factures triées par date décroissante
+        return FacturePharmacie.objects.all().order_by('-facture_date_time')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         today = localtime().date()
-        context["factures_du_jour"] = FacturePharmacie.objects.filter(facture_date_time__date=today)
+        context["factures_du_jour"] = FacturePharmacie.objects.filter(
+            facture_date_time__date=today
+        ).order_by('-facture_date_time')
         return context
 
 
@@ -297,10 +310,16 @@ class FacturePharmacieRecepListView(ListView):
     template_name = "pharmacie/factures/recep_facture_list_pharmacie.html"
     context_object_name = "factures"
 
+    def get_queryset(self):
+        # Liste complète, triée par date décroissante
+        return FacturePharmacie.objects.all().order_by('-facture_date_time')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         today = localtime().date()
-        context["factures_du_jour"] = FacturePharmacie.objects.filter(facture_date_time__date=today)
+        context["factures_du_jour"] = FacturePharmacie.objects.filter(
+            facture_date_time__date=today
+        ).order_by('-facture_date_time')
         return context
 
 

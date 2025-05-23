@@ -2,6 +2,8 @@ from django.db import models
 from django_countries.fields import CountryField
 from django.utils.timezone import now
 import random
+from personnels.models import Personnel
+
 
 
 
@@ -102,6 +104,7 @@ class Patient(models.Model):
     lien = models.CharField(max_length=255, null=True, blank=True, verbose_name="Lien")
     medecin = models.CharField(max_length=255, null=True, blank=True, verbose_name="Médecin" )
     assistant = models.CharField(max_length=255, null=True, blank=True, verbose_name="Assistant(e)" )
+    save_by = models.ForeignKey(Personnel, on_delete=models.PROTECT, verbose_name="Agent", null=True,blank=True)  
     date = models.DateTimeField(auto_now_add=True, verbose_name="Date et heure de création")
     deleted_at = models.DateTimeField(null=True, blank=True, verbose_name="Supprimé le")  # Champ pour suppression logique
 

@@ -2,6 +2,8 @@ from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, View
 from django.utils.timezone import now
+from django.contrib.auth.mixins import LoginRequiredMixin
+from personnels.mixins import SaveByPersonnelMixin
 from .models import Vaccin
 from .forms import VaccinForm
 
@@ -15,7 +17,7 @@ class VaccinListView(ListView):
         return Vaccin.objects.filter(deleted_at__isnull=True)
 
 #  Création d'un vaccin
-class VaccinCreateView(CreateView):
+class VaccinCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView):
     model = Vaccin
     form_class = VaccinForm
     template_name = "vaccin/vaccin_form.html"

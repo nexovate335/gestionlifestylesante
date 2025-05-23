@@ -166,6 +166,7 @@ class BlocOperatoireAdmin(BaseAdmin):
         'instrumentiste',
         'panseur',
         'anesthesiste',
+        'save_by',
         'date',
     )
     list_filter = ('date', 'medecin')
@@ -180,7 +181,7 @@ class BlocOperatoireAdmin(BaseAdmin):
             'fields': (
                 'actes', 'montant', 'medecin', 'aides',
                 'instrumentiste', 'panseur', 'anesthesiste',
-                'observation', 'date'
+                'observation', 'save_by', 'date'
             )
         }),
     )

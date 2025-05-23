@@ -9,6 +9,8 @@ from .forms import ConsultationForm, SuiteConsultationForm, SuiviConsultationFor
 from patients.models import Patient
 from django.forms import inlineformset_factory
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from personnels.mixins import SaveByPersonnelMixin
 
 # Liste des consultations
 class ConsultationListView(ListView):
@@ -39,11 +41,12 @@ class SuiviConsultationListView(ListView):
 
 
 # Création d'une consultation   
-class ConsultationCreateView(CreateView):
+class ConsultationCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView):
     model = Consultation
     form_class = ConsultationForm
     template_name = "consultation/consultations/consultation_form.html"
     success_url = reverse_lazy('consultation:consultation_list')
+
     
 # Détails d'une consultation
 class ConsultationDetailView(DetailView):

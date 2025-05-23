@@ -42,7 +42,7 @@
                                             <th>Statut</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="factureTable">
+                                    <tbody id="factureTableJour">
                                         {% for facture in factures_du_jour %}
                                             <tr>
                                                 <td>{{ facture.numero_facture }}</td>
@@ -59,6 +59,7 @@
                                         {% empty %}
                                             <tr><td colspan="12" class="text-center">Aucune facture créée aujourd’hui.</td></tr>
                                         {% endfor %}
+                                        <tr id="noResultsJour" style="display: none;"><td colspan="12" class="text-center">Aucun résultat trouvé.</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -83,7 +84,7 @@
                                             <th>Commentaire</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="factureTable">
+                                    <tbody id="factureTableToutes">
                                         {% for facture in factures %}
                                             <tr>
                                                 <td>{{ facture.numero_facture }}</td>
@@ -101,10 +102,9 @@
                                                 <td>{{ facture.commentaire|default:"Aucun commentaire" }}</td>
                                             </tr>
                                         {% empty %}
-                                            <tr>
-                                                <td colspan="12" class="text-center">Aucune facture trouvée.</td>
-                                            </tr>
+                                            <tr><td colspan="12" class="text-center">Aucune facture trouvée.</td></tr>
                                         {% endfor %}
+                                        <tr id="noResultsToutes" style="display: none;"><td colspan="12" class="text-center">Aucun résultat trouvé.</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -116,7 +116,7 @@
     </div>
 </div>
 
-<!-- Script de recherche (s'applique uniquement à l'onglet "Toutes les factures") -->
+<!-- Script de recherche (pour les deux onglets) -->
 <script>
     const searchInput = document.getElementById('searchInput');
 
@@ -127,7 +127,6 @@
         let matchCount = 0;
 
         rows.forEach(row => {
-            // Ne pas filtrer les lignes "Aucun résultat trouvé"
             if (row.id && row.id.startsWith("noResults")) return;
 
             const cells = row.querySelectorAll('td');
@@ -146,7 +145,6 @@
             }
         });
 
-        // Afficher ou masquer le message "Aucun résultat"
         const noResultsRow = activeTab.querySelector('tr[id^="noResults"]');
         if (noResultsRow) {
             noResultsRow.style.display = matchCount === 0 ? '' : 'none';

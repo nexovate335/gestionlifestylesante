@@ -1,6 +1,8 @@
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, View
 from django.utils.timezone import now
+from django.contrib.auth.mixins import LoginRequiredMixin
+from personnels.mixins import SaveByPersonnelMixin
 from .models import Pansement, Patient
 from .forms import PansementForm
 
@@ -17,7 +19,7 @@ class PansementListView(ListView):
 
 
 # Vue pour la création d'un pansement
-class PansementCreateView(CreateView):
+class PansementCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView):
     model = Pansement
     form_class = PansementForm
     template_name = "pansement/pansements/pansement_form.html"

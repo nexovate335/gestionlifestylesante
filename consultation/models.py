@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.timezone import now
 from patients.models import Patient
+from personnels.models import Personnel
+
 
 class ConsultationManager(models.Manager):
     def get_queryset(self):
@@ -49,6 +51,7 @@ class Consultation(models.Model):
     atcd_arret_ecole = models.BooleanField(default=False, verbose_name="Arrêt de la scolarisation")
     atcd_victime_guerre = models.BooleanField(default=False, verbose_name="Victime de guerre")
     suivi_medecin = models.TextField(null=True, blank=True, verbose_name="Suivi du médecin")
+    save_by = models.ForeignKey(Personnel, on_delete=models.PROTECT, verbose_name="Agent",  null=True,blank=True)
     date = models.DateTimeField(auto_now_add=True, verbose_name="Date et heure de création")
     deleted_at = models.DateTimeField(null=True, blank=True, verbose_name="Supprimé le")
 
@@ -97,6 +100,7 @@ class Ordonnance(models.Model):
     date = models.DateTimeField(auto_now_add=True, verbose_name="Date de création")
     commentaire = models.TextField(null=True, blank=True, verbose_name="Commentaire général")
     prescripteur = models.CharField(max_length=100, null=True, blank=True, verbose_name="Prescripteur")
+    save_by = models.ForeignKey(Personnel, on_delete=models.PROTECT, verbose_name="Agent",  null=True,blank=True)
     deleted_at = models.DateTimeField(null=True, blank=True, verbose_name="Supprimé le")
 
     objects = OrdonnanceManager()

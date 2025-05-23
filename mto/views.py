@@ -2,8 +2,10 @@ from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, View
 from django.utils.timezone import now
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Mto
 from .forms import MtoForm
+from personnels.mixins import SaveByPersonnelMixin
 
 # Liste des Mtos actifs (non supprimés)
 class MtoListView(ListView):
@@ -15,18 +17,12 @@ class MtoListView(ListView):
         return Mto.objects.filter(deleted_at__isnull=True)  # Mtos non supprimés
 
 # Création d'un Mto
-class MtoCreateView(CreateView):
+class MtoCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView):
     model = Mto
     form_class = MtoForm
     template_name = "mto/mtos/mto_form.html"
     success_url = reverse_lazy("mto:mto_list")
 
-    def form_valid(self, form):
-        if form.is_valid():
-            mto = form.save(commit=False)
-            mto.save()
-            return redirect(self.success_url)
-        return self.form_invalid(form)
 
 # Détails d'un Mto
 class MtoDetailView(DetailView):

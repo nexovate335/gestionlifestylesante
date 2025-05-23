@@ -4,6 +4,8 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, V
 from django.utils.timezone import now
 from .models import Hospitalisation
 from .forms import HospitalisationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from personnels.mixins import SaveByPersonnelMixin
 
 # Liste des hospitalisations actives
 class HospitalisationListView(ListView):
@@ -15,18 +17,12 @@ class HospitalisationListView(ListView):
         return Hospitalisation.objects.filter(deleted_at__isnull=True)  # Hospitalisations non supprimées
 
 # Création d'une hospitalisation
-class HospitalisationCreateView(CreateView):
+class HospitalisationCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView):
     model = Hospitalisation
     form_class = HospitalisationForm
     template_name = "hospitalisation/hospitalisations/hospitalisation_form.html"
     success_url = reverse_lazy("hospitalisation:hospitalisation_list")
 
-    def form_valid(self, form):
-        if form.is_valid():
-            hospitalisation = form.save(commit=False)
-            hospitalisation.save()
-            return redirect(self.success_url)
-        return self.form_invalid(form)
 
 # Détails d'une hospitalisation
 class HospitalisationDetailView(DetailView):

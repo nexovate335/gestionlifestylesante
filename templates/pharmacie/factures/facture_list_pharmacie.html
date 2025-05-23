@@ -1,23 +1,19 @@
 {% extends 'pharmacie/basePh.html' %}
 
-
 {% block content %}
-
 <div class="app-body">
     <div class="row gx-3">
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">Liste des Factures Pharmacie</h5>
-                    <div class="d-flex gap-2">
-                        <a href="{% url 'pharmacie:creer_facture_pharmacie' %}" class="btn btn-primary btn-sm">
-                            <i class="bi bi-plus-circle"></i>Créer une nouvelle facture
-                        </a>
-                    </div>
+                    <a href="{% url 'pharmacie:creer_facture_pharmacie' %}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-plus-circle"></i> Nouvelle facture
+                    </a>
                 </div>
 
                 <div class="card-body">
-                    <!-- Barre de recherche -->
+                    <!-- Recherche -->
                     <div class="d-flex justify-content-end mb-3">
                         <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher une facture...">
                     </div>
@@ -33,23 +29,23 @@
                     </ul>
 
                     <div class="tab-content" id="factureTabsContent">
-                        <!-- Tab: Factures du jour -->
+                        <!-- Tab : Factures du jour -->
                         <div class="tab-pane fade show active" id="jour" role="tabpanel">
-                            <div class="table-responsive mt-3">
-                                <table class="table truncate m-0 align-middle">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Numéro de dossier</th>
+                                            <th>Dossier</th>
                                             <th>Patient</th>
-                                            <th>Nom Personne</th>
-                                            <th>Date de création</th>
-                                            <th>Montant Total</th>
-                                            <th>Reste à payer</th>
+                                            <th>Nom personne</th>
+                                            <th>Date</th>
+                                            <th>Total</th>
+                                            <th>Reste</th>
                                             <th>Statut</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="factureTable">
+                                    <tbody>
                                         {% for facture in factures_du_jour %}
                                             <tr>
                                                 <td>{{ facture.numero_facture }}</td>
@@ -57,40 +53,40 @@
                                                 <td>{{ facture.patient.nom }} {{ facture.patient.prenom }}</td>
                                                 <td>{{ facture.nom_personne }}</td>
                                                 <td>{{ facture.facture_date_time|date:"d/m/Y H:i" }}</td>
-                                                <td>{{ facture.total }} FCFA</td>
-                                                <td>{{ facture.reste_a_payer }} FCFA</td>
+                                                <td>{{ facture.total|floatformat:0 }} FCFA</td>
+                                                <td>{{ facture.reste_a_payer|floatformat:0 }} FCFA</td>
                                                 <td class="{% if facture.paye %}text-success{% else %}text-danger{% endif %}">
-                                                    {% if facture.paye %} Payée {% else %} Non payée {% endif %}
+                                                    {% if facture.paye %}Payée{% else %}Non payée{% endif %}
                                                 </td>
                                             </tr>
                                         {% empty %}
-                                            <tr><td colspan="12" class="text-center">Aucune facture créée aujourd’hui.</td></tr>
+                                            <tr><td colspan="8" class="text-center">Aucune facture aujourd’hui.</td></tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
 
-                        <!-- Tab: Toutes les factures -->
+                        <!-- Tab : Toutes les factures -->
                         <div class="tab-pane fade" id="toutes" role="tabpanel">
-                            <div class="table-responsive mt-3">
-                                <table id="basicExample" class="table truncate m-0 align-middle">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Numéro de dossier</th>
+                                            <th>Dossier</th>
                                             <th>Patient</th>
-                                            <th>Nom Personne</th>
-                                            <th>Date de création</th>
-                                            <th>Montant Total</th>
-                                            <th>Total somme versée</th>
+                                            <th>Nom personne</th>
+                                            <th>Date</th>
+                                            <th>Total</th>
+                                            <th>Versé</th>
                                             <th>Avance</th>
-                                            <th>Reste à payer</th>
+                                            <th>Reste</th>
                                             <th>Statut</th>
                                             <th>Commentaire</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="factureTable">
+                                    <tbody>
                                         {% for facture in factures %}
                                             <tr>
                                                 <td>{{ facture.numero_facture }}</td>
@@ -98,32 +94,30 @@
                                                 <td>{{ facture.patient.nom }} {{ facture.patient.prenom }}</td>
                                                 <td>{{ facture.nom_personne }}</td>
                                                 <td>{{ facture.facture_date_time|date:"d/m/Y H:i" }}</td>
-                                                <td>{{ facture.total }} FCFA</td>
-                                                <td>{{ facture.total_somme_verse }} FCFA</td>
-                                                <td>{{ facture.avance }} FCFA</td>
-                                                <td>{{ facture.reste_a_payer }} FCFA</td>
+                                                <td>{{ facture.total|floatformat:0 }} FCFA</td>
+                                                <td>{{ facture.total_somme_verse|floatformat:0 }} FCFA</td>
+                                                <td>{{ facture.avance|floatformat:0 }} FCFA</td>
+                                                <td>{{ facture.reste_a_payer|floatformat:0 }} FCFA</td>
                                                 <td class="{% if facture.paye %}text-success{% else %}text-danger{% endif %}">
-                                                    {% if facture.paye %} Payée {% else %} Non payée {% endif %}
+                                                    {% if facture.paye %}Payée{% else %}Non payée{% endif %}
                                                 </td>
-                                                <td>{{ facture.commentaire|default:"Aucun commentaire" }}</td>
+                                                <td>{{ facture.commentaire|default:"-" }}</td>
                                             </tr>
                                         {% empty %}
-                                            <tr>
-                                                <td colspan="12" class="text-center">Aucune facture trouvée.</td>
-                                            </tr>
+                                            <tr><td colspan="11" class="text-center">Aucune facture enregistrée.</td></tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                    </div> <!-- end tab content -->
+                    </div> <!-- /tab-content -->
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Script de recherche (s'applique uniquement à l'onglet "Toutes les factures") -->
+<!-- Recherche dynamique -->
 <script>
     const searchInput = document.getElementById('searchInput');
 
@@ -131,44 +125,22 @@
         const filter = searchInput.value.toLowerCase();
         const activeTab = document.querySelector('.tab-pane.active');
         const rows = activeTab.querySelectorAll('tbody tr');
-        let matchCount = 0;
 
         rows.forEach(row => {
-            // Ne pas filtrer les lignes "Aucun résultat trouvé"
-            if (row.id && row.id.startsWith("noResults")) return;
-
             const cells = row.querySelectorAll('td');
-            if (cells.length >= 4) {
-                const numeroDossier = cells[1].textContent.toLowerCase();
-                const nomPatient = cells[2].textContent.toLowerCase();
-                const nomPersonne = cells[3].textContent.toLowerCase();
-
-                const match =
-                    numeroDossier.includes(filter) ||
-                    nomPatient.includes(filter) ||
-                    nomPersonne.includes(filter);
-
-                row.style.display = match ? '' : 'none';
-                if (match) matchCount++;
-            }
+            const match = Array.from(cells).some(cell =>
+                cell.textContent.toLowerCase().includes(filter)
+            );
+            row.style.display = match ? '' : 'none';
         });
-
-        // Afficher ou masquer le message "Aucun résultat"
-        const noResultsRow = activeTab.querySelector('tr[id^="noResults"]');
-        if (noResultsRow) {
-            noResultsRow.style.display = matchCount === 0 ? '' : 'none';
-        }
     }
 
     searchInput.addEventListener('keyup', updateSearchResults);
-
     document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(tab => {
-        tab.addEventListener('shown.bs.tab', function () {
+        tab.addEventListener('shown.bs.tab', () => {
             searchInput.value = '';
             updateSearchResults();
         });
     });
 </script>
-
-
 {% endblock %}

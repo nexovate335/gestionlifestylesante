@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 from patients.models import Patient
+from personnels.models import Personnel
 
 class BlocOperatoireManager(models.Manager):
     """Gestionnaire personnalisé pour le modèle BlocOperatoire."""
@@ -24,6 +25,7 @@ class BlocOperatoire(models.Model):
     panseur = models.CharField(max_length=100, verbose_name="Panseur", blank=True, null=True)
     anesthesiste = models.CharField(max_length=100, verbose_name="Anesthésiste", blank=True, null=True)
     observation = models.TextField(null=True, blank=True, verbose_name="Observation")
+    save_by = models.ForeignKey(Personnel, on_delete=models.PROTECT, verbose_name="Agent", null=True,blank=True)
     date = models.DateTimeField(auto_now_add=True, verbose_name="Date et heure de création")
     deleted_at = models.DateTimeField(null=True, blank=True, verbose_name="Supprimé le")  # Champ pour suppression logique
 

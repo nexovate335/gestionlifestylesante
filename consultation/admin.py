@@ -156,6 +156,7 @@ class ConsultationAdmin(BaseAdmin):
         'medecin',
         'assistant',
         'suivi_medecin',
+        'save_by',
         'date',
     )
     list_filter = ('date', 'type_consultation', 'medecin')
@@ -176,7 +177,7 @@ class ConsultationAdmin(BaseAdmin):
             'fields': ('patient','nom_personne', 'type_consultation', 'date')
         }),
         ("Personnel médical", {
-            'fields': ('medecin', 'assistant', 'suivi_medecin')
+            'fields': ('medecin', 'assistant', 'suivi_medecin', 'save_by',)
         }),
         ("Motif et commentaire", {
             'fields': ('motif_consultation', 'commentaire')
@@ -229,6 +230,7 @@ class OrdonnanceAdmin(BaseAdmin):
     list_display = (
         'consultation',
         'prescripteur',
+        'save_by',
         'date',
     )
     list_filter = ('date', 'prescripteur')

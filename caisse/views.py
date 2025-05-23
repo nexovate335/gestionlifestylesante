@@ -14,12 +14,17 @@ from .forms import FactureCaisseForm, FactureCaisseFormUpdate, CaisseFormSet, Au
 class FactureCaisseRecepListView(ListView):
     model = FactureCaisse
     template_name = "caisse/factures/facture_list_caisse_recep.html"
-    context_object_name = "factures"
-    
+    context_object_name = "factures"  # Toutes les factures
+
+    def get_queryset(self):
+        return FactureCaisse.objects.all().order_by("-facture_date_time")  # Onglet "toutes"
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         today = localtime().date()
-        context["factures_du_jour"] = FactureCaisse.objects.filter(facture_date_time__date=today)
+        context["factures_du_jour"] = FactureCaisse.objects.filter(
+            facture_date_time__date=today
+        ).order_by("-facture_date_time")  # Onglet "du jour"
         return context
         
     
@@ -27,12 +32,15 @@ class FactureCaisseRecepListView(ListView):
 class FactureCaisseListView(ListView):
     model = FactureCaisse
     template_name = "caisse/factures/facture_list_caisse.html"
-    context_object_name = "factures"  # toutes les factures
+    context_object_name = "factures"  # Toutes les factures
+
+    def get_queryset(self):
+        return FactureCaisse.objects.all().order_by("-facture_date_time")  # pour l'onglet "toutes"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         today = localtime().date()
-        context["factures_du_jour"] = FactureCaisse.objects.filter(facture_date_time__date=today)
+        context["factures_du_jour"] = FactureCaisse.objects.filter(facture_date_time__date=today).order_by("-facture_date_time")
         return context
 
 #  Création d'une facture (remplace `creer_facturecaisse`)

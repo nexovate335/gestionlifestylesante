@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, View
 from .models import BlocOperatoire
 from .forms import BlocOperatoireForm, BlocOperatoireUpdateForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from personnels.mixins import SaveByPersonnelMixin
 
 # Liste des blocs opératoires actifs
 class BlocOperatoireListView(ListView):
@@ -26,18 +28,13 @@ class BlocOperatoireRecepListView(ListView):
 
 
 # Création d'un bloc opératoire
-class BlocOperatoireCreateView(CreateView):
+class BlocOperatoireCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView):
     model = BlocOperatoire
     form_class = BlocOperatoireForm
     template_name = "blocoperatoire/blocoperatoires/blocoperatoire_form.html"
     success_url = reverse_lazy("blocoperatoire:blocoperatoire_list_recep")
 
-    def form_valid(self, form):
-        bloc = form.save(commit=False)
-        bloc.deleted_at = None  # S'assurer que le champ est bien NULL
-        bloc.save()
-        return redirect(self.success_url)
-
+    
 # Détails d'un bloc opératoire
 class BlocOperatoireDetailView(DetailView):
     model = BlocOperatoire

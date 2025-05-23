@@ -2,6 +2,8 @@ from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, View
 from django.utils.timezone import now
+from django.contrib.auth.mixins import LoginRequiredMixin
+from personnels.mixins import SaveByPersonnelMixin
 from .models import Viol
 from .forms import ViolForm
 
@@ -15,7 +17,7 @@ class ViolListView(ListView):
         return Viol.objects.filter(deleted_at__isnull=True)
 
 #  Création d'un Viol
-class ViolCreateView(CreateView):
+class ViolCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView):
     model = Viol
     form_class = ViolForm
     template_name = "viol/viol_form.html"

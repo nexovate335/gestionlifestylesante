@@ -1,8 +1,6 @@
 {% extends 'caisse/baseCai.html' %}
 
-
 {% block content %}
-
 <div class="app-body">
     <div class="row gx-3">
         <div class="col-sm-12">
@@ -10,6 +8,7 @@
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">Liste des Factures Pharmacie</h5>
                 </div>
+
                 <div class="card-body">
                     <!-- Barre de recherche -->
                     <div class="d-flex justify-content-end mb-3">
@@ -27,24 +26,25 @@
                     </ul>
 
                     <div class="tab-content" id="factureTabsContent">
-                        <!-- Tab: Factures du jour -->
+
+                        <!-- Onglet : Factures du jour -->
                         <div class="tab-pane fade show active" id="jour" role="tabpanel">
                             <div class="table-responsive mt-3">
-                                <table class="table truncate m-0 align-middle">
+                                <table class="table m-0 align-middle">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
                                             <th>Numéro de dossier</th>
                                             <th>Patient</th>
                                             <th>Nom Personne</th>
-                                            <th>Date de création</th>
-                                            <th>Montant Total</th>
-                                            <th>Reste à payer</th>
+                                            <th>Date</th>
+                                            <th>Total</th>
+                                            <th>Reste</th>
                                             <th>Statut</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="factureTable">
+                                    <tbody>
                                         {% for facture in factures_du_jour %}
                                             <tr>
                                                 <td>{{ facture.numero_facture }}</td>
@@ -55,7 +55,7 @@
                                                 <td>{{ facture.total }} FCFA</td>
                                                 <td>{{ facture.reste_a_payer }} FCFA</td>
                                                 <td class="{% if facture.paye %}text-success{% else %}text-danger{% endif %}">
-                                                    {% if facture.paye %} Payée {% else %} Non payée {% endif %}
+                                                    {{ facture.paye|yesno:"Payée,Non payée" }}
                                                 </td>
                                                 <td>
                                                     {% if not facture.paye %}
@@ -63,7 +63,7 @@
                                                             <i class="bi bi-eye"></i> Paiement
                                                         </a>
                                                     {% else %}
-                                                        <button class="btn btn-outline-secondary btn-sm" disabled style="opacity: 0.6;" title="Facture déjà payée">
+                                                        <button class="btn btn-outline-secondary btn-sm" disabled title="Déjà payée">
                                                             <i class="bi bi-eye-slash"></i> Payée
                                                         </button>
                                                     {% endif %}
@@ -73,34 +73,34 @@
                                                 </td>
                                             </tr>
                                         {% empty %}
-                                            <tr><td colspan="12" class="text-center">Aucune facture créée aujourd’hui.</td></tr>
+                                            <tr><td colspan="9" class="text-center">Aucune facture créée aujourd’hui.</td></tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
 
-                        <!-- Tab: Toutes les factures -->
+                        <!-- Onglet : Toutes les factures -->
                         <div class="tab-pane fade" id="toutes" role="tabpanel">
                             <div class="table-responsive mt-3">
-                                <table id="basicExample" class="table truncate m-0 align-middle">
+                                <table class="table m-0 align-middle" id="allFacturesTable">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
                                             <th>Numéro de dossier</th>
                                             <th>Patient</th>
                                             <th>Nom Personne</th>
-                                            <th>Date de création</th>
-                                            <th>Montant Total</th>
-                                            <th>Total somme versée</th>
+                                            <th>Date</th>
+                                            <th>Total</th>
+                                            <th>Somme versée</th>
                                             <th>Avance</th>
-                                            <th>Reste à payer</th>
+                                            <th>Reste</th>
                                             <th>Statut</th>
                                             <th>Commentaire</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="factureTable">
+                                    <tbody>
                                         {% for facture in factures %}
                                             <tr>
                                                 <td>{{ facture.numero_facture }}</td>
@@ -113,7 +113,7 @@
                                                 <td>{{ facture.avance }} FCFA</td>
                                                 <td>{{ facture.reste_a_payer }} FCFA</td>
                                                 <td class="{% if facture.paye %}text-success{% else %}text-danger{% endif %}">
-                                                    {% if facture.paye %} Payée {% else %} Non payée {% endif %}
+                                                    {{ facture.paye|yesno:"Payée,Non payée" }}
                                                 </td>
                                                 <td>{{ facture.commentaire|default:"Aucun commentaire" }}</td>
                                                 <td>
@@ -122,7 +122,7 @@
                                                             <i class="bi bi-eye"></i> Paiement
                                                         </a>
                                                     {% else %}
-                                                        <button class="btn btn-outline-secondary btn-sm" disabled style="opacity: 0.6;" title="Facture déjà payée">
+                                                        <button class="btn btn-outline-secondary btn-sm" disabled title="Déjà payée">
                                                             <i class="bi bi-eye-slash"></i> Payée
                                                         </button>
                                                     {% endif %}
@@ -140,14 +140,14 @@
                                 </table>
                             </div>
                         </div>
-                    </div> <!-- end tab content -->
+                    </div> <!-- Fin contenu onglets -->
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Script de recherche (s'applique uniquement à l'onglet "Toutes les factures") -->
+<!-- Script de recherche -->
 <script>
     const searchInput = document.getElementById('searchInput');
 
@@ -158,41 +158,21 @@
         let matchCount = 0;
 
         rows.forEach(row => {
-            // Ne pas filtrer les lignes "Aucun résultat trouvé"
-            if (row.id && row.id.startsWith("noResults")) return;
-
             const cells = row.querySelectorAll('td');
             if (cells.length >= 4) {
-                const numeroDossier = cells[1].textContent.toLowerCase();
-                const nomPatient = cells[2].textContent.toLowerCase();
-                const nomPersonne = cells[3].textContent.toLowerCase();
-
-                const match =
-                    numeroDossier.includes(filter) ||
-                    nomPatient.includes(filter) ||
-                    nomPersonne.includes(filter);
-
+                const match = [1, 2, 3].some(i => cells[i].textContent.toLowerCase().includes(filter));
                 row.style.display = match ? '' : 'none';
                 if (match) matchCount++;
             }
         });
-
-        // Afficher ou masquer le message "Aucun résultat"
-        const noResultsRow = activeTab.querySelector('tr[id^="noResults"]');
-        if (noResultsRow) {
-            noResultsRow.style.display = matchCount === 0 ? '' : 'none';
-        }
     }
 
     searchInput.addEventListener('keyup', updateSearchResults);
-
-    document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(tab => {
-        tab.addEventListener('shown.bs.tab', function () {
+    document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(tab =>
+        tab.addEventListener('shown.bs.tab', () => {
             searchInput.value = '';
             updateSearchResults();
-        });
-    });
+        })
+    );
 </script>
-
-
 {% endblock %}

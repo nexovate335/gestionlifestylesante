@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.timezone import now
 from patients.models import Patient
+from personnels.models import Personnel
+
 
 class HospitalisationManager(models.Manager):
     def get_queryset(self):
@@ -18,7 +20,7 @@ class Hospitalisation(models.Model):
     commentaire = models.TextField(null=True, max_length=1000, blank=True, verbose_name="Commentaire")
     date = models.DateTimeField(auto_now_add=True, verbose_name="Date et heure de création")
     deleted_at = models.DateTimeField(null=True, blank=True, verbose_name="Supprimé le")
-
+    save_by = models.ForeignKey(Personnel, on_delete=models.PROTECT, verbose_name="Agent", null=True,blank=True) 
     objects = HospitalisationManager()
     all_objects = models.Manager()
 

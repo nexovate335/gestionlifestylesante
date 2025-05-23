@@ -2,6 +2,8 @@ from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, View
 from django.db.models.functions import Lower
+from django.contrib.auth.mixins import LoginRequiredMixin
+from personnels.mixins import SaveByPersonnelMixin
 from .models import RendezVous
 from .forms import RendezVousForm
 
@@ -37,7 +39,7 @@ class RendezVousListView(ListView):
 
 
 # Création d'un rendez-vous
-class RendezVousCreateView(CreateView):
+class RendezVousCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView):
     model = RendezVous
     form_class = RendezVousForm
     template_name = "rendez_vous/rendezvous_form.html"
