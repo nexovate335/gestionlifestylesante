@@ -33,7 +33,7 @@ class Echographie(models.Model):
         verbose_name_plural = "Echographies"
 
     def __str__(self):
-        return f"{self.patient.nom} {self.patient.prenom} - Pratiqueur: {self.pratiqueur}"
+        return f"{self.id}"
 
     def delete(self):
         self.deleted_at = now()
