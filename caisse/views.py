@@ -5,6 +5,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DetailView, D
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.timezone import now
+from datetime import datetime
 from django.utils.timezone import localtime
 from .models import FactureCaisse, Caisse, AutresDepenses, RapportJournalierCaisse
 from .forms import FactureCaisseForm, FactureCaisseFormUpdate, CaisseFormSet, AutresDepensesForm, RapportJournalierCaisseForm
@@ -14,34 +15,79 @@ from .forms import FactureCaisseForm, FactureCaisseFormUpdate, CaisseFormSet, Au
 class FactureCaisseRecepListView(ListView):
     model = FactureCaisse
     template_name = "caisse/factures/facture_list_caisse_recep.html"
-    context_object_name = "factures"  # Toutes les factures
+    context_object_name = "factures"
 
     def get_queryset(self):
-        return FactureCaisse.objects.all().order_by("-facture_date_time")  # Onglet "toutes"
+        queryset = FactureCaisse.objects.all().order_by("-facture_date_time")
+
+        date = self.request.GET.get("date")
+        date_debut = self.request.GET.get("date_debut")
+        date_fin = self.request.GET.get("date_fin")
+
+        if date:
+            queryset = queryset.filter(facture_date_time__date=date)
+        elif date_debut and date_fin:
+            queryset = queryset.filter(facture_date_time__date__range=[date_debut, date_fin])
+        elif date_debut:
+            queryset = queryset.filter(facture_date_time__date__gte=date_debut)
+        elif date_fin:
+            queryset = queryset.filter(facture_date_time__date__lte=date_fin)
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        today = localtime().date()
-        context["factures_du_jour"] = FactureCaisse.objects.filter(
-            facture_date_time__date=today
-        ).order_by("-facture_date_time")  # Onglet "du jour"
+        context["date"] = self.request.GET.get("date", "")
+        context["date_debut"] = self.request.GET.get("date_debut", "")
+        context["date_fin"] = self.request.GET.get("date_fin", "")
         return context
-        
     
+        
 @method_decorator(login_required, name='dispatch')
 class FactureCaisseListView(ListView):
     model = FactureCaisse
     template_name = "caisse/factures/facture_list_caisse.html"
-    context_object_name = "factures"  # Toutes les factures
+    context_object_name = "factures"
 
     def get_queryset(self):
-        return FactureCaisse.objects.all().order_by("-facture_date_time")  # pour l'onglet "toutes"
+        queryset = FactureCaisse.objects.all().order_by("-facture_date_time")
+        date_str = self.request.GET.get("date")
+        date_debut = self.request.GET.get("date_debut")
+        date_fin = self.request.GET.get("date_fin")
+
+        # Filtrage par date exacte (prioritaire)
+        if date_str:
+            try:
+                date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
+                queryset = queryset.filter(facture_date_time__date=date_obj)
+            except ValueError:
+                pass  # date invalide
+
+        # Sinon, filtrage par plage de dates
+        elif date_debut or date_fin:
+            try:
+                if date_debut:
+                    date_debut_obj = datetime.strptime(date_debut, "%Y-%m-%d").date()
+                    queryset = queryset.filter(facture_date_time__date__gte=date_debut_obj)
+                if date_fin:
+                    date_fin_obj = datetime.strptime(date_fin, "%Y-%m-%d").date()
+                    queryset = queryset.filter(facture_date_time__date__lte=date_fin_obj)
+            except ValueError:
+                pass  # Ignore les dates invalides
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         today = localtime().date()
         context["factures_du_jour"] = FactureCaisse.objects.filter(facture_date_time__date=today).order_by("-facture_date_time")
+
+        # Pour pré-remplir le formulaire dans le template
+        context["date"] = self.request.GET.get("date", "")
+        context["date_debut"] = self.request.GET.get("date_debut", "")
+        context["date_fin"] = self.request.GET.get("date_fin", "")
         return context
+
 
 #  Création d'une facture (remplace `creer_facturecaisse`)
 @method_decorator(login_required, name='dispatch')
@@ -112,7 +158,7 @@ class AutresDepensesListView(ListView):
     context_object_name = "depenses"
 
     def get_queryset(self):
-        return AutresDepenses.objects.all()
+        return AutresDepenses.objects.filter(deleted_at__isnull=True).order_by('-date')
 
 
 # Ajouter une dépense
@@ -153,7 +199,8 @@ class RapportJournalierCaisseListView(ListView):
     context_object_name = "rapports"
 
     def get_queryset(self):
-        return RapportJournalierCaisse.objects.filter(deleted_at__isnull=True)
+        return RapportJournalierCaisse.objects.filter(deleted_at__isnull=True).order_by('-date')
+
 
 
 @method_decorator(login_required, name='dispatch')

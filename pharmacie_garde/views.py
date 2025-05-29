@@ -5,6 +5,7 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 from django.shortcuts import get_object_or_404, redirect,render
 from django.utils.decorators import method_decorator
 from django.urls import reverse 
+from datetime import datetime
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from .models import  PhGardeCommande, PhGardeStock, PhGardeFacturePharmacie, PhGardeFactureAvance, PhGardeVente
@@ -210,11 +211,39 @@ class PhGardeFacturePharmacieListView(ListView):
     model = PhGardeFacturePharmacie
     template_name = "pharmacie_garde/phgardefactures/phgardefacture_list_pharmacie.html"
     context_object_name = "factures"
-    
+
+    def get_queryset(self):
+        queryset = PhGardeFacturePharmacie.objects.all()
+        request = self.request.GET
+
+        date = request.get("date")
+        date_debut = request.get("date_debut")
+        date_fin = request.get("date_fin")
+
+        if date:
+            try:
+                date_obj = datetime.strptime(date, "%Y-%m-%d").date()
+                queryset = queryset.filter(facture_date_time__date=date_obj)
+            except ValueError:
+                pass  # Ignore invalid dates
+
+        elif date_debut and date_fin:
+            try:
+                debut = datetime.strptime(date_debut, "%Y-%m-%d").date()
+                fin = datetime.strptime(date_fin, "%Y-%m-%d").date()
+                queryset = queryset.filter(facture_date_time__date__range=(debut, fin))
+            except ValueError:
+                pass
+
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         today = localtime().date()
         context["factures_du_jour"] = PhGardeFacturePharmacie.objects.filter(facture_date_time__date=today)
+        context["date"] = self.request.GET.get("date", "")
+        context["date_debut"] = self.request.GET.get("date_debut", "")
+        context["date_fin"] = self.request.GET.get("date_fin", "")
         return context
     
 @method_decorator(login_required, name='dispatch')
@@ -223,12 +252,48 @@ class PhGardeFacturePharmacieCaisseListView(ListView):
     template_name = "pharmacie_garde/phgardefactures/phgardecaisse_facture_list_pharmacie.html"
     context_object_name = "factures"
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        # Récupère les paramètres GET
+        date = self.request.GET.get("date")
+        date_debut = self.request.GET.get("date_debut")
+        date_fin = self.request.GET.get("date_fin")
+
+        # Filtre selon la date exacte
+        if date:
+            try:
+                date_obj = datetime.strptime(date, "%Y-%m-%d").date()
+                queryset = queryset.filter(facture_date_time__date=date_obj)
+            except ValueError:
+                pass
+
+        # Filtre selon l'intervalle de dates
+        elif date_debut and date_fin:
+            try:
+                debut = datetime.strptime(date_debut, "%Y-%m-%d").date()
+                fin = datetime.strptime(date_fin, "%Y-%m-%d").date()
+                queryset = queryset.filter(facture_date_time__date__range=(debut, fin))
+            except ValueError:
+                pass
+
+        # Par défaut, afficher les factures du jour
+        else:
+            today = localtime().date()
+            queryset = queryset.filter(facture_date_time__date=today)
+
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        today = localtime().date()
-        context["factures_du_jour"] = PhGardeFacturePharmacie.objects.filter(facture_date_time__date=today)
-        return context
 
+        # Récupération des valeurs pour les inputs de filtre dans le template
+        context["date"] = self.request.GET.get("date", "")
+        context["date_debut"] = self.request.GET.get("date_debut", "")
+        context["date_fin"] = self.request.GET.get("date_fin", "")
+
+        return context
+    
 
 @method_decorator(login_required, name='dispatch')
 class PhGardeFacturePharmacieRecepListView(ListView):
@@ -236,10 +301,36 @@ class PhGardeFacturePharmacieRecepListView(ListView):
     template_name = "pharmacie_garde/phgardefactures/phgarderecep_facture_list_pharmacie.html"
     context_object_name = "factures"
 
+    def get_queryset(self):
+        queryset = super().get_queryset().select_related('patient')
+        date_str = self.request.GET.get("date")
+        date_debut_str = self.request.GET.get("date_debut")
+        date_fin_str = self.request.GET.get("date_fin")
+
+        if date_str:
+            try:
+                date = datetime.strptime(date_str, "%Y-%m-%d").date()
+                queryset = queryset.filter(facture_date_time__date=date)
+            except ValueError:
+                pass
+        elif date_debut_str and date_fin_str:
+            try:
+                date_debut = datetime.strptime(date_debut_str, "%Y-%m-%d").date()
+                date_fin = datetime.strptime(date_fin_str, "%Y-%m-%d").date()
+                queryset = queryset.filter(facture_date_time__date__range=(date_debut, date_fin))
+            except ValueError:
+                pass
+        else:
+            today = localtime().date()
+            queryset = queryset.filter(facture_date_time__date=today)
+
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        today = localtime().date()
-        context["factures_du_jour"] = PhGardeFacturePharmacie.objects.filter(facture_date_time__date=today)
+        context["date"] = self.request.GET.get("date", "")
+        context["date_debut"] = self.request.GET.get("date_debut", "")
+        context["date_fin"] = self.request.GET.get("date_fin", "")
         return context
     
 

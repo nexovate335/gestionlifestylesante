@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
+from datetime import datetime
 from django.urls import reverse
 from django.utils.timezone import localtime
 from .models import FactureCaisseGarde, CaisseGarde, AutresDepensesGarde, RapportJournalierCaisseGarde
@@ -15,12 +16,35 @@ class FactureCaisseRecepGardeListView(ListView):
     model = FactureCaisseGarde
     template_name = "caisse_garde/factures_garde/facture_list_caisse_recep_garde.html"
     context_object_name = "factures"
-    
+
+    def get_queryset(self):
+        queryset = super().get_queryset().order_by('-facture_date_time')
+        date = self.request.GET.get('date')
+        date_debut = self.request.GET.get('date_debut')
+        date_fin = self.request.GET.get('date_fin')
+
+        if date:
+            try:
+                date_obj = datetime.strptime(date, "%Y-%m-%d").date()
+                queryset = queryset.filter(facture_date_time__date=date_obj)
+            except ValueError:
+                pass
+        elif date_debut and date_fin:
+            try:
+                debut = datetime.strptime(date_debut, "%Y-%m-%d").date()
+                fin = datetime.strptime(date_fin, "%Y-%m-%d").date()
+                queryset = queryset.filter(facture_date_time__date__range=(debut, fin))
+            except ValueError:
+                pass
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        today = localtime().date()
-        context["factures_du_jour"] = FactureCaisseGarde.objects.filter(facture_date_time__date=today)
+        context["date"] = self.request.GET.get("date", "")
+        context["date_debut"] = self.request.GET.get("date_debut", "")
+        context["date_fin"] = self.request.GET.get("date_fin", "")
         return context
+    
     
 @method_decorator(login_required, name='dispatch')
 class FactureCaisseGardeListView(ListView):
@@ -28,10 +52,33 @@ class FactureCaisseGardeListView(ListView):
     template_name = "caisse_garde/factures_garde/facture_list_caisse_garde.html"
     context_object_name = "factures"
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        date = self.request.GET.get("date")
+        date_debut = self.request.GET.get("date_debut")
+        date_fin = self.request.GET.get("date_fin")
+
+        if date:
+            try:
+                date = datetime.strptime(date, "%Y-%m-%d").date()
+                queryset = queryset.filter(facture_date_time__date=date)
+            except ValueError:
+                pass
+        elif date_debut and date_fin:
+            try:
+                date_debut = datetime.strptime(date_debut, "%Y-%m-%d").date()
+                date_fin = datetime.strptime(date_fin, "%Y-%m-%d").date()
+                queryset = queryset.filter(facture_date_time__date__range=(date_debut, date_fin))
+            except ValueError:
+                pass
+
+        return queryset.order_by("-facture_date_time")
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        today = localtime().date()
-        context["factures_du_jour"] = FactureCaisseGarde.objects.filter(facture_date_time__date=today)
+        context["date"] = self.request.GET.get("date", "")
+        context["date_debut"] = self.request.GET.get("date_debut", "")
+        context["date_fin"] = self.request.GET.get("date_fin", "")
         return context
 
 #  Création d'une facture (remplace `creer_facturecaisse`)
@@ -102,7 +149,7 @@ class AutresDepensesGardeListView(ListView):
     context_object_name = "depenses"
 
     def get_queryset(self):
-        return AutresDepensesGarde.objects.all()
+        return AutresDepensesGarde.objects.all().order_by('-date')
 
 
 # Ajouter une dépense
@@ -143,7 +190,7 @@ class RapportJournalierCaisseGardeListView(ListView):
     context_object_name = "rapports"
 
     def get_queryset(self):
-        return RapportJournalierCaisseGarde.objects.filter(deleted_at__isnull=True)
+        return RapportJournalierCaisseGarde.objects.filter(deleted_at__isnull=True).order_by('-date')
 
 
 @method_decorator(login_required, name='dispatch')

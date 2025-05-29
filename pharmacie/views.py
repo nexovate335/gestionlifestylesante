@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, redirect,render
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.urls import reverse
+from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from .models import Produit, Fournisseur, Commande, Stock, FacturePharmacie, FactureAvance, Vente
 from .forms import *
@@ -273,16 +274,41 @@ class FacturePharmacieListView(ListView):
     context_object_name = "factures"
 
     def get_queryset(self):
-        # Toutes les factures triées par date décroissante
-        return FacturePharmacie.objects.all().order_by('-facture_date_time')
+        qs = FacturePharmacie.objects.all().order_by('-facture_date_time')
+        date = self.request.GET.get('date')
+        date_debut = self.request.GET.get('date_debut')
+        date_fin = self.request.GET.get('date_fin')
+
+        if date:
+            try:
+                parsed_date = datetime.strptime(date, "%Y-%m-%d").date()
+                qs = qs.filter(facture_date_time__date=parsed_date)
+            except ValueError:
+                pass
+        elif date_debut and date_fin:
+            try:
+                debut = datetime.strptime(date_debut, "%Y-%m-%d")
+                fin = datetime.strptime(date_fin, "%Y-%m-%d")
+                qs = qs.filter(facture_date_time__date__range=(debut, fin))
+            except ValueError:
+                pass
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         today = localtime().date()
+
         context["factures_du_jour"] = FacturePharmacie.objects.filter(
             facture_date_time__date=today
-        ).order_by('-facture_date_time')
+        ).order_by("-facture_date_time")
+
+        # Pour afficher les valeurs sélectionnées dans le formulaire
+        context["date"] = self.request.GET.get("date", "")
+        context["date_debut"] = self.request.GET.get("date_debut", "")
+        context["date_fin"] = self.request.GET.get("date_fin", "")
+
         return context
+
     
     
 @method_decorator(login_required, name='dispatch')
@@ -292,15 +318,24 @@ class FacturePharmacieCaisseListView(ListView):
     context_object_name = "factures"
 
     def get_queryset(self):
-        # Retourne toutes les factures triées par date décroissante
-        return FacturePharmacie.objects.all().order_by('-facture_date_time')
+        queryset = FacturePharmacie.objects.all().order_by('-facture_date_time')
+
+        date = self.request.GET.get("date")
+        date_debut = self.request.GET.get("date_debut")
+        date_fin = self.request.GET.get("date_fin")
+
+        if date:
+            queryset = queryset.filter(facture_date_time__date=date)
+        elif date_debut and date_fin:
+            queryset = queryset.filter(facture_date_time__date__range=[date_debut, date_fin])
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        today = localtime().date()
-        context["factures_du_jour"] = FacturePharmacie.objects.filter(
-            facture_date_time__date=today
-        ).order_by('-facture_date_time')
+        context["date"] = self.request.GET.get("date", "")
+        context["date_debut"] = self.request.GET.get("date_debut", "")
+        context["date_fin"] = self.request.GET.get("date_fin", "")
         return context
 
 
@@ -311,15 +346,34 @@ class FacturePharmacieRecepListView(ListView):
     context_object_name = "factures"
 
     def get_queryset(self):
-        # Liste complète, triée par date décroissante
-        return FacturePharmacie.objects.all().order_by('-facture_date_time')
+        queryset = FacturePharmacie.objects.all().order_by('-facture_date_time')
+
+        date = self.request.GET.get("date")
+        date_debut = self.request.GET.get("date_debut")
+        date_fin = self.request.GET.get("date_fin")
+
+        if date:
+            try:
+                date_obj = datetime.strptime(date, "%Y-%m-%d").date()
+                queryset = queryset.filter(facture_date_time__date=date_obj)
+            except ValueError:
+                pass
+
+        elif date_debut and date_fin:
+            try:
+                date_start = datetime.strptime(date_debut, "%Y-%m-%d").date()
+                date_end = datetime.strptime(date_fin, "%Y-%m-%d").date()
+                queryset = queryset.filter(facture_date_time__date__range=(date_start, date_end))
+            except ValueError:
+                pass
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        today = localtime().date()
-        context["factures_du_jour"] = FacturePharmacie.objects.filter(
-            facture_date_time__date=today
-        ).order_by('-facture_date_time')
+        context["date"] = self.request.GET.get("date", "")
+        context["date_debut"] = self.request.GET.get("date_debut", "")
+        context["date_fin"] = self.request.GET.get("date_fin", "")
         return context
 
 
