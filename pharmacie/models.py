@@ -141,25 +141,44 @@ class StockManager(models.Manager):
         return super().get_queryset().filter(deleted_at__isnull=False)
 
 # Table Stock
+from django.db import models
+from django.core.validators import MinValueValidator
+from django.utils.timezone import now
+
 class Stock(models.Model):
     num_stock = models.AutoField(primary_key=True)
-    produit = models.OneToOneField(Produit, on_delete=models.PROTECT, related_name='stock', verbose_name="Produit")
-    quantite_reelle = models.PositiveIntegerField(default=0, verbose_name="Quantité réelle")  # Déjà positif par défaut
+
+    produit = models.OneToOneField(
+        'Produit',
+        on_delete=models.PROTECT,
+        related_name='stock',
+        verbose_name="Produit"
+    )
+
+    quantite_reelle = models.PositiveIntegerField(default=0, verbose_name="Quantité réelle")
+    quantite_vendue = models.PositiveIntegerField(default=0, verbose_name="Quantité vendue")
+    quantite_restante = models.PositiveIntegerField(default=0, verbose_name="Quantité restante", editable=False)
+
     prix_unitaire = models.DecimalField(
-        max_digits=10, decimal_places=2,
+        max_digits=10,
+        decimal_places=2,
         blank=True, null=True,
-        validators=[MinValueValidator(0)],  # Empêche les valeurs négatives
+        validators=[MinValueValidator(0)],
         verbose_name="Prix unitaire"
-    )  
+    )
+
     prix_total = models.DecimalField(
-        max_digits=15, decimal_places=2,
+        max_digits=15,
+        decimal_places=2,
         blank=True, null=True,
-        validators=[MinValueValidator(0)],  # Empêche les valeurs négatives
+        validators=[MinValueValidator(0)],
         verbose_name="Prix total"
     )
+
     date_stock = models.DateTimeField(auto_now_add=True, verbose_name="Date et heure de stockage")
     deleted_at = models.DateTimeField(null=True, blank=True, verbose_name="Supprimé le")
 
+    # Gestionnaires personnalisés
     objects = StockManager()
     all_objects = models.Manager()
 
@@ -168,14 +187,28 @@ class Stock(models.Model):
         verbose_name_plural = "Stocks"
 
     def save(self, *args, **kwargs):
-        # Si prix_unitaire est None, attribuer une valeur par défaut
         if self.prix_unitaire is None:
-            self.prix_unitaire = 0  # Valeur par défaut
+            self.prix_unitaire = 0
 
-        # Calculer le prix total seulement si prix_unitaire est valide
+        # Recalcul automatique
         self.prix_total = self.quantite_reelle * self.prix_unitaire
+        self.quantite_restante = max(self.quantite_reelle - self.quantite_vendue, 0)
 
         super().save(*args, **kwargs)
+
+    def retirer_stock(self, quantite):
+        """
+        Retire une quantité du stock et met à jour la quantité vendue/restante.
+        """
+        if quantite <= 0:
+            raise ValueError("La quantité à retirer doit être positive.")
+
+        if quantite > self.quantite_restante:
+            raise ValueError("Stock insuffisant pour ce retrait.")
+
+        self.quantite_vendue += quantite
+        self.quantite_restante = self.quantite_reelle - self.quantite_vendue
+        self.save()
 
     def delete(self):
         self.deleted_at = now()
@@ -187,6 +220,7 @@ class Stock(models.Model):
 
     def __str__(self):
         return f"Stock de {self.produit.nom_produit}"
+
 
 def generate_unique_numero_facture():
     random_number = random.randint(0,1000000)  # 5 chiffres aléatoires
