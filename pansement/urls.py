@@ -11,4 +11,5 @@ urlpatterns = [
     path('<int:pk>/delete/', PansementDeleteView.as_view(), name='pansement_delete'),
     path('<int:pk>/restore/', PansementRestoreView.as_view(), name='pansement_restore'),
     path('deleted/', PansementDeletedListView.as_view(), name='pansement_deleted_list'),
+    path('autocomplete/patients/',patient_autocomplete_api, name='patient-autocomplete-api'),
 ]

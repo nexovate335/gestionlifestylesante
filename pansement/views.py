@@ -1,10 +1,14 @@
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, View
 from django.utils.timezone import now
+from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from personnels.mixins import SaveByPersonnelMixin
 from .models import Pansement, Patient
 from .forms import PansementForm
+from django.http import JsonResponse
+
+
 
 # Vue pour la liste des pansements actifs
 class PansementListView(ListView):
@@ -23,12 +27,26 @@ class PansementCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView):
     model = Pansement
     form_class = PansementForm
     template_name = "pansement/pansements/pansement_form.html"
-    success_url = "/pansement/"
+    success_url = reverse_lazy("pansement:pansement_list")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["patients"] = Patient.objects.all()
         return context
+
+    def form_valid(self, form):
+        patient_id = self.request.POST.get("patient")
+        if patient_id:
+            try:
+                patient = Patient.objects.get(pk=patient_id)
+                form.instance.patient = patient
+                return super().form_valid(form)
+            except Patient.DoesNotExist:
+                form.add_error("patient", "Patient introuvable.")
+        else:
+            form.add_error("patient", "Veuillez sélectionner un patient valide.")
+        return self.form_invalid(form)
+
 
 # Vue pour les détails d'un pansement
 class PansementDetailView(DetailView):
@@ -84,3 +102,17 @@ class PansementDeletedListView(ListView):
     def get_queryset(self):
         # Récupère les pansements supprimés (où `deleted_at` n'est pas null)
         return Pansement.objects.filter(deleted_at__isnull=False)
+
+
+def patient_autocomplete_api(request):
+    term = request.GET.get("q", "")
+    patients = Patient.objects.filter(nom__icontains=term)[:10]
+
+    results = []
+    for patient in patients:
+        results.append({
+            "id": patient.id,
+            "text": f"{patient.nom} {patient.prenom}"
+        })
+
+    return JsonResponse({"results": results})

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_countries',
+      
    
     'caisse',
     'caisse_garde', 
@@ -57,9 +58,7 @@ INSTALLED_APPS = [
     'hospitalisation',
     'mto',
     'rendez_vous',    
-    'personnels',
-    
-    
+    'personnels',       
 ]
 
 MIDDLEWARE = [
@@ -95,7 +94,7 @@ WSGI_APPLICATION = 'main.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-if not  DEBUG:
+if  DEBUG:
     # Environnement local => SQLite
     DATABASES = {
         'default': {

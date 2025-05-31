@@ -2,15 +2,24 @@
 
 {% block content %}
 <div class="container mt-4">
+
     <h2 class="mb-4">Ajouter un Pansement</h2>
 
     <form method="post">
         {% csrf_token %}
         <div class="row g-3">
-            <!-- Patient -->
+
+            <!-- Patient avec datalist -->
             <div class="col-md-6">
-                <label for="{{ form.patient.id_for_label }}" class="form-label">Patient *</label>
-                {{ form.patient }}
+                <label for="patient-input" class="form-label">Patient *</label>
+                <input class="form-control" list="patients" name="patient_nom" id="patient-input" placeholder="Numero dossier et nom du patient">
+                <datalist id="patients">
+                    {% for patient in patients %}
+                        <option data-id="{{ patient.id }}" value="{{ patient.numero_dossier }}-{{ patient.nom }}">
+                    {% endfor %}
+                </datalist>
+                <!-- Champ masqué pour stocker l'ID sélectionné -->
+                <input type="hidden" name="patient" id="patient-id">
             </div>
 
             <!-- Montant -->
@@ -45,4 +54,21 @@
         </div>
     </form>
 </div>
+
+<!-- JS pour lier nom -> ID -->
+<script>
+    document.getElementById('patient-input').addEventListener('input', function () {
+        const input = this.value.toLowerCase();
+        const options = document.querySelectorAll('#patients option');
+        let foundId = null;
+
+        options.forEach(option => {
+            if (option.value.toLowerCase() === input) {
+                foundId = option.getAttribute('data-id');
+            }
+        });
+
+        document.getElementById('patient-id').value = foundId || '';
+    });
+</script>
 {% endblock %}

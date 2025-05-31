@@ -2,6 +2,7 @@ from django import forms
 from .models import BlocOperatoire
 
 class BlocOperatoireForm(forms.ModelForm):
+    
     actes = forms.CharField(
         widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Décrivez les actes opératoires', 'rows': 3})
     )

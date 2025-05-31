@@ -92,3 +92,4 @@ class PatientDeletedListView(ListView):
 
     def get_queryset(self):
         return Patient.objects.deleted()  # Récupère uniquement les patients supprimés
+    
