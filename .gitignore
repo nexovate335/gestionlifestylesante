@@ -22,3 +22,6 @@ __pycache__/
 
 # Dossier de migration auto
 */migrations/__pycache__/
+
+
+staticfiles/
