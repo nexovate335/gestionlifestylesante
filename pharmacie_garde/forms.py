@@ -65,6 +65,34 @@ class PhGardeVenteForm(forms.ModelForm):
             'quantite_vendue': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
         }
 
+    def clean(self):
+        cleaned_data = super().clean()
+        produit = cleaned_data.get('produit')
+        quantite = cleaned_data.get('quantite_vendue')
+
+        if produit and quantite:
+            try:
+                stock = PhGardeStock.objects.get(produit=produit)
+            except PhGardeStock.DoesNotExist:
+                self.add_error('produit', "⚠️ Ce produit n’a pas de stock enregistré.")
+                return cleaned_data
+
+            if stock.quantite_restante == 0:
+                self.add_error('quantite_vendue', f"❌ Stock vide pour {produit}. Vente impossible.")
+            elif quantite > stock.quantite_restante:
+                self.add_error(
+                    'quantite_vendue',
+                    f"⚠️ Quantité demandée ({quantite}) > stock disponible ({stock.quantite_restante}). Vente non autorisée."
+                )
+            elif stock.quantite_restante - quantite < 5:
+                self.add_error(
+                    'quantite_vendue',
+                    f"⚠️ Attention : après cette vente, le stock sera critique ({stock.quantite_restante - quantite} unité(s))."
+                )
+
+        return cleaned_data
+
+
 class PhGardeFacturePharmacieForm(forms.ModelForm):
     
     class Meta:

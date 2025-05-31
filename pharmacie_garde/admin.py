@@ -181,7 +181,7 @@ class PhGardeCommandeAdmin(BaseAdmin):
 # Admin pour Stock
 @admin.register(PhGardeStock)
 class PhGardeStockAdmin(BaseAdmin):
-    list_display = ('produit', 'quantite_reelle', 'prix_unitaire', 'prix_total', 'date_stock')
+    list_display = ('produit', 'quantite_reelle', 'quantite_vendue', 'quantite_restante', 'prix_unitaire', 'prix_total', 'date_stock')
     search_fields = ('produit__nom_produit',)
     ordering = ('produit__nom_produit',)
 

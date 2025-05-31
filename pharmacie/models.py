@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator
 from personnels.models import Personnel
 from patients.models import Patient
 from decimal import Decimal
+from django.core.exceptions import ValidationError
 import random
 
 
@@ -141,10 +142,6 @@ class StockManager(models.Manager):
         return super().get_queryset().filter(deleted_at__isnull=False)
 
 # Table Stock
-from django.db import models
-from django.core.validators import MinValueValidator
-from django.utils.timezone import now
-
 class Stock(models.Model):
     num_stock = models.AutoField(primary_key=True)
 
@@ -178,7 +175,6 @@ class Stock(models.Model):
     date_stock = models.DateTimeField(auto_now_add=True, verbose_name="Date et heure de stockage")
     deleted_at = models.DateTimeField(null=True, blank=True, verbose_name="Supprimé le")
 
-    # Gestionnaires personnalisés
     objects = StockManager()
     all_objects = models.Manager()
 
@@ -190,25 +186,10 @@ class Stock(models.Model):
         if self.prix_unitaire is None:
             self.prix_unitaire = 0
 
-        # Recalcul automatique
         self.prix_total = self.quantite_reelle * self.prix_unitaire
         self.quantite_restante = max(self.quantite_reelle - self.quantite_vendue, 0)
 
         super().save(*args, **kwargs)
-
-    def retirer_stock(self, quantite):
-        """
-        Retire une quantité du stock et met à jour la quantité vendue/restante.
-        """
-        if quantite <= 0:
-            raise ValueError("La quantité à retirer doit être positive.")
-
-        if quantite > self.quantite_restante:
-            raise ValueError("Stock insuffisant pour ce retrait.")
-
-        self.quantite_vendue += quantite
-        self.quantite_restante = self.quantite_reelle - self.quantite_vendue
-        self.save()
 
     def delete(self):
         self.deleted_at = now()
@@ -417,9 +398,6 @@ class FactureAvance(models.Model):
         return f"{self.facture.numero_facture}"
 
 
-
-
-
 class VenteManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(deleted_at__isnull=True)
@@ -432,23 +410,24 @@ class Vente(models.Model):
     num_vente = models.AutoField(primary_key=True)
     facture = models.ForeignKey(FacturePharmacie, on_delete=models.PROTECT, verbose_name="Facture")
     produit = models.ForeignKey(Produit, on_delete=models.PROTECT, related_name='ventes', verbose_name="Produit")
+    
     quantite_vendue = models.PositiveIntegerField(
-        validators=[MinValueValidator(1)],  # Empêche la vente de 0 ou d'une valeur négative
+        validators=[MinValueValidator(1)],
         verbose_name="Quantité vendue"
     )
     prix_unitaire = models.DecimalField(
         max_digits=10, decimal_places=2, 
         blank=True, null=True, 
-        validators=[MinValueValidator(0)],  # Empêche les valeurs négatives
+        validators=[MinValueValidator(0)],
         verbose_name="Prix unitaire"
     )
     prix_total = models.DecimalField(
         max_digits=15, decimal_places=2, 
         blank=True, null=True, 
-        validators=[MinValueValidator(0)],  # Empêche les valeurs négatives
+        validators=[MinValueValidator(0)],
         verbose_name="Prix total"
     )
-    date_vente = models.DateTimeField(auto_now_add=True, verbose_name="Date et heure de vente")  # Inclut l'heure
+    date_vente = models.DateTimeField(auto_now_add=True, verbose_name="Date et heure de vente")
     deleted_at = models.DateTimeField(null=True, blank=True, verbose_name="Date de suppression")
 
     objects = VenteManager()
@@ -456,40 +435,45 @@ class Vente(models.Model):
     class Meta:
         verbose_name = "Vente"
         verbose_name_plural = "Ventes"
-        
+
     def save(self, *args, **kwargs):
         stock = Stock.objects.get(produit=self.produit)
-        self.prix_unitaire = stock.prix_unitaire or 0  # Assurer un prix valide
-        self.prix_total = self.quantite_vendue * self.prix_unitaire  # Calcul du prix total
+        self.prix_unitaire = stock.prix_unitaire or 0
+        self.prix_total = self.quantite_vendue * self.prix_unitaire
 
-        # Vérifier la disponibilité du stock
-        if stock.quantite_reelle < self.quantite_vendue:  
-            kwargs['stock_insuffisant'] = True
-        else:
-            # Mettre à jour le stock
-            stock.quantite_reelle -= self.quantite_vendue
-            stock.save()
+        #  Si la quantité restante est 0 : interdiction de vendre
+        if stock.quantite_restante == 0:
+            raise ValidationError("Impossible d'effectuer la vente : le stock est vide.")
 
-            # Sauvegarder la vente
-            super().save(*args, **kwargs)
+        #  Si la quantité demandée dépasse la quantité restante
+        if self.quantite_vendue > stock.quantite_restante:
+            raise ValidationError(f"Stock insuffisant. Il reste seulement {stock.quantite_restante} unités en stock.")
 
-            # Mettre à jour automatiquement le total de la facture
-            self.facture.total = self.facture.get_total
-            self.facture.save()
+        #  Alerte : stock faible
+        if stock.quantite_restante - self.quantite_vendue < 5:
+            raise ValidationError(f"Alerte : le stock deviendra critique après cette vente. Seulement {stock.quantite_restante - self.quantite_vendue} unités resteront.")
 
-    def __str__(self):
-        return f"Vente {self.num_vente}"
+        #  Mise à jour du stock
+        stock.quantite_vendue += self.quantite_vendue
+        stock.quantite_restante = stock.quantite_reelle - stock.quantite_vendue
+        stock.save()
+
+        # Sauvegarde de la vente
+        super().save(*args, **kwargs)
+
+        #  Mise à jour de la facture
+        self.facture.total = self.facture.get_total
+        self.facture.save()
 
     def delete(self):
-        """Suppression logique."""
         self.deleted_at = now()
         self.save()
-
-        #  Mettre à jour le total de la facture après suppression
         self.facture.total = self.facture.get_total
         self.facture.save()
 
     def restore(self):
-        """Restaure une vente supprimée logiquement."""
         self.deleted_at = None
         self.save()
+
+    def __str__(self):
+        return f"Vente {self.num_vente}"

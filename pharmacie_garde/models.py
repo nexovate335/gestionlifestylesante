@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
 from personnels.models import Personnel
 from patients.models import Patient
 from pharmacie.models import Fournisseur 
@@ -110,37 +111,51 @@ class PhGardeStockManager(models.Manager):
 
 # Table Stock
 class PhGardeStock(models.Model):
-    produit = models.OneToOneField(PhGardeProduit, on_delete=models.PROTECT, related_name='stock', verbose_name="Produit")
-    quantite_reelle = models.PositiveIntegerField(default=0, verbose_name="Quantité réelle")  # Déjà positif par défaut
+ 
+    produit = models.OneToOneField(
+        'PhGardeProduit',
+        on_delete=models.PROTECT,
+        related_name='stock',
+        verbose_name="Produit"
+    )
+
+    quantite_reelle = models.PositiveIntegerField(default=0, verbose_name="Quantité réelle")
+    quantite_vendue = models.PositiveIntegerField(default=0, verbose_name="Quantité vendue")
+    quantite_restante = models.PositiveIntegerField(default=0, verbose_name="Quantité restante", editable=False)
+
     prix_unitaire = models.DecimalField(
-        max_digits=10, decimal_places=2,
+        max_digits=10,
+        decimal_places=2,
         blank=True, null=True,
-        validators=[MinValueValidator(0)],  # Empêche les valeurs négatives
+        validators=[MinValueValidator(0)],
         verbose_name="Prix unitaire"
-    )  
+    )
+
     prix_total = models.DecimalField(
-        max_digits=15, decimal_places=2,
+        max_digits=15,
+        decimal_places=2,
         blank=True, null=True,
-        validators=[MinValueValidator(0)],  # Empêche les valeurs négatives
+        validators=[MinValueValidator(0)],
         verbose_name="Prix total"
     )
+
     date_stock = models.DateTimeField(auto_now_add=True, verbose_name="Date et heure de stockage")
     deleted_at = models.DateTimeField(null=True, blank=True, verbose_name="Supprimé le")
 
+    # Managers
     objects = PhGardeStockManager()
     all_objects = models.Manager()
 
     class Meta:
-        verbose_name = "PhGardeStock"
-        verbose_name_plural = "PhGardeStocks"
+        verbose_name = "Stock de Garde"
+        verbose_name_plural = "Stocks de Garde"
 
     def save(self, *args, **kwargs):
-        # Si prix_unitaire est None, attribuer une valeur par défaut
         if self.prix_unitaire is None:
-            self.prix_unitaire = 0  # Valeur par défaut
+            self.prix_unitaire = 0
 
-        # Calculer le prix total seulement si prix_unitaire est valide
         self.prix_total = self.quantite_reelle * self.prix_unitaire
+        self.quantite_restante = max(self.quantite_reelle - self.quantite_vendue, 0)
 
         super().save(*args, **kwargs)
 
@@ -154,6 +169,7 @@ class PhGardeStock(models.Model):
 
     def __str__(self):
         return f"Stock de {self.produit.nom_produit}"
+
 
 def generate_unique_numero_facture():
     random_number = random.randint(0,1000000)  # 5 chiffres aléatoires
@@ -350,9 +366,6 @@ class PhGardeFactureAvance(models.Model):
         return f"{self.facture.numero_facture}"
 
 
-
-
-
 class PhGardeVenteManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(deleted_at__isnull=True)
@@ -363,66 +376,86 @@ class PhGardeVenteManager(models.Manager):
 
 class PhGardeVente(models.Model):
     num_vente = models.AutoField(primary_key=True)
-    facture = models.ForeignKey(PhGardeFacturePharmacie, on_delete=models.PROTECT, verbose_name="Facture")
-    produit = models.ForeignKey(PhGardeProduit, on_delete=models.PROTECT, related_name='ventes', verbose_name="Produit")
+    facture = models.ForeignKey(
+        'PhGardeFacturePharmacie',
+        on_delete=models.PROTECT,
+        verbose_name="Facture"
+    )
+    produit = models.ForeignKey(
+        'PhGardeProduit',
+        on_delete=models.PROTECT,
+        related_name='ventes',
+        verbose_name="Produit"
+    )
+
     quantite_vendue = models.PositiveIntegerField(
-        validators=[MinValueValidator(1)],  # Empêche la vente de 0 ou d'une valeur négative
+        validators=[MinValueValidator(1)],
         verbose_name="Quantité vendue"
     )
     prix_unitaire = models.DecimalField(
-        max_digits=10, decimal_places=2, 
-        blank=True, null=True, 
-        validators=[MinValueValidator(0)],  # Empêche les valeurs négatives
+        max_digits=10,
+        decimal_places=2,
+        blank=True, null=True,
+        validators=[MinValueValidator(0)],
         verbose_name="Prix unitaire"
     )
     prix_total = models.DecimalField(
-        max_digits=15, decimal_places=2, 
-        blank=True, null=True, 
-        validators=[MinValueValidator(0)],  # Empêche les valeurs négatives
+        max_digits=15,
+        decimal_places=2,
+        blank=True, null=True,
+        validators=[MinValueValidator(0)],
         verbose_name="Prix total"
     )
-    date_vente = models.DateTimeField(auto_now_add=True, verbose_name="Date et heure de vente")  # Inclut l'heure
+    date_vente = models.DateTimeField(auto_now_add=True, verbose_name="Date et heure de vente")
     deleted_at = models.DateTimeField(null=True, blank=True, verbose_name="Date de suppression")
 
     objects = PhGardeVenteManager()
 
     class Meta:
-        verbose_name = "PhGardeVente"
-        verbose_name_plural = "PhGardeVentes"
-        
+        verbose_name = "Vente de garde"
+        verbose_name_plural = "Ventes de garde"
+
     def save(self, *args, **kwargs):
         stock = PhGardeStock.objects.get(produit=self.produit)
-        self.prix_unitaire = stock.prix_unitaire or 0  # Assurer un prix valide
-        self.prix_total = self.quantite_vendue * self.prix_unitaire  # Calcul du prix total
 
-        # Vérifier la disponibilité du stock
-        if stock.quantite_reelle < self.quantite_vendue:  
-            kwargs['stock_insuffisant'] = True
-        else:
-            # Mettre à jour le stock
-            stock.quantite_reelle -= self.quantite_vendue
-            stock.save()
+        self.prix_unitaire = stock.prix_unitaire or 0
+        self.prix_total = self.quantite_vendue * self.prix_unitaire
 
-            # Sauvegarder la vente
-            super().save(*args, **kwargs)
+        # Validation stock
+        if stock.quantite_restante == 0:
+            raise ValidationError("❌ Impossible d'effectuer la vente : le stock est vide.")
 
-            # Mettre à jour automatiquement le total de la facture
-            self.facture.total = self.facture.get_total
-            self.facture.save()
+        if self.quantite_vendue > stock.quantite_restante:
+            raise ValidationError(f"❌ Stock insuffisant : il ne reste que {stock.quantite_restante} unités pour ce produit.")
 
-    def __str__(self):
-        return f"Vente {self.num_vente}"
+        if stock.quantite_restante - self.quantite_vendue < 5:
+            raise ValidationError(
+                f"⚠️ Attention : après cette vente, le stock deviendra critique ({stock.quantite_restante - self.quantite_vendue} unités restantes)."
+            )
+
+        # Mise à jour du stock
+        stock.quantite_vendue += self.quantite_vendue
+        stock.quantite_restante = stock.quantite_reelle - stock.quantite_vendue
+        stock.save()
+
+        # Sauvegarde de la vente
+        super().save(*args, **kwargs)
+
+        # Mise à jour automatique du total de la facture
+        self.facture.total = self.facture.get_total
+        self.facture.save()
 
     def delete(self):
-        """Suppression logique."""
+        """Suppression logique + mise à jour facture"""
         self.deleted_at = now()
         self.save()
-
-        #  Mettre à jour le total de la facture après suppression
         self.facture.total = self.facture.get_total
         self.facture.save()
 
     def restore(self):
-        """Restaure une vente supprimée logiquement."""
+        """Restauration logique"""
         self.deleted_at = None
-        self.save() 
+        self.save()
+
+    def __str__(self):
+        return f"Vente {self.num_vente}"

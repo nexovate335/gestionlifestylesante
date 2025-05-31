@@ -3,15 +3,35 @@
 
 <div class="container mt-4">
     <h2 class="mb-4">Créer une Facture</h2>
-    
+
+    <!-- Affichage des messages globaux -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <form method="post">
         {% csrf_token %}
-        
+
         <!-- Formulaire principal -->
         <div class="card mb-3 p-3">
             <h4 class="mb-3">Informations du Patient</h4>
-            {{ form.as_p }}  
-        </div>        
+
+            {{ form.as_p }}
+
+            <!-- Erreurs globales du formulaire principal -->
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
 
         <!-- Ventes Associées -->
         <div class="card mb-3 p-3">
@@ -20,15 +40,31 @@
                 {{ formset.management_form }}
                 {% for form in formset %}
                     <div class="vente-form row gx-3 mb-3 border p-3 rounded d-flex align-items-center">
+
+                        <!-- Erreurs globales du sous-formulaire -->
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger w-100">
+                                {% for error in form.non_field_errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
                         <div class="col-lg-10 col-sm-12">
                             <div class="mb-2">
                                 {{ form.produit.label_tag }} {{ form.produit }}
+                                {% for error in form.produit.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
                             </div>
                             <div class="mb-2">
                                 {{ form.quantite_vendue.label_tag }} {{ form.quantite_vendue }}
+                                {% for error in form.quantite_vendue.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
                             </div>
-                            
                         </div>
+
                         <div class="col-lg-2 d-flex align-items-center">
                             <button type="button" class="btn btn-danger remove-form">Supprimer</button>
                         </div>
@@ -37,7 +73,7 @@
             </div>
 
             <div class="d-flex justify-content-between mt-3">
-                <div></div>  <!-- Espacement à gauche -->
+                <div></div>
                 <button type="button" id="add-form" class="btn btn-primary">Ajouter une Vente</button>
             </div>
         </div>
@@ -49,7 +85,7 @@
     </form>
 </div>
 
-
+<!-- Script JS inchangé -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         let formsetContainer = document.getElementById("formset");
@@ -69,16 +105,15 @@
                     }
                 });
             });
-            totalForms.value = forms.length;  // Mise à jour du total de formulaires
+            totalForms.value = forms.length;
         }
 
         addButton.addEventListener("click", function () {
             let formNum = parseInt(totalForms.value);
             let newForm = document.querySelector(".vente-form").cloneNode(true);
 
-            // Réinitialisation des champs du formulaire cloné
             newForm.querySelectorAll("input, select, textarea").forEach(input => {
-                input.value = "";  // Réinitialise les champs
+                input.value = "";
                 let newName = input.name.replace(/\d+/, formNum);
                 let newId = input.id.replace(/\d+/, formNum);
                 input.setAttribute("name", newName);

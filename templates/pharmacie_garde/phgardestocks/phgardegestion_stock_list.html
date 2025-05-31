@@ -21,6 +21,8 @@
                                 <tr>
                                     <th>Produit</th>
                                     <th>Quantité réelle</th>
+                                    <th>Quantité vendue</th>
+                                    <th>Quantité restante</th>
                                     <th>Prix unitaire de vente</th>
                                     <th>Prix total</th>
                                     <th>Actions</th>
@@ -31,6 +33,8 @@
                                 <tr>
                                     <td>{{ stock.produit.nom_produit }}</td>
                                     <td>{{ stock.quantite_reelle }}</td>
+                                    <td>{{ stock.quantite_vendue }}</td>
+                                    <td>{{ stock.quantite_restante }}</td>
                                     <td>{{ stock.prix_unitaire }} FCFA</td>
                                     <td>{{ stock.prix_total }} FCFA</td>
                                     <td>

@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
+from django.core.exceptions import ValidationError
 from .models import Produit, Fournisseur, Commande, Stock, FacturePharmacie, Vente
 
 class ProduitForm(forms.ModelForm):
@@ -75,6 +76,38 @@ class VenteForm(forms.ModelForm):
             'produit': forms.Select(attrs={'class': 'form-control'}),
             'quantite_vendue': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        produit = cleaned_data.get('produit')
+        quantite = cleaned_data.get('quantite_vendue')
+
+        if produit and quantite:
+            try:
+                stock = Stock.objects.get(produit=produit)
+            except Stock.DoesNotExist:
+                self.add_error('produit', "⚠️ Ce produit n'a pas de stock associé.")
+                return cleaned_data
+
+            if stock.quantite_restante == 0:
+                # ❌ Blocage si stock totalement vide
+                self.add_error('quantite_vendue', f"❌ Stock vide pour {produit}. Impossible d'effectuer la vente.")
+            else:
+                # Avertissements informatifs
+                if quantite > stock.quantite_restante:
+                    self.add_error(
+                        'quantite_vendue',
+                        f"⚠️ La quantité demandée ({quantite}) dépasse le stock disponible ({stock.quantite_restante}). La vente est quand même autorisée."
+                    )
+                elif stock.quantite_restante - quantite < 5:
+                    self.add_error(
+                        'quantite_vendue',
+                        f"⚠️ Attention : après cette vente, il ne restera que {stock.quantite_restante - quantite} unité(s)."
+                    )
+
+        return cleaned_data
+
+
 
 class FacturePharmacieForm(forms.ModelForm):
     

@@ -5,6 +5,7 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 from django.shortcuts import get_object_or_404, redirect,render
 from django.utils.decorators import method_decorator
 from django.urls import reverse 
+from django.contrib import messages
 from datetime import datetime
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -342,23 +343,41 @@ class PhGardeFacturePharmacieCreateView(CreateView):
     template_name = "pharmacie_garde/phgardefactures/phgardecreer_facturepharmacie.html"
     success_url = reverse_lazy("pharmacie_garde:liste_factures_phgarde")
 
-    def form_valid(self, form):
-        facture = form.save(commit=False)
-        facture.save_by = self.request.user.personnel  # Associe l'utilisateur connecté
-        facture.save()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context["formset"] = PhGardeVenteFormSet(self.request.POST)
+        else:
+            context["formset"] = PhGardeVenteFormSet()
+        return context
 
-        formset = PhGardeVenteFormSet(self.request.POST)
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context["formset"]
+
         if formset.is_valid():
+            facture = form.save(commit=False)
+            facture.save_by = self.request.user.personnel
+            facture.save()
+
             ventes = formset.save(commit=False)
             for vente in ventes:
                 vente.facture = facture
                 vente.save()
-        return super().form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["formset"] = PhGardeVenteFormSet()
-        return context
+            messages.success(self.request, "✅ Facture et ventes enregistrées avec succès.")
+            return super().form_valid(form)
+        else:
+            for subform in formset:
+                for field, errors in subform.errors.items():
+                    for error in errors:
+                        if field != '__all__':
+                            messages.error(self.request, f"❌ Erreur sur le champ {field} : {error}")
+                        else:
+                            messages.error(self.request, f"❌ {error}")
+
+            return self.render_to_response(self.get_context_data(form=form, formset=formset))
+
 
 #  Modification d'une facture (remplace `modifier_facturePharmacie`)
 @method_decorator(login_required, name='dispatch')
