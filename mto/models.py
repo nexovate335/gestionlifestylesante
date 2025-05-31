@@ -31,7 +31,7 @@ class Mto(models.Model):
         verbose_name_plural = "Mto"
 
     def __str__(self):
-        return f"{self.patient.nom} {self.patient.prenom} - Pratiqueur: {self.pratiqueur}"
+        return f"{self.id}"
 
     def delete(self):
         """Effectue une suppression logique en définissant deleted_at."""

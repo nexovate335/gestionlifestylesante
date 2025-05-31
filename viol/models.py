@@ -32,7 +32,7 @@ class Viol(models.Model):
         verbose_name_plural = "Viols"
 
     def __str__(self):
-        return f"{self.patient.nom} {self.patient.prenom} - Médecin: {self.medecin}"
+        return f"{self.id} "
 
     def delete(self):
         """Effectue une suppression logique en définissant deleted_at."""
