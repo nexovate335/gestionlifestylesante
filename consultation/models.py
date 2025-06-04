@@ -80,15 +80,7 @@ class OrdonnanceManager(models.Manager):
 
     def deleted(self):
         return super().get_queryset().filter(deleted_at__isnull=False)
-
-
-class TraitementManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(deleted_at__isnull=True)
-
-    def deleted(self):
-        return super().get_queryset().filter(deleted_at__isnull=False)
-
+    
 
 class Ordonnance(models.Model):
     consultation = models.ForeignKey(
@@ -120,6 +112,15 @@ class Ordonnance(models.Model):
     def restore(self):
         self.deleted_at = None
         self.save()
+
+
+class TraitementManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted_at__isnull=True)
+
+    def deleted(self):
+        return super().get_queryset().filter(deleted_at__isnull=False)
+
 
 
 class Traitement(models.Model):

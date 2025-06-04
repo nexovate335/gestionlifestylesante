@@ -24,7 +24,5 @@ class HospitalisationForm(forms.ModelForm):
 
     class Meta:
         model = Hospitalisation
-        fields = ['patient', 'montant', 'nombre_jours', 'commentaire', 'date_admission', 'date_sortie']
-        widgets = {
-            'patient': forms.Select(attrs={'class': 'form-select'}),
-        }
+        fields = ['montant', 'nombre_jours', 'commentaire', 'date_admission', 'date_sortie']
+        

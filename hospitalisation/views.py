@@ -4,6 +4,7 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, V
 from django.utils.timezone import now
 from .models import Hospitalisation
 from .forms import HospitalisationForm
+from patients.models import Patient
 from django.contrib.auth.mixins import LoginRequiredMixin
 from personnels.mixins import SaveByPersonnelMixin
 
@@ -14,7 +15,7 @@ class HospitalisationListView(ListView):
     context_object_name = "hospitalisations"
 
     def get_queryset(self):
-        return Hospitalisation.objects.filter(deleted_at__isnull=True)  # Hospitalisations non supprimées
+        return Hospitalisation.objects.all().order_by('-date') 
 
 # Création d'une hospitalisation
 class HospitalisationCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView):
@@ -22,6 +23,25 @@ class HospitalisationCreateView(LoginRequiredMixin, SaveByPersonnelMixin, Create
     form_class = HospitalisationForm
     template_name = "hospitalisation/hospitalisations/hospitalisation_form.html"
     success_url = reverse_lazy("hospitalisation:hospitalisation_list")
+    
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context["patients"] = Patient.objects.all()
+            return context
+
+    def form_valid(self, form):
+        patient_id = self.request.POST.get("patient")
+        if patient_id:
+            try:
+                patient = Patient.objects.get(pk=patient_id)
+                form.instance.patient = patient
+                return super().form_valid(form)
+            except Patient.DoesNotExist:
+                form.add_error(None, "Patient introuvable.")
+        else:
+            form.add_error(None, "Veuillez sélectionner un patient.")
+        return self.form_invalid(form)
+
 
 
 # Détails d'une hospitalisation
@@ -36,8 +56,26 @@ class HospitalisationDetailView(DetailView):
 class HospitalisationUpdateView(UpdateView):
     model = Hospitalisation
     form_class = HospitalisationForm
-    template_name = "hospitalisation/hospitalisations/hospitalisation_form.html"
+    template_name = "hospitalisation/hospitalisations/hospitalisation_form1.html"
     success_url = reverse_lazy("hospitalisation:hospitalisation_list")
+    
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context["patients"] = Patient.objects.all()
+            return context
+
+    def form_valid(self, form):
+        patient_id = self.request.POST.get("patient")
+        if patient_id:
+            try:
+                patient = Patient.objects.get(pk=patient_id)
+                form.instance.patient = patient
+                return super().form_valid(form)
+            except Patient.DoesNotExist:
+                form.add_error(None, "Patient introuvable.")
+        else:
+            form.add_error(None, "Veuillez sélectionner un patient.")
+        return self.form_invalid(form)
 
 # Suppression logique d'une hospitalisation
 class HospitalisationDeleteView(View):

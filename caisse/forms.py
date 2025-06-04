@@ -18,9 +18,8 @@ class FactureCaisseForm(forms.ModelForm):
     
     class Meta:
         model = FactureCaisse
-        fields = ['patient','nom_personne']  # Ajout du champ somme versée
+        fields = ['nom_personne']  # Ajout du champ somme versée
         widgets = {
-            'patient': forms.Select(attrs={'class': 'form-control'}),
             'nom_personne': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom de la personne'}),
             
         }

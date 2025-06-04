@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Mto
 from .forms import MtoForm
 from personnels.mixins import SaveByPersonnelMixin
+from patients.models import Patient
 
 # Liste des Mtos actifs (non supprimés)
 class MtoListView(ListView):
@@ -14,7 +15,7 @@ class MtoListView(ListView):
     context_object_name = "mtos"
 
     def get_queryset(self):
-        return Mto.objects.filter(deleted_at__isnull=True)  # Mtos non supprimés
+        return Mto.objects.all().order_by('-date')
 
 # Création d'un Mto
 class MtoCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView):
@@ -22,7 +23,26 @@ class MtoCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView):
     form_class = MtoForm
     template_name = "mto/mtos/mto_form.html"
     success_url = reverse_lazy("mto:mto_list")
+    
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context["patients"] = Patient.objects.all()
+            return context
 
+    def form_valid(self, form):
+        patient_id = self.request.POST.get("patient")
+        if patient_id:
+            try:
+                patient = Patient.objects.get(pk=patient_id)
+                form.instance.patient = patient
+                return super().form_valid(form)
+            except Patient.DoesNotExist:
+                form.add_error(None, "Patient introuvable.")
+        else:
+            form.add_error(None, "Veuillez sélectionner un patient.")
+        return self.form_invalid(form)
+
+ 
 
 # Détails d'un Mto
 class MtoDetailView(DetailView):
@@ -36,6 +56,25 @@ class MtoUpdateView(UpdateView):
     form_class = MtoForm
     template_name = "mto/mtos/mto_form1.html"
     success_url = reverse_lazy("mto:mto_list")
+    
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context["patients"] = Patient.objects.all()
+            return context
+
+    def form_valid(self, form):
+        patient_id = self.request.POST.get("patient")
+        if patient_id:
+            try:
+                patient = Patient.objects.get(pk=patient_id)
+                form.instance.patient = patient
+                return super().form_valid(form)
+            except Patient.DoesNotExist:
+                form.add_error(None, "Patient introuvable.")
+        else:
+            form.add_error(None, "Veuillez sélectionner un patient.")
+        return self.form_invalid(form)
+
 
 # Suppression logique d'un Mto
 class MtoDeleteView(View):

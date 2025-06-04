@@ -1,0 +1,51 @@
+{% extends "csi_makelekele/baseCsi.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow rounded">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Créer une prestation</h4>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="id_nom_complet" class="form-label">Nom complet du patient</label>
+                    <input type="text" name="nom_complet" maxlength="255" class="form-control" id="id_nom_complet" value="{{ form.nom_complet.value|default:'' }}">
+                    {{ form.nom_complet.errors }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_numero_dossier" class="form-label">Numéro de dossier</label>
+                    <input type="text" name="numero_dossier" maxlength="100" class="form-control" id="id_numero_dossier" value="{{ form.numero_dossier.value|default:'' }}">
+                    {{ form.numero_dossier.errors }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_motif" class="form-label">Motif de la visite</label>
+                    <input type="text" name="motif" maxlength="255" class="form-control" id="id_motif" value="{{ form.motif.value|default:'' }}">
+                    {{ form.motif.errors }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_type" class="form-label">Type de prestation</label>
+                    <input type="text" name="type" maxlength="100" class="form-control" id="id_type" value="{{ form.type.value|default:'' }}">
+                    {{ form.type.errors }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_observation" class="form-label">Observation</label>
+                    <textarea name="observation" class="form-control" id="id_observation">{{ form.observation.value|default:'' }}</textarea>
+                    {{ form.observation.errors }}
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-success">Enregistrer</button>
+                    <a href="{% url 'prestation:prestation_list' %}" class="btn btn-secondary">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

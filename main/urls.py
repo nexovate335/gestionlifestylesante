@@ -6,6 +6,7 @@ from .views import home
 
 urlpatterns = [ 
     path('',home,name='home'),
+    path('select2/', include('django_select2.urls')),
     path('accounts/', include('personnels.urls')),
     path('conixgest/', admin.site.urls),
     path('pharmacie/',include('pharmacie.urls', namespace='pharmacie')),
@@ -23,6 +24,8 @@ urlpatterns = [
     path('blocoperatoire/',include('blocoperatoire.urls', namespace='blocoperatoire')),
     path('mto/',include('mto.urls', namespace='mto')),
     path('rendez_vous/',include('rendez_vous.urls', namespace='rendez_vous')),
+    path('csiMakelekele/', include('csi_makelekele.urls',namespace='prestation')),
+    
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

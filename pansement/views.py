@@ -4,7 +4,8 @@ from django.utils.timezone import now
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from personnels.mixins import SaveByPersonnelMixin
-from .models import Pansement, Patient
+from .models import Pansement
+from patients.models import Patient
 from .forms import PansementForm
 from django.http import JsonResponse
 
@@ -18,7 +19,7 @@ class PansementListView(ListView):
 
     def get_queryset(self):
         # Récupère les pansements actifs uniquement
-        return Pansement.objects.all()
+        return Pansement.objects.all().order_by('-date')
 
 
 
@@ -28,24 +29,6 @@ class PansementCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView):
     form_class = PansementForm
     template_name = "pansement/pansements/pansement_form.html"
     success_url = reverse_lazy("pansement:pansement_list")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["patients"] = Patient.objects.all()
-        return context
-
-    def form_valid(self, form):
-        patient_id = self.request.POST.get("patient")
-        if patient_id:
-            try:
-                patient = Patient.objects.get(pk=patient_id)
-                form.instance.patient = patient
-                return super().form_valid(form)
-            except Patient.DoesNotExist:
-                form.add_error("patient", "Patient introuvable.")
-        else:
-            form.add_error("patient", "Veuillez sélectionner un patient valide.")
-        return self.form_invalid(form)
 
 
 # Vue pour les détails d'un pansement
@@ -70,8 +53,11 @@ class PansementDetailView(DetailView):
 class PansementUpdateView(UpdateView):
     model = Pansement
     form_class = PansementForm
-    template_name = "pansement/pansements/pansement_form.html"
-    success_url = "/pansement/"
+    template_name = "pansement/pansements/pansement_form1.html"
+    success_url = reverse_lazy("pansement:pansement_list")
+
+
+
 
 # Vue pour la suppression d'un pansement (marquer comme supprimé)
 class PansementDeleteView(View):

@@ -1,0 +1,33 @@
+{% extends "csi_makelekele/baseCsi.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Prestations Supprimées</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nom Complet</th>
+                <th>Numéro Dossier</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for prestation in prestations_deleted %}
+            <tr>
+                <td>{{ prestation.nom_complet }}</td>
+                <td>{{ prestation.numero_dossier }}</td>
+                <td>
+                    <form method="post" action="{% url 'prestation:prestation_restore' prestation.pk %}">
+                        {% csrf_token %}
+                        <button class="btn btn-success btn-sm">Restaurer</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center">Aucune prestation supprimée.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

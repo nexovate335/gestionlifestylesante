@@ -1,0 +1,26 @@
+{% extends "csi_makelekele/baseCsi.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Détails de la Prestation</h4>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Nom complet :</strong> {{ prestation.nom_complet }}</li>
+                <li class="list-group-item"><strong>Numéro de dossier :</strong> {{ prestation.numero_dossier }}</li>
+                <li class="list-group-item"><strong>Motif :</strong> {{ prestation.motif }}</li>
+                <li class="list-group-item"><strong>Type :</strong> {{ prestation.type }}</li>
+                <li class="list-group-item"><strong>Observation :</strong> {{ prestation.observation|default:"-" }}</li>
+                <li class="list-group-item"><strong>Date :</strong> {{ prestation.date|date:"d/m/Y H:i" }}</li>
+            </ul>
+        </div>
+        <div class="card-footer text-end">
+            <a href="{% url 'prestation:prestation_list' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

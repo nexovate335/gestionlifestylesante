@@ -19,8 +19,7 @@ class ConsultationListView(ListView):
     context_object_name = "consultations"
 
     def get_queryset(self):
-        return Consultation.objects.filter(deleted_at__isnull=True)  # Récupère uniquement les consultations actives
-
+        return Consultation.objects.all().order_by('-date') 
 
 class SuiteConsultationListView(ListView):
     model = Consultation
@@ -46,6 +45,25 @@ class ConsultationCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateVie
     form_class = ConsultationForm
     template_name = "consultation/consultations/consultation_form.html"
     success_url = reverse_lazy('consultation:consultation_list')
+    
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context["patients"] = Patient.objects.all()
+            return context
+
+    def form_valid(self, form):
+        patient_id = self.request.POST.get("patient")
+        if patient_id:
+            try:
+                patient = Patient.objects.get(pk=patient_id)
+                form.instance.patient = patient
+                return super().form_valid(form)
+            except Patient.DoesNotExist:
+                form.add_error(None, "Patient introuvable.")
+        else:
+            form.add_error(None, "Veuillez sélectionner un patient.")
+        return self.form_invalid(form)
+
 
     
 # Détails d'une consultation
@@ -71,6 +89,25 @@ class ConsultationUpdateView(UpdateView):
     model = Consultation
     form_class = ConsultationForm
     template_name = "consultation/consultations/consultation_form1.html"
+    
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context["patients"] = Patient.objects.all()
+            return context
+
+    def form_valid(self, form):
+        patient_id = self.request.POST.get("patient")
+        if patient_id:
+            try:
+                patient = Patient.objects.get(pk=patient_id)
+                form.instance.patient = patient
+                return super().form_valid(form)
+            except Patient.DoesNotExist:
+                form.add_error(None, "Patient introuvable.")
+        else:
+            form.add_error(None, "Veuillez sélectionner un patient.")
+        return self.form_invalid(form)
+
 
     def get_success_url(self):
         return reverse('consultation:consultation_detail', kwargs={'pk': self.object.pk})

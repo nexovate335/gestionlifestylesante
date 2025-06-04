@@ -8,9 +8,9 @@ class ExamenForm(forms.ModelForm):
     
     class Meta:
         model = Examen
-        fields = ['patient','nom_personne', 'examen', 'prix','nature_examen', 'prescripteur', 'preleveur', 'technicien', 'commentaire']
+        fields = ['nom_personne', 'examen', 'prix','nature_examen', 'prescripteur', 'preleveur', 'technicien', 'commentaire']
         widgets = {
-            'patient': forms.Select(attrs={'class': 'form-select'}),
+           
             'nom_personne': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom de la personne'}),
             'prix': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le montant'}),
             'nature_examen': forms.Select(attrs={'class': 'form-select', "placeholder": "Entrez la nature de l'examen"}),  
@@ -24,9 +24,8 @@ class ExamenForm(forms.ModelForm):
 class ResultatForm(forms.ModelForm):
     class Meta:
         model = Resultat
-        fields = ['patient','nom_personne','examen', 'resultat','commentaire']
+        fields = ['nom_personne','examen', 'resultat','commentaire']
         widgets = {
-            'patient': forms.Select(attrs={'class': 'form-select'}),
             'nom_personne': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom de la personne'}),
             'examen': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, "placeholder": "Entrez l'examen"}), 
             'resultat': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, "placeholder": "Entrez le résultat"}), 

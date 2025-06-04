@@ -1,0 +1,93 @@
+{% extends "csi_makelekele/baseCsi.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Liste des Prestations</h2>
+        <a href="{% url 'prestation:prestation_create' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Ajouter une Prestation
+        </a>
+    </div>
+
+    <!-- Section filtrage par type -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-center">
+                <div class="col-md-4">
+                    <label for="type" class="form-label fw-bold">Filtrer par type de prestation :</label>
+                    <select name="type" id="type" class="form-select" onchange="this.form.submit()">
+                        <option value="">-- Tous les types --</option>
+                        {% for t in types %}
+                            <option value="{{ t }}" {% if request.GET.type == t %}selected{% endif %}>{{ t }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <a href="{% url 'prestation:prestation_list' %}" class="btn btn-outline-secondary w-100">Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Compteurs par type -->
+    <div class="row mb-4">
+        {% for t, count in type_counts.items %}
+        <div class="col-md-3 mb-2">
+            <div class="card border-primary">
+                <div class="card-body text-center">
+                    <h6 class="card-title text-muted mb-1">{{ t|default:"Autre" }}</h6>
+                    <span class="fs-4">{{ count }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Tableau des prestations -->
+    <div class="table-responsive shadow rounded">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-primary text-center">
+                <tr>
+                    <th scope="col">Nom Complet</th>
+                    <th scope="col">N° Dossier</th>
+                    <th scope="col">Motif</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prestation in prestations %}
+                <tr>
+                    <td>{{ prestation.nom_complet }}</td>
+                    <td>{{ prestation.numero_dossier }}</td>
+                    <td>{{ prestation.motif }}</td>
+                    <td>{{ prestation.type }}</td>
+                    <td>{{ prestation.date|date:"d/m/Y H:i" }}</td>
+                    <td class="text-center">
+                        <div class="btn-group" role="group" aria-label="Actions">
+                            <a href="{% url 'prestation:prestation_detail' prestation.pk %}" class="btn btn-outline-info btn-sm">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{% url 'prestation:prestation_update' prestation.pk %}" class="btn btn-outline-warning btn-sm">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form action="{% url 'prestation:prestation_delete' prestation.pk %}" method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Supprimer cette prestation ?')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">Aucune prestation trouvée.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -428,7 +428,7 @@ class PhGardeVente(models.Model):
         if self.quantite_vendue > stock.quantite_restante:
             raise ValidationError(f"❌ Stock insuffisant : il ne reste que {stock.quantite_restante} unités pour ce produit.")
 
-        if stock.quantite_restante - self.quantite_vendue < 5:
+        if stock.quantite_restante - self.quantite_vendue < 1:
             raise ValidationError(
                 f"⚠️ Attention : après cette vente, le stock deviendra critique ({stock.quantite_restante - self.quantite_vendue} unités restantes)."
             )

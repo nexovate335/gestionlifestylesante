@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.timezone import now
+from patients.models import Patient
 from .models import Echographie
 from .forms import EchographieForm
 from personnels.mixins import SaveByPersonnelMixin
@@ -16,7 +17,7 @@ class EchographieListView(ListView):
     context_object_name = "echographies"
 
     def get_queryset(self):
-        return Echographie.objects.filter(deleted_at__isnull=True)  
+        return Echographie.objects.all().order_by('-date') 
 
 # Création d'une échographie
 class EchographieCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView):
@@ -24,6 +25,7 @@ class EchographieCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateView
     form_class = EchographieForm
     template_name = "echographie/echographies/echographie_form.html"
     success_url = reverse_lazy("echographie:echographie_list")
+    
 
 
 # Détails d'une échographie
@@ -39,6 +41,8 @@ class EchographieUpdateView(UpdateView):
     form_class = EchographieForm
     template_name = "echographie/echographies/echographie_form1.html"
     success_url = reverse_lazy("echographie:echographie_list")
+    
+    
 
 # Suppression logique d'une échographie
 class EchographieDeleteView(View):
