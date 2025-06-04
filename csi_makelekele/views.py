@@ -34,7 +34,7 @@ class PrestationListView(ListView):
 
 
 # Création d'une prestation
-class PrestationCreateView(LoginRequiredMixin, CreateView):
+class PrestationCreateView(CreateView):
     model = Prestation
     form_class = PrestationForm
     template_name = "csi_makelekele/prestations/prestation_form.html"
