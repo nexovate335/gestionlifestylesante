@@ -8,9 +8,9 @@ class ExamenForm(forms.ModelForm):
     
     class Meta:
         model = Examen
-        fields = ['nom_personne', 'examen', 'prix','nature_examen', 'prescripteur', 'preleveur', 'technicien', 'commentaire']
+        fields = ['patient','nom_personne', 'examen', 'prix','nature_examen', 'prescripteur', 'preleveur', 'technicien', 'commentaire']
         widgets = {
-           
+            'patient': forms.Select(attrs={'class': 'form-control'}),
             'nom_personne': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom de la personne'}),
             'prix': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le montant'}),
             'nature_examen': forms.Select(attrs={'class': 'form-select', "placeholder": "Entrez la nature de l'examen"}),  
