@@ -6,7 +6,6 @@ from .views import home
 
 urlpatterns = [ 
     path('',home,name='home'),
-    path('select2/', include('django_select2.urls')),
     path('accounts/', include('personnels.urls')),
     path('conixgest/', admin.site.urls),
     path('pharmacie/',include('pharmacie.urls', namespace='pharmacie')),
