@@ -40,23 +40,7 @@ class ExamenCreateView(CreateView):
     template_name = "laboratoire/examens/examen_form.html"
     success_url = reverse_lazy("laboratoire:examen_lab_list")
     
-    def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context["patients"] = Patient.objects.all()
-            return context
 
-    def form_valid(self, form):
-        patient_id = self.request.POST.get("patient")
-        if patient_id:
-            try:
-                patient = Patient.objects.get(pk=patient_id)
-                form.instance.patient = patient
-                return super().form_valid(form)
-            except Patient.DoesNotExist:
-                form.add_error(None, "Patient introuvable.")
-        else:
-            form.add_error(None, "Veuillez sélectionner un patient.")
-        return self.form_invalid(form)
 
 # Détails d'un examen
 class ExamenDetailView(DetailView):
@@ -76,24 +60,6 @@ class ExamenUpdateView(UpdateView):
     form_class = ExamenForm
     template_name = "laboratoire/examens/examen_form1.html"
     success_url = reverse_lazy("laboratoire:examen_list")
-    
-    def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context["patients"] = Patient.objects.all()
-            return context
-
-    def form_valid(self, form):
-        patient_id = self.request.POST.get("patient")
-        if patient_id:
-            try:
-                patient = Patient.objects.get(pk=patient_id)
-                form.instance.patient = patient
-                return super().form_valid(form)
-            except Patient.DoesNotExist:
-                form.add_error(None, "Patient introuvable.")
-        else:
-            form.add_error(None, "Veuillez sélectionner un patient.")
-        return self.form_invalid(form)
 
 
 class ExamenLabUpdateView(UpdateView):
@@ -102,24 +68,6 @@ class ExamenLabUpdateView(UpdateView):
     template_name = "laboratoire/examens/examen_lab_form1.html"
     success_url = reverse_lazy("laboratoire:examen_lab_list")
     
-    def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context["patients"] = Patient.objects.all()
-            return context
-
-    def form_valid(self, form):
-        patient_id = self.request.POST.get("patient")
-        if patient_id:
-            try:
-                patient = Patient.objects.get(pk=patient_id)
-                form.instance.patient = patient
-                return super().form_valid(form)
-            except Patient.DoesNotExist:
-                form.add_error(None, "Patient introuvable.")
-        else:
-            form.add_error(None, "Veuillez sélectionner un patient.")
-        return self.form_invalid(form)
-
 
 # Suppression logique d'un examen
 class ExamenDeleteView(DeleteView):
