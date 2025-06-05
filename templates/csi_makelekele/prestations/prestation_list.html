@@ -23,10 +23,11 @@
                     </select>
                 </div>
 
-                <div class="col-md-3">
+               <div class="col-md-3">
                     <label for="date" class="form-label fw-bold">Filtrer par date :</label>
-                    <input type="date" name="date" id="date" class="form-control" value="{{request.GET.date}}">
+                    <input type="date" name="date" id="date" class="form-control" value="{{ request.GET.date }}">
                 </div>
+
 
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary w-100">Filtrer</button>
@@ -38,11 +39,13 @@
             </form>
 
             <!-- Lien pour filtrer les prestations d’aujourd’hui -->
+            <!-- lien "Voir les prestations d’aujourd’hui" -->
             <div class="mt-3">
-                <a href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}date={{ request.GET.date }}" class="btn btn-outline-info btn-sm">
+                <a href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}date__gte={{ filter_start_date }}&date__lt={{ filter_end_date }}" class="btn btn-outline-info btn-sm">
                     Voir les prestations d’aujourd’hui{% if request.GET.type %} de type "{{ request.GET.type }}"{% endif %} ({{ request.GET.date }})
                 </a>
             </div>
+
 
             <!-- Résumé des filtres -->
             {% if request.GET.type or request.GET.date %}

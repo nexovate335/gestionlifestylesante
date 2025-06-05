@@ -11,6 +11,9 @@ from collections import Counter
 from django.db.models import Count
 from django.utils.timezone import now
 from datetime import datetime
+from django.utils.timezone import make_aware, get_current_timezone, now
+from datetime import datetime, time, timedelta
+
 
 # Liste des prestations
 class PrestationListView(ListView):
@@ -26,15 +29,18 @@ class PrestationListView(ListView):
         if type_filter:
             queryset = queryset.filter(type=type_filter)
 
-        # Filtrer par date (avec support DateTimeField ou DateField)
+        # Filtrer par date avec intervalle datetime aware
         date_filter = self.request.GET.get('date')
         if date_filter:
             try:
                 date_obj = datetime.strptime(date_filter, '%Y-%m-%d').date()
-                # Utilise date__date pour compatibilité avec DateTimeField
-                queryset = queryset.filter(date__date=date_obj)
+                tz = get_current_timezone()
+                start_datetime = make_aware(datetime.combine(date_obj, time.min), timezone=tz)
+                next_day = date_obj + timedelta(days=1)
+                end_datetime = make_aware(datetime.combine(next_day, time.min), timezone=tz)
+                queryset = queryset.filter(date__gte=start_datetime, date__lt=end_datetime)
             except ValueError:
-                pass  # ignore invalid dates
+                pass
 
         return queryset
 
@@ -50,7 +56,18 @@ class PrestationListView(ListView):
             .annotate(count=Count("type"))
             .values_list("type", "count")
         )
-        context["today"] = now().date().isoformat()  # pour champ <input type="date" value=today>
+        # Date au format ISO pour input type=date
+        context["today"] = now().date().isoformat()
+
+        # Dates aware pour filtre dans le template "Voir les prestations d’aujourd’hui"
+        tz = get_current_timezone()
+        today_date = now().date()
+        start_datetime = make_aware(datetime.combine(today_date, time.min), timezone=tz)
+        next_day = today_date + timedelta(days=1)
+        end_datetime = make_aware(datetime.combine(next_day, time.min), timezone=tz)
+        context["filter_start_date"] = start_datetime.isoformat()
+        context["filter_end_date"] = end_datetime.isoformat()
+
         return context
 
 # Création d'une prestation
