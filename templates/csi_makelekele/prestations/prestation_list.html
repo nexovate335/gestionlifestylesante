@@ -25,7 +25,7 @@
 
                 <div class="col-md-3">
                     <label for="date" class="form-label fw-bold">Filtrer par date :</label>
-                    <input type="date" name="date" id="date" class="form-control" value="{{ request.GET.date }}">
+                    <input type="date" name="date" id="date" class="form-control" value="{{ request.GET.date|default:today }}">
                 </div>
 
                 <div class="col-md-2">
@@ -39,8 +39,8 @@
 
             <!-- Lien pour filtrer les prestations d’aujourd’hui -->
             <div class="mt-3">
-                <a href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}date={{ today }}" class="btn btn-outline-info btn-sm">
-                    Voir les prestations d’aujourd’hui{% if request.GET.type %} de type "{{ request.GET.type }}"{% endif %} ({{ today|date:"d/m/Y" }})
+                <a href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}date={{ request.GET.date }}" class="btn btn-outline-info btn-sm">
+                    Voir les prestations d’aujourd’hui{% if request.GET.type %} de type "{{ request.GET.type }}"{% endif %} ({{ request.GET.date }})
                 </a>
             </div>
 

@@ -20,17 +20,18 @@ class PrestationListView(ListView):
 
     def get_queryset(self):
         queryset = Prestation.objects.all().order_by('-date')
-        
+
         # Filtrer par type
         type_filter = self.request.GET.get('type')
         if type_filter:
             queryset = queryset.filter(type=type_filter)
 
-        # Filtrer par date
+        # Filtrer par date (avec support DateTimeField ou DateField)
         date_filter = self.request.GET.get('date')
         if date_filter:
             try:
                 date_obj = datetime.strptime(date_filter, '%Y-%m-%d').date()
+                # Utilise date__date pour compatibilité avec DateTimeField
                 queryset = queryset.filter(date__date=date_obj)
             except ValueError:
                 pass  # ignore invalid dates
@@ -39,14 +40,18 @@ class PrestationListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["types"] = Prestation.objects.values_list("type", flat=True).distinct().order_by("type")
-        context["type_counts"] = dict(
-            Prestation.objects.values("type").annotate(count=Count("type")).values_list("type", "count")
+        context["types"] = (
+            Prestation.objects.values_list("type", flat=True)
+            .distinct()
+            .order_by("type")
         )
-        context["today"] = now().date().isoformat()
+        context["type_counts"] = dict(
+            Prestation.objects.values("type")
+            .annotate(count=Count("type"))
+            .values_list("type", "count")
+        )
+        context["today"] = now().date().isoformat()  # pour champ <input type="date" value=today>
         return context
-
-
 
 # Création d'une prestation
 class PrestationCreateView(CreateView):
