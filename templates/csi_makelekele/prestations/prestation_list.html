@@ -9,23 +9,55 @@
         </a>
     </div>
 
-    <!-- Section filtrage par type -->
+    <!-- Section filtrage par type et date -->
     <div class="card mb-4 shadow-sm">
         <div class="card-body">
-            <form method="get" class="row g-3 align-items-center">
+            <form method="get" class="row g-3 align-items-end">
                 <div class="col-md-4">
                     <label for="type" class="form-label fw-bold">Filtrer par type de prestation :</label>
-                    <select name="type" id="type" class="form-select" onchange="this.form.submit()">
+                    <select name="type" id="type" class="form-select">
                         <option value="">-- Tous les types --</option>
                         {% for t in types %}
                             <option value="{{ t }}" {% if request.GET.type == t %}selected{% endif %}>{{ t }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-md-2 d-flex align-items-end">
+
+                <div class="col-md-3">
+                    <label for="date" class="form-label fw-bold">Filtrer par date :</label>
+                    <input type="date" name="date" id="date" class="form-control" value="{{ request.GET.date }}">
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+                </div>
+
+                <div class="col-md-3">
                     <a href="{% url 'prestation:prestation_list' %}" class="btn btn-outline-secondary w-100">Réinitialiser</a>
                 </div>
             </form>
+
+            <!-- Lien pour filtrer les prestations d’aujourd’hui -->
+            <div class="mt-3">
+                <a href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}date={{ today }}" class="btn btn-outline-info btn-sm">
+                    Voir les prestations d’aujourd’hui{% if request.GET.type %} de type "{{ request.GET.type }}"{% endif %} ({{ today|date:"d/m/Y" }})
+                </a>
+            </div>
+
+            <!-- Résumé des filtres -->
+            {% if request.GET.type or request.GET.date %}
+            <div class="alert alert-info mt-3">
+                <strong>Filtres appliqués :</strong>
+                <ul class="mb-0">
+                    {% if request.GET.type %}
+                        <li>Type : <strong>{{ request.GET.type }}</strong></li>
+                    {% endif %}
+                    {% if request.GET.date %}
+                        <li>Date : <strong>{{ request.GET.date }}</strong></li>
+                    {% endif %}
+                </ul>
+            </div>
+            {% endif %}
         </div>
     </div>
 
@@ -67,7 +99,7 @@
                     <td>{{ prestation.observation }}</td>
                     <td>{{ prestation.date|date:"d/m/Y H:i" }}</td>
                     <td class="text-center">
-                        <div class="btn-group" role="group" aria-label="Actions">
+                        <div class="d-flex justify-content-center gap-2">
                             <a href="{% url 'prestation:prestation_detail' prestation.pk %}" class="btn btn-outline-info btn-sm">
                                 <i class="bi bi-eye"></i>
                             </a>
@@ -85,7 +117,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="6" class="text-center text-muted py-4">Aucune prestation trouvée.</td>
+                    <td colspan="7" class="text-center text-muted py-4">Aucune prestation trouvée.</td>
                 </tr>
                 {% endfor %}
             </tbody>

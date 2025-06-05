@@ -84,7 +84,7 @@ class PhGardeVenteForm(forms.ModelForm):
                     'quantite_vendue',
                     f"⚠️ Quantité demandée ({quantite}) > stock disponible ({stock.quantite_restante}). Vente non autorisée."
                 )
-            elif stock.quantite_restante - quantite < 5:
+            elif stock.quantite_restante - quantite < 1:
                 self.add_error(
                     'quantite_vendue',
                     f"⚠️ Attention : après cette vente, le stock sera critique ({stock.quantite_restante - quantite} unité(s))."

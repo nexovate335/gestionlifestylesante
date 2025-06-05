@@ -99,7 +99,7 @@ class VenteForm(forms.ModelForm):
                         'quantite_vendue',
                         f"⚠️ La quantité demandée ({quantite}) dépasse le stock disponible ({stock.quantite_restante}). La vente est quand même autorisée."
                     )
-                elif stock.quantite_restante - quantite < 5:
+                elif stock.quantite_restante - quantite < 1:
                     self.add_error(
                         'quantite_vendue',
                         f"⚠️ Attention : après cette vente, il ne restera que {stock.quantite_restante - quantite} unité(s)."

@@ -23,7 +23,8 @@ def export_as_excel(modeladmin, request, queryset):
 
     workbook = openpyxl.Workbook()
     worksheet = workbook.active
-    worksheet.title = slugify(meta.verbose_name_plural)
+    worksheet.title = slugify(str(meta.verbose_name_plural))
+
 
     # En-têtes en gras
     for col_num, field_name in enumerate(field_names, 1):

@@ -7,13 +7,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.timezone import now
 from .models import Prestation
 from .forms import PrestationForm
-
-
-# Liste des prestations
 from collections import Counter
 from django.db.models import Count
-from .models import Prestation
+from django.utils.timezone import now
+from datetime import datetime
 
+# Liste des prestations
 class PrestationListView(ListView):
     model = Prestation
     template_name = "csi_makelekele/prestations/prestation_list.html"
@@ -21,16 +20,32 @@ class PrestationListView(ListView):
 
     def get_queryset(self):
         queryset = Prestation.objects.all().order_by('-date')
+        
+        # Filtrer par type
         type_filter = self.request.GET.get('type')
         if type_filter:
             queryset = queryset.filter(type=type_filter)
+
+        # Filtrer par date
+        date_filter = self.request.GET.get('date')
+        if date_filter:
+            try:
+                date_obj = datetime.strptime(date_filter, '%Y-%m-%d').date()
+                queryset = queryset.filter(date__date=date_obj)
+            except ValueError:
+                pass  # ignore invalid dates
+
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["types"] = Prestation.objects.values_list("type", flat=True).distinct().order_by("type")
-        context["type_counts"] = dict(Prestation.objects.values("type").annotate(count=Count("type")).values_list("type", "count"))
+        context["type_counts"] = dict(
+            Prestation.objects.values("type").annotate(count=Count("type")).values_list("type", "count")
+        )
+        context["today"] = now().date().isoformat()
         return context
+
 
 
 # Création d'une prestation
