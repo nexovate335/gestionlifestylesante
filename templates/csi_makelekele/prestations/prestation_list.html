@@ -97,7 +97,7 @@
                     <td>{{ prestation.motif }}</td>
                     <td>{{ prestation.type }}</td>
                     <td>{{ prestation.observation }}</td>
-                    <td>{{ prestation.date|date:"d/m/Y H:i" }}</td>
+                    <td>{{ prestation.date}}</td>
                     <td class="text-center">
                         <div class="d-flex justify-content-center gap-2">
                             <a href="{% url 'prestation:prestation_detail' prestation.pk %}" class="btn btn-outline-info btn-sm">
