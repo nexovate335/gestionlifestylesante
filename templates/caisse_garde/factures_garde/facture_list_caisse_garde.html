@@ -1,7 +1,6 @@
 {% extends 'caisse_garde/baseCaiGar.html' %}
 
 {% block content %}
-
 <div class="app-body">
     <div class="row gx-3">
         <div class="col-sm-12">
@@ -16,8 +15,7 @@
                 </div>
 
                 <div class="card-body">
-
-                    <!-- Filtres de dates -->
+                    <!-- Filtres -->
                     <form method="get" class="row g-3 align-items-end mb-4">
                         <div class="col-md-3">
                             <label for="date" class="form-label">Date unique</label>
@@ -36,131 +34,88 @@
                             <a href="{% url 'caisse_garde:liste_factures_caisse_garde' %}" class="btn btn-sm btn-secondary w-50">Réinitialiser</a>
                         </div>
                     </form>
-                    <!-- Barre de recherche -->
+
+                    <!-- Recherche -->
                     <div class="d-flex justify-content-end mb-3">
                         <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher une facture...">
                     </div>
 
-                    <!-- Onglets -->
-                    <ul class="nav nav-tabs mb-3" id="factureTabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="toutes-tab" data-bs-toggle="tab" data-bs-target="#toutes" type="button" role="tab">Toutes les factures</button>
-                        </li>
-                    </ul>
-
-                    <div class="tab-content" id="factureTabsContent">
-                        <!-- Tab: Toutes les factures -->
-                        <div class="tab-pane fade" id="toutes" role="tabpanel">
-                            <div class="table-responsive mt-3">
-                                <table id="basicExample" class="table truncate m-0 align-middle">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Numéro de dossier</th>
-                                            <th>Patient</th>
-                                            <th>Nom Personne</th>
-                                            <th>Date de création</th>
-                                            <th>Montant Total</th>
-                                            <th>Total somme versée</th>
-                                            <th>Avance</th>
-                                            <th>Reste à payer</th>
-                                            <th>Statut</th>
-                                            <th>Commentaire</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="factureTable">
-                                        {% for facture in factures %}
-                                            <tr>
-                                                <td>{{ facture.numero_facture }}</td>
-                                                <td>{{ facture.patient.numero_dossier }}</td>
-                                                <td>{{ facture.patient.nom }} {{ facture.patient.prenom }}</td>
-                                                <td>{{ facture.nom_personne }}</td>
-                                                <td>{{ facture.facture_date_time|date:"d/m/Y H:i" }}</td>
-                                                <td>{{ facture.total }} FCFA</td>
-                                                <td>{{ facture.total_somme_verse }} FCFA</td>
-                                                <td>{{ facture.avance }} FCFA</td>
-                                                <td>{{ facture.reste_a_payer }} FCFA</td>
-                                                <td class="{% if facture.paye %}text-success{% else %}text-danger{% endif %}">
-                                                    {% if facture.paye %} Payée {% else %} Non payée {% endif %}
-                                                </td>
-                                                <td>{{ facture.commentaire|default:"Aucun commentaire" }}</td>
-                                                <td>
-                                                    {% if not facture.paye %}
-                                                        <a href="{% url 'caisse_garde:modifier_facture_caisse_garde' facture.pk %}" class="btn btn-outline-info btn-sm">
-                                                            <i class="bi bi-eye"></i> Paiement
-                                                        </a>
-                                                    {% else %}
-                                                        <button class="btn btn-outline-secondary btn-sm" disabled style="opacity: 0.6;" title="Facture déjà payée">
-                                                            <i class="bi bi-eye-slash"></i> Payée
-                                                        </button>
-                                                    {% endif %}
-                                                    <a href="{% url 'caisse_garde:voir_facture_caisse_garde' facture.numero_facture %}" class="btn btn-outline-info btn-sm">
-                                                        <i class="bi bi-eye"></i> Facture
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        {% empty %}
-                                            <tr>
-                                                <td colspan="12" class="text-center">Aucune facture trouvée.</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div> <!-- end tab content -->
+                    <!-- Tableau unique -->
+                    <div class="table-responsive mt-3">
+                        <table id="basicExample" class="table truncate m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Numéro de dossier</th>
+                                    <th>Patient</th>
+                                    <th>Nom Personne</th>
+                                    <th>Date de création</th>
+                                    <th>Montant Total</th>
+                                    <th>Total somme versée</th>
+                                    <th>Avance</th>
+                                    <th>Reste à payer</th>
+                                    <th>Statut</th>
+                                    <th>Commentaire</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="factureTable">
+                                {% for facture in factures %}
+                                    <tr>
+                                        <td>{{ facture.numero_facture }}</td>
+                                        <td>{{ facture.patient.numero_dossier }}</td>
+                                        <td>{{ facture.patient.nom }} {{ facture.patient.prenom }}</td>
+                                        <td>{{ facture.nom_personne }}</td>
+                                        <td>{{ facture.facture_date_time|date:"d/m/Y H:i" }}</td>
+                                        <td>{{ facture.total }} FCFA</td>
+                                        <td>{{ facture.total_somme_verse }} FCFA</td>
+                                        <td>{{ facture.avance }} FCFA</td>
+                                        <td>{{ facture.reste_a_payer }} FCFA</td>
+                                        <td class="{% if facture.paye %}text-success{% else %}text-danger{% endif %}">
+                                            {% if facture.paye %} Payée {% else %} Non payée {% endif %}
+                                        </td>
+                                        <td>{{ facture.commentaire|default:"Aucun commentaire" }}</td>
+                                        <td>
+                                            {% if not facture.paye %}
+                                                <a href="{% url 'caisse_garde:modifier_facture_caisse_garde' facture.pk %}" class="btn btn-outline-info btn-sm">
+                                                    <i class="bi bi-eye"></i> Paiement
+                                                </a>
+                                            {% else %}
+                                                <button class="btn btn-outline-secondary btn-sm" disabled style="opacity: 0.6;" title="Facture déjà payée">
+                                                    <i class="bi bi-eye-slash"></i> Payée
+                                                </button>
+                                            {% endif %}
+                                            <a href="{% url 'caisse_garde:voir_facture_caisse_garde' facture.numero_facture %}" class="btn btn-outline-info btn-sm">
+                                                <i class="bi bi-eye"></i> Facture
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="12" class="text-center">Aucune facture trouvée.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Script de recherche (s'applique uniquement à l'onglet "Toutes les factures") -->
 <script>
     const searchInput = document.getElementById('searchInput');
 
-    function updateSearchResults() {
-        const filter = searchInput.value.toLowerCase();
-        const activeTab = document.querySelector('.tab-pane.active');
-        const rows = activeTab.querySelectorAll('tbody tr');
-        let matchCount = 0;
+    searchInput.addEventListener('keyup', function () {
+        const filter = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#factureTable tr');
 
         rows.forEach(row => {
-            // Ne pas filtrer les lignes "Aucun résultat trouvé"
-            if (row.id && row.id.startsWith("noResults")) return;
-
             const cells = row.querySelectorAll('td');
-            if (cells.length >= 4) {
-                const numeroDossier = cells[1].textContent.toLowerCase();
-                const nomPatient = cells[2].textContent.toLowerCase();
-                const nomPersonne = cells[3].textContent.toLowerCase();
-
-                const match =
-                    numeroDossier.includes(filter) ||
-                    nomPatient.includes(filter) ||
-                    nomPersonne.includes(filter);
-
-                row.style.display = match ? '' : 'none';
-                if (match) matchCount++;
-            }
-        });
-
-        // Afficher ou masquer le message "Aucun résultat"
-        const noResultsRow = activeTab.querySelector('tr[id^="noResults"]');
-        if (noResultsRow) {
-            noResultsRow.style.display = matchCount === 0 ? '' : 'none';
-        }
-    }
-
-    searchInput.addEventListener('keyup', updateSearchResults);
-
-    document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(tab => {
-        tab.addEventListener('shown.bs.tab', function () {
-            searchInput.value = '';
-            updateSearchResults();
+            const match = [...cells].some(cell => cell.textContent.toLowerCase().includes(filter));
+            row.style.display = match ? '' : 'none';
         });
     });
 </script>
-
 {% endblock %}
