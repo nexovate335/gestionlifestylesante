@@ -450,7 +450,7 @@ class Vente(models.Model):
             raise ValidationError(f"Stock insuffisant. Il reste seulement {stock.quantite_restante} unités en stock.")
 
         #  Alerte : stock faible
-        if stock.quantite_restante - self.quantite_vendue < 1:
+        if stock.quantite_restante - self.quantite_vendue < 0:
             raise ValidationError(f"Alerte : le stock deviendra critique après cette vente. Seulement {stock.quantite_restante - self.quantite_vendue} unités resteront.")
 
         #  Mise à jour du stock
