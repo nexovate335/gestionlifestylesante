@@ -30,7 +30,7 @@ class Hospitalisation(models.Model):
         verbose_name_plural = "Hospitalisations"
 
     def __str__(self):
-        return f"{self.patient.nom} {self.patient.prenom} - Nombre de jours: {self.nombre_jours}"
+        return f"{self.id} - Nombre de jours: {self.nombre_jours}"
 
     def delete(self):
         self.deleted_at = now()
