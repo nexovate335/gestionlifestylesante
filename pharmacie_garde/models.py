@@ -27,6 +27,7 @@ class PhGardeProduit(models.Model):
     class Meta:
         verbose_name = "PhGardeProduit"
         verbose_name_plural = "PhGardeProduits"
+        ordering = ['nom_produit']
 
     def __str__(self):
         return self.nom_produit

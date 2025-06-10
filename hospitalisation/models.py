@@ -13,6 +13,7 @@ class HospitalisationManager(models.Manager):
 
 class Hospitalisation(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.PROTECT, verbose_name="Patient")
+    nom_personne = models.CharField(max_length=255,null=True, blank=True, verbose_name="Nom complet de la personne concernée")
     montant = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Montant")
     date_admission = models.DateTimeField(verbose_name="Date d'admission")
     date_sortie = models.DateTimeField(null=True, blank=True, verbose_name="Date de sortie")

@@ -254,22 +254,20 @@ class PhGardeFacturePharmacieCaisseListView(ListView):
     context_object_name = "factures"
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = PhGardeFacturePharmacie.objects.all()
+        request = self.request.GET
 
-        # Récupère les paramètres GET
-        date = self.request.GET.get("date")
-        date_debut = self.request.GET.get("date_debut")
-        date_fin = self.request.GET.get("date_fin")
+        date = request.get("date")
+        date_debut = request.get("date_debut")
+        date_fin = request.get("date_fin")
 
-        # Filtre selon la date exacte
         if date:
             try:
                 date_obj = datetime.strptime(date, "%Y-%m-%d").date()
                 queryset = queryset.filter(facture_date_time__date=date_obj)
             except ValueError:
-                pass
+                pass  # Ignore invalid dates
 
-        # Filtre selon l'intervalle de dates
         elif date_debut and date_fin:
             try:
                 debut = datetime.strptime(date_debut, "%Y-%m-%d").date()
@@ -277,11 +275,6 @@ class PhGardeFacturePharmacieCaisseListView(ListView):
                 queryset = queryset.filter(facture_date_time__date__range=(debut, fin))
             except ValueError:
                 pass
-
-        # Par défaut, afficher les factures du jour
-        else:
-            today = localtime().date()
-            queryset = queryset.filter(facture_date_time__date=today)
 
         return queryset
 
@@ -303,30 +296,31 @@ class PhGardeFacturePharmacieRecepListView(ListView):
     context_object_name = "factures"
 
     def get_queryset(self):
-        queryset = super().get_queryset().select_related('patient')
-        date_str = self.request.GET.get("date")
-        date_debut_str = self.request.GET.get("date_debut")
-        date_fin_str = self.request.GET.get("date_fin")
+        queryset = PhGardeFacturePharmacie.objects.all()
+        request = self.request.GET
 
-        if date_str:
+        date = request.get("date")
+        date_debut = request.get("date_debut")
+        date_fin = request.get("date_fin")
+
+        if date:
             try:
-                date = datetime.strptime(date_str, "%Y-%m-%d").date()
-                queryset = queryset.filter(facture_date_time__date=date)
+                date_obj = datetime.strptime(date, "%Y-%m-%d").date()
+                queryset = queryset.filter(facture_date_time__date=date_obj)
+            except ValueError:
+                pass  # Ignore invalid dates
+
+        elif date_debut and date_fin:
+            try:
+                debut = datetime.strptime(date_debut, "%Y-%m-%d").date()
+                fin = datetime.strptime(date_fin, "%Y-%m-%d").date()
+                queryset = queryset.filter(facture_date_time__date__range=(debut, fin))
             except ValueError:
                 pass
-        elif date_debut_str and date_fin_str:
-            try:
-                date_debut = datetime.strptime(date_debut_str, "%Y-%m-%d").date()
-                date_fin = datetime.strptime(date_fin_str, "%Y-%m-%d").date()
-                queryset = queryset.filter(facture_date_time__date__range=(date_debut, date_fin))
-            except ValueError:
-                pass
-        else:
-            today = localtime().date()
-            queryset = queryset.filter(facture_date_time__date=today)
 
         return queryset
-
+    
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["date"] = self.request.GET.get("date", "")
