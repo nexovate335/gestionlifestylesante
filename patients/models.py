@@ -114,6 +114,7 @@ class Patient(models.Model):
     class Meta:
         verbose_name = "Patient"
         verbose_name_plural = "Patients"
+        ordering = ['numero_dossier']
 
     def delete(self):
         """Marque l'enregistrement comme supprimé."""
