@@ -34,30 +34,13 @@ class BlocOperatoireCreateView(LoginRequiredMixin, SaveByPersonnelMixin, CreateV
     template_name = "blocoperatoire/blocoperatoires/blocoperatoire_form.html"
     success_url = reverse_lazy("blocoperatoire:blocoperatoire_list_recep")
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["patients"] = Patient.objects.all()
-        return context
-
-    def form_valid(self, form):
-        patient_id = self.request.POST.get("patient")
-        if patient_id:
-            try:
-                patient = Patient.objects.get(pk=patient_id)
-                form.instance.patient = patient
-                return super().form_valid(form)
-            except Patient.DoesNotExist:
-                form.add_error(None, "Patient introuvable.")
-        else:
-            form.add_error(None, "Veuillez sélectionner un patient.")
-        return self.form_invalid(form)
-
     
 # Détails d'un bloc opératoire
 class BlocOperatoireDetailView(DetailView):
     model = BlocOperatoire
     template_name = "blocoperatoire/blocoperatoires/blocoperatoire_detail.html"
     context_object_name = "blocoperatoire"
+    
 
 # Mise à jour d'un bloc opératoire
 class BlocOperatoireUpdateView(LoginRequiredMixin, SaveByPersonnelMixin, UpdateView):
@@ -66,35 +49,7 @@ class BlocOperatoireUpdateView(LoginRequiredMixin, SaveByPersonnelMixin, UpdateV
     template_name = "blocoperatoire/blocoperatoires/blocoperatoire_form.html"
     success_url = reverse_lazy("blocoperatoire:blocoperatoire_list_recep")
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["patients"] = Patient.objects.all()
-
-        # Valeur affichée dans l'input visible (ex: "12345-Doe")
-        patient = self.object.patient
-        if patient:
-            context["patient_display_value"] = f"{patient.numero_dossier}-{patient.nom}"
-        else:
-            context["patient_display_value"] = ""
-        return context
-
-    def form_valid(self, form):
-        patient_id = self.request.POST.get("patient")
-        if patient_id:
-            try:
-                patient = Patient.objects.get(pk=patient_id)
-                form.instance.patient = patient
-            except Patient.DoesNotExist:
-                form.add_error(None, "Patient introuvable.")
-                return self.form_invalid(form)
-        else:
-            form.add_error(None, "Veuillez sélectionner un patient valide.")
-            return self.form_invalid(form)
-
-        return super().form_valid(form)
-
-    
-    
+     
 class BlocOperatoireUserUpdateView(UpdateView):
     model = BlocOperatoire
     form_class = BlocOperatoireUpdateForm
