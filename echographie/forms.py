@@ -2,6 +2,11 @@ from django import forms
 from .models import Echographie
 
 class EchographieForm(forms.ModelForm):
+    numero_dossier = forms.CharField(
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le numéro de dossier'})
+    )
     demandeur = forms.CharField(
         max_length=100,
         required=False,
@@ -33,10 +38,9 @@ class EchographieForm(forms.ModelForm):
     
     class Meta:
         model = Echographie
-        fields = ['patient','nom_personne', 'demandeur', 'pratiqueur', 'assistant', 'montant', 'resultat', 'commentaire']
+        fields = ['nom_personne','numero_dossier', 'demandeur', 'pratiqueur', 'assistant', 'montant', 'resultat', 'commentaire']
         widgets = {
            
-            'patient': forms.Select(attrs={'class': 'form-control'}),
             'nom_personne': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom de la personne'}),
             
             

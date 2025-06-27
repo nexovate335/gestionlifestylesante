@@ -159,7 +159,7 @@ class BaseAdmin(admin.ModelAdmin):
 # Admin Pansement
 @admin.register(Pansement)
 class PansementAdmin(BaseAdmin):
-    list_display = ('patient','nom_personne', 'montant', 'panseur', 'save_by', 'date')
+    list_display = ('patient','nom_personne', 'numero_dossier', 'montant', 'panseur', 'save_by', 'date')
     search_fields = ('patient__nom', 'patient__prenom', 'panseur')
     ordering = ('-date',)
     readonly_fields = ('date',)

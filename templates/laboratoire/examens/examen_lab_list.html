@@ -26,10 +26,8 @@
                         <table id="basicExample" class="table truncate m-0 align-middle">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Numéro de dossier</th>
                                     <th>Patient</th>
-                                    <th>Nom Personne</th>
                                     <th>Examen</th>
                                     <th>Prix</th>
                                     <th>Nature de l'examen</th>
@@ -44,9 +42,7 @@
                             <tbody id="examenTable">
                                 {% for examen in examens %}
                                 <tr>
-                                    <td>{{ examen.id }}</td>
-                                    <td>{{ examen.patient.numero_dossier }}</td>
-                                    <td class="patient-name">{{ examen.patient.nom }} {{ examen.patient.prenom }}</td>
+                                    <td>{{ examen.numero_dossier }}</td>
                                     <td>{{ examen.nom_personne }}</td>
                                     <td>{{ examen.examen }}</td>
                                     <td>{{ examen.prix }} FCFA</td>

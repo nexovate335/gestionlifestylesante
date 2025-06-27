@@ -23,10 +23,8 @@
                         <table id="blocTable" class="table truncate m-0 align-middle">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Numéro de dossier</th>
                                     <th>Patient</th>
-                                    <th>Nom Personne</th>  
                                     <th>Actes</th>
                                     <th>Montant</th>
                                     <th>Médecin</th>
@@ -43,9 +41,7 @@
                             <tbody>
                                 {% for bloc in blocs %}
                                     <tr>
-                                        <td>{{ bloc.id }}</td>
-                                        <td>{{ bloc.patient.numero_dossier }}</td>
-                                        <td>{{ bloc.patient.nom }} {{ bloc.patient.prenom }}</td>  <!-- Ajout du patient -->
+                                        <td>{{ bloc.numero_dossier }}</td>
                                         <td>{{ bloc.nom_personne }}</td>
                                         <td>{{ bloc.actes }}</td>
                                         <td>{{ bloc.montant }}</td>

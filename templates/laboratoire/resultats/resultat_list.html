@@ -26,7 +26,6 @@
                         <table id="basicExample" class="table truncate m-0 align-middle">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Numéro de dossier</th>
                                     <th>Patient</th>
                                     <th>Examen</th>
@@ -38,9 +37,8 @@
                             <tbody id="resultatTable">
                                 {% for resultat in resultats %}
                                 <tr>
-                                    <td>{{ resultat.pk }}</td>
-                                    <td>{{ resultat.patient.numero_dossier }}</td>
-                                    <td class="examination-info">{{ resultat.patient.nom }} {{ resultat.patient.prenom }}</td>
+                                    <td>{{ resultat.numero_dossier }}</td>
+                                    <td class="examination-info">{{ resultat.nom_personne }}</td>
                                     <td>{{ resultat.examen }}</td>
                                     <td>{{ resultat.resultat }}</td>
                                     <td>{{ resultat.commentaire|truncatechars:50  }}</td>

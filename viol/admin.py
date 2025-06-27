@@ -159,7 +159,7 @@ class BaseAdmin(admin.ModelAdmin):
 
 @admin.register(Viol)
 class ViolAdmin(BaseAdmin):
-    list_display = ('patient','nom_personne', 'montant', 'medecin', 'save_by', 'date')
+    list_display = ('patient','nom_personne', 'numero_dossier', 'montant', 'medecin', 'save_by', 'date')
     list_filter = ('date', 'medecin', 'deleted_at')
     search_fields = ('patient', 'medecin')
     ordering = ('-date',)
@@ -167,7 +167,7 @@ class ViolAdmin(BaseAdmin):
 
     fieldsets = (
         ("Informations personnelles", {
-            'fields': ('patient','nom_personne')
+            'fields': ('patient','nom_personne', 'numero_dossier')
         }),
         ("Détails du viol", {
             'fields': ('montant', 'medecin', 'observation', 'commentaire','save_by', 'date')

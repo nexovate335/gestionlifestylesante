@@ -72,6 +72,7 @@
                             <thead>
                                 <tr>
                                     <th>Nom Personne</th>
+                                    <th>Numéro de Dossier</th>
                                     <th>Nom Docteur</th>
                                     <th>Date et Heure</th>
                                     <th>Statut</th>
@@ -84,6 +85,7 @@
                                 {% for rendezvous in rendezvous %}
                                 <tr>
                                     <td>{{ rendezvous.nom_personne }}</td>
+                                    <td>{{ rendezvous.numero_dossier }}</td>
                                     <td>{{ rendezvous.nom_docteur }}</td>
                                     <td>{{ rendezvous.jour_rdv }}/{{ rendezvous.mois_rdv }}/{{ rendezvous.annee_rdv }} à {{ rendezvous.heure_rdv }}</td>
                                     <td>{{ rendezvous.statut }}</td>

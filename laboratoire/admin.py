@@ -170,24 +170,24 @@ class ExamenAdmin(BaseAdmin):
 
 @admin.register(Resultat)
 class ResultatAdmin(BaseAdmin):
-    list_display = ('patient','nom_personne', 'examen', 'resultat', 'date')
+    list_display = ('patient','nom_personne','numero_dossier', 'examen', 'resultat', 'date')
     search_fields = ('patient__nom',)
     ordering = ('-date',)
     readonly_fields = ('date',)
     fieldsets = (
-        ("Informations liées à l'examen", {'fields': ('patient','nom_personne')}),
+        ("Informations liées à l'examen", {'fields': ('patient','nom_personne','numero_dossier')}),
         ("Détails", {'fields': ('examen', 'resultat', 'date')}),
     )
 
 @admin.register(ExamenCytologiePv)
 class ExamenCytologiePvAdmin(BaseAdmin):
-    list_display = ('patient','nom_personne', 'pv_secretion', 'cyto_leuco', 'cyto_h', 'date')
+    list_display = ('patient','nom_personne', 'numero_dossier', 'pv_secretion', 'cyto_leuco', 'cyto_h', 'date')
     search_fields = ('patient__nom', 'pv_secretion', 'cyto_leuco', 'cyto_h')
     ordering = ('-date',)
     readonly_fields = ('date',)
     list_filter = ('date', 'pv_couleur', 'cyto_h')
     fieldsets = (
-        ("Informations personnelles", {'fields': ('patient','nom_personne')}),
+        ("Informations personnelles", {'fields': ('patient','nom_personne', 'numero_dossier')}),
         ("PV", {'fields': ('pv_secretion', 'pv_couleur', 'pv_odeur')}),
         ("Cytologie", {'fields': (
             'cyto_ce', 'cyto_leuco', 'cyto_cc', 'cyto_levure',
@@ -199,10 +199,10 @@ class ExamenCytologiePvAdmin(BaseAdmin):
 @admin.register(ExamenCytologieEcbu)
 class ExamenCytologieEcbuAdmin(BaseAdmin):
     list_display = (
-        'patient','nom_personne', 'ecbu_culot', 'ecbu_couleur', 'cyto_ce', 'cyto_leuco',
+        'patient','nom_personne', 'numero_dossier', 'ecbu_culot', 'ecbu_couleur', 'cyto_ce', 'cyto_leuco',
         'cyto_cylendre', 'cyto_cristaux', 'cyto_h', 'cyto_gram', 'date'
     )
-    search_fields = ('patient__nom', 'patient__prenom')
+    search_fields = ('patient__nom', 'patient__prenom','numero_dossier',)
     ordering = ('-date',)
     readonly_fields = ('date',)
     fieldsets = (

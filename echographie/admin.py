@@ -158,14 +158,14 @@ class BaseAdmin(admin.ModelAdmin):
 
 @admin.register(Echographie)
 class EchographieAdmin(BaseAdmin):
-    list_display = ('patient','nom_personne', 'demandeur', 'pratiqueur', 'assistant', 'montant', 'resultat','commentaire', 'save_by', 'date')
+    list_display = ('patient','nom_personne', 'numero_dossier', 'demandeur', 'pratiqueur', 'assistant', 'montant', 'resultat','commentaire', 'save_by', 'date')
     list_filter = ('date',  'deleted_at')  # Inclure deleted_at dans les filtres
     search_fields = ('patient', 'resultat')
     ordering = ('-date',)
     readonly_fields = ('date',)
     fieldsets = (
         ("Informations personnelles", {
-            'fields': ('patient','nom_personne')
+            'fields': ('patient','nom_personne', 'numero_dossier')
         }),
         ("Détails de l'échographie", {
             'fields': ('demandeur', 'pratiqueur', 'assistant', 'montant', 'resultat', 'save_by', 'commentaire')

@@ -26,7 +26,6 @@
                         <table id="consultationTable" class="table truncate m-0 align-middle">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Numéro de Dossier</th>
                                     <th>Patient</th>
                                     <th>Type de Consultation</th>
@@ -41,9 +40,8 @@
                             <tbody id="consultationBody">
                                 {% for consultation in consultations %}
                                 <tr>
-                                    <td>{{ consultation.id }}</td>
-                                    <td>{{ consultation.patient.numero_dossier }}</td>
-                                    <td class="patient-name">{{ consultation.patient.nom }} {{ consultation.patient.prenom }}</td>
+                                    <td>{{ consultation.numero_dossier }}</td>
+                                    <td class="patient-name">{{ consultation.nom_personne }}</td>
                                     <td>{{ consultation.type_consultation }}</td>
                                     <td>{{ consultation.medecin|default:"N/A" }}</td>
                                     <td>{{ consultation.assistant|default:"N/A" }}</td>

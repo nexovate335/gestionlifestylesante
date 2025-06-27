@@ -28,7 +28,6 @@
                                 <tr>
                                     <th>Nom du dossier</th>
                                     <th>Nom du Patient</th>
-                                    <th>Nom Personne</th>
                                     <th>Type de Vaccin</th>
                                     <th>Montant</th>
                                     <th>Commentaire</th>
@@ -40,7 +39,6 @@
                                 {% for vaccin in vaccins %}
                                 <tr>
                                     <td>{{ vaccin.numero_dossier}}</td>
-                                    <td class="patient-name">{{ vaccin.patient.nom }} {{ vaccin.patient.prenom }}</td>
                                     <td>{{ vaccin.nom_personne }}</td>
                                     <td>{{ vaccin.type_vaccin }}</td>
                                     <td>{{ vaccin.montant }}</td>

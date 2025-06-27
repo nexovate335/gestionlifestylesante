@@ -25,10 +25,8 @@
                         <table id="basicExample" class="table truncate m-0 align-middle">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Numérode dossier</th>
+                                    <th>Numéro de dossier</th>
                                     <th>Patient</th>
-                                    <th>Nom Personne</th>
                                     <th>Demandeur</th>
                                     <th>Pratiqueur</th>
                                     <th>Assistant(e)</th>
@@ -42,9 +40,7 @@
                             <tbody id="echographieTable">
                                 {% for echographie in echographies %}
                                 <tr>
-                                    <td>{{ echographie.id}}</td>
-                                    <td>{{ echographie.patient.numero_dossier}}</td>
-                                    <td>{{ echographie.patient.nom }} {{ echographie.patient.prenom }}</td>
+                                    <td>{{ echographie.numero_dossier}}</td>
                                     <td>{{ echographie.nom_personne }}</td>
                                     <td>{{ echographie.demandeur }}</td>
                                     <td>{{ echographie.pratiqueur }}</td>

@@ -3,16 +3,16 @@ from .models import Hospitalisation
 
 class HospitalisationForm(forms.ModelForm):
     
-    patient = forms.ModelChoiceField(
-        queryset=Hospitalisation._meta.get_field('patient').related_model.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control'}),
-        label='Patient'
-    )
 
     nom_personne = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom complet de la personne'}),
         label='Nom de la personne'
+    )
+    numero_dossier = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Numéro de dossier'}),
+        label='Numéro de dossier'
     )
 
     montant = forms.DecimalField(
@@ -49,4 +49,4 @@ class HospitalisationForm(forms.ModelForm):
 
     class Meta:
         model = Hospitalisation
-        fields = ['patient', 'nom_personne', 'montant', 'nombre_jours', 'commentaire', 'date_admission', 'date_sortie']
+        fields = [ 'nom_personne','numero_dossier', 'montant', 'nombre_jours', 'commentaire', 'date_admission', 'date_sortie']

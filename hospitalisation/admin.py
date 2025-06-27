@@ -158,14 +158,14 @@ class BaseAdmin(admin.ModelAdmin):
 
 @admin.register(Hospitalisation)
 class HospitalisationAdmin(BaseAdmin):
-    list_display = ('patient', 'montant', 'nombre_jours', 'date_admission', 'date_sortie', 'save_by', 'date')
+    list_display = ('patient','nom_personne', 'numero_dossier', 'montant', 'nombre_jours', 'date_admission', 'date_sortie', 'save_by', 'date')
     list_filter = ('date_admission', 'date_sortie', 'deleted_at')  # Inclure date_admission et date_sortie dans les filtres
     search_fields = ('patient__nom', 'patient__prenom', 'montant')
     ordering = ('-date_admission',)
     readonly_fields = ('date',)
     fieldsets = (
         ("Informations du patient", {
-            'fields': ('patient',)
+            'fields': ('patient', 'nom_personne', 'numero_dossier',)
         }),
         ("Détails de l'hospitalisation", {
             'fields': ('montant', 'nombre_jours', 'commentaire', 'date_admission', 'date_sortie', 'save_by')

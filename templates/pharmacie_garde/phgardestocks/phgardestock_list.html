@@ -10,9 +10,18 @@
                 </div>
 
                 <div class="card-body">
-                    <!-- Barre de recherche -->
-                    <div class="d-flex justify-content-end mb-3">
+                    <!-- Barre de recherche + filtre + compteur -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
                         <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Rechercher un stock...">
+                        <div class="d-flex align-items-center gap-2">
+                            <button id="toggleCriticalBtn" class="btn btn-outline-danger btn-sm">
+                                <i class="bi bi-filter-circle"></i> Afficher les stocks critiques
+                            </button>
+                            <span id="criticalCount" class="badge bg-secondary text-white d-flex align-items-center gap-1">
+                                <i class="bi bi-check-circle"></i>
+                                Stocks critiques : 0
+                            </span>
+                        </div>
                     </div>
 
                     <div class="table-responsive">
@@ -29,8 +38,25 @@
                             </thead>
                             <tbody id="stockTable">
                                 {% for stock in stocks %}
-                                <tr>
-                                    <td>{{ stock.produit.nom_produit }}</td>
+                                <tr class="
+                                    {% if stock.quantite_restante <= 1 %}
+                                        table-danger stock-critique
+                                    {% elif stock.quantite_restante >= 2 and stock.quantite_restante <= 4 %}
+                                        table-warning stock-critique
+                                    {% else %}
+                                        table-success
+                                    {% endif %}
+                                ">
+                                    <td>
+                                        {% if stock.quantite_restante <= 1 %}
+                                        🚨
+                                        {% elif stock.quantite_restante >= 2 and stock.quantite_restante <= 4 %}
+                                        ⚠️
+                                        {% else %}
+                                        ✅   
+                                        {% endif %}
+                                        {{ stock.produit.nom_produit }}
+                                    </td>
                                     <td>{{ stock.quantite_reelle }}</td>
                                     <td>{{ stock.quantite_vendue }}</td>
                                     <td>{{ stock.quantite_restante }}</td>
@@ -39,10 +65,11 @@
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="5" class="text-center">Aucun stock trouvé.</td>
+                                    <td colspan="6" class="text-center">Aucun stock trouvé.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
+
                         </table>
                     </div>
                 </div>
@@ -51,20 +78,98 @@
     </div>
 </div>
 
-<!-- Script de recherche -->
+<!-- Toast Bootstrap en haut à droite -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1055">
+    <div id="ruptureToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="bi bi-x-octagon me-2"></i>
+                <span id="ruptureMessage">Produit en rupture de stock</span>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<!-- Script JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-    document.getElementById('searchInput').addEventListener('keyup', function() {
-        let filter = this.value.toLowerCase();
-        let rows = document.querySelectorAll('#stockTable tr');
-        
+    const searchInput = document.getElementById('searchInput');
+    const toggleBtn = document.getElementById('toggleCriticalBtn');
+    const badge = document.getElementById('criticalCount');
+    const rows = document.querySelectorAll('#stockTable tr');
+    let showOnlyCritical = false;
+
+    function updateCriticalCount() {
+        const criticalRows = document.querySelectorAll('#stockTable .stock-critique');
+        const count = criticalRows.length;
+
+        // Couleur + icône selon règle
+        badge.classList.remove('bg-danger', 'bg-warning', 'bg-success');
+        let iconHTML = '';
+        if (count <= 1) {
+            badge.classList.add('bg-danger');
+            iconHTML = '<i class="bi bi-exclamation-triangle"></i>'; // 🚨
+        } else if (count >= 2 && count <= 4) {
+            badge.classList.add('bg-warning');
+            iconHTML = '<i class="bi bi-exclamation-diamond"></i>'; // ⚠️
+        } else {
+            badge.classList.add('bg-success');
+            iconHTML = '<i class="bi bi-check-circle"></i>'; // ✅
+        }
+
+        badge.innerHTML = `${iconHTML} Stocks critiques : ${count}`;
+    }
+
+    function showRuptureToastIfNeeded() {
+        const ruptureRows = Array.from(document.querySelectorAll('#stockTable tr'))
+            .filter(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 4) {
+                    const qteRestante = parseInt(cells[3].textContent.trim());
+                    return qteRestante === 0;
+                }
+                return false;
+            });
+
+        if (ruptureRows.length > 0) {
+            const toastEl = document.getElementById('ruptureToast');
+            const toastBody = document.getElementById('ruptureMessage');
+            const toast = new bootstrap.Toast(toastEl, { delay: 6000 });
+
+            toastBody.innerHTML = `🚨 ${ruptureRows.length} produit${ruptureRows.length > 1 ? 's' : ''} en rupture de stock !`;
+            toast.show();
+        }
+    }
+
+    searchInput.addEventListener('keyup', function () {
+        const filter = this.value.toLowerCase();
         rows.forEach(row => {
-            let name = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
-            if (name.includes(filter)) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
+            const nameCell = row.querySelector('td:nth-child(1)');
+            if (!nameCell) return;
+            const name = nameCell.textContent.toLowerCase();
+            row.style.display = name.includes(filter) ? '' : 'none';
         });
     });
+
+    toggleBtn.addEventListener('click', function () {
+        showOnlyCritical = !showOnlyCritical;
+
+        rows.forEach(row => {
+            const isCritical = row.classList.contains('stock-critique');
+            row.style.display = showOnlyCritical ? (isCritical ? '' : 'none') : '';
+        });
+
+        this.innerHTML = showOnlyCritical
+            ? `<i class="bi bi-list-ul"></i> Afficher tous les stocks`
+            : `<i class="bi bi-filter-circle"></i> Afficher les stocks critiques`;
+
+        showRuptureToastIfNeeded();
+    });
+
+    // Initialisation au chargement
+    updateCriticalCount();
+    showRuptureToastIfNeeded();
 </script>
 {% endblock %}

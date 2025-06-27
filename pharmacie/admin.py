@@ -209,7 +209,7 @@ class VenteAdmin(BaseAdmin):
 # Admin pour FacturePharmacie
 @admin.register(FacturePharmacie)
 class FacturePharmacieAdmin(BaseAdmin):
-    list_display = ('patient','nom_personne', 'facture_date_time', 'total', 'total_somme_verse', 'avance', 'reste_a_payer', 'nombre_versements', 'paye', 'deleted_at')
+    list_display = ('patient','nom_personne','numero_dossier', 'facture_date_time', 'total', 'total_somme_verse', 'avance', 'reste_a_payer', 'nombre_versements', 'paye', 'deleted_at')
     list_filter = ('paye', 'facture_date_time', 'deleted_at')
     search_fields = ('patient__nom', 'save_by__nom')
     readonly_fields = ('total_somme_verse', 'avance', 'reste_a_payer', 'paye', 'nombre_versements')

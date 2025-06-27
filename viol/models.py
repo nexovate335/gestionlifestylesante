@@ -16,6 +16,7 @@ class ViolManager(models.Manager):
 class Viol(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Patient")
     nom_personne = models.CharField(max_length=255,null=True, blank=True, verbose_name="Nom complet de la personne concernée")
+    numero_dossier = models.CharField(max_length=100, verbose_name="Numéro de dossier", null=True, blank=True)
     montant = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Montant")
     medecin = models.CharField(max_length=100, verbose_name="Médecin")
     observation = models.TextField(verbose_name="Obseration",null=True,blank=True)

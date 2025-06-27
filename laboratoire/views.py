@@ -119,27 +119,7 @@ class ResultatCreateView(CreateView):
     form_class = ResultatForm
     template_name = "laboratoire/resultats/resultat_form.html"
     success_url = reverse_lazy("laboratoire:resultat_list")
-    
-    def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context["patients"] = Patient.objects.all()
-            return context
-
-    def form_valid(self, form):
-        patient_id = self.request.POST.get("patient")
-        if patient_id:
-            try:
-                patient = Patient.objects.get(pk=patient_id)
-                form.instance.patient = patient
-                return super().form_valid(form)
-            except Patient.DoesNotExist:
-                form.add_error(None, "Patient introuvable.")
-        else:
-            form.add_error(None, "Veuillez sélectionner un patient.")
-        return self.form_invalid(form)
-
-
-    
+       
 
 # Détails d'un résultat
 class ResultatDetailView(DetailView):
@@ -154,26 +134,7 @@ class ResultatUpdateView(UpdateView):
     template_name = "laboratoire/resultats/resultat_form.html"
     success_url = reverse_lazy("laboratoire:resultat_list")
     
-    def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context["patients"] = Patient.objects.all()
-            return context
 
-    def form_valid(self, form):
-        patient_id = self.request.POST.get("patient")
-        if patient_id:
-            try:
-                patient = Patient.objects.get(pk=patient_id)
-                form.instance.patient = patient
-                return super().form_valid(form)
-            except Patient.DoesNotExist:
-                form.add_error(None, "Patient introuvable.")
-        else:
-            form.add_error(None, "Veuillez sélectionner un patient.")
-        return self.form_invalid(form)
-
-
-   
 # Suppression logique d'un résultat
 class ResultatDeleteView(DeleteView):
     model = Resultat
@@ -225,24 +186,7 @@ class ExamenCytologiePvCreateView(CreateView):
     template_name = "laboratoire/examenscytopv/examencytopv_form.html"
     success_url = reverse_lazy("laboratoire:examencytopv_list")
     
-    def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context["patients"] = Patient.objects.all()
-            return context
-
-    def form_valid(self, form):
-        patient_id = self.request.POST.get("patient")
-        if patient_id:
-            try:
-                patient = Patient.objects.get(pk=patient_id)
-                form.instance.patient = patient
-                return super().form_valid(form)
-            except Patient.DoesNotExist:
-                form.add_error(None, "Patient introuvable.")
-        else:
-            form.add_error(None, "Veuillez sélectionner un patient.")
-        return self.form_invalid(form)
-
+    
 # Détails d’un examen
 class ExamenCytologiePvDetailView(DetailView):
     model = ExamenCytologiePv
@@ -257,23 +201,6 @@ class ExamenCytologiePvUpdateView(UpdateView):
     template_name = "laboratoire/examenscytopv/examencytopv_form.html"
     success_url = reverse_lazy("laboratoire:examencytopv_list")
     
-    def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context["patients"] = Patient.objects.all()
-            return context
-
-    def form_valid(self, form):
-        patient_id = self.request.POST.get("patient")
-        if patient_id:
-            try:
-                patient = Patient.objects.get(pk=patient_id)
-                form.instance.patient = patient
-                return super().form_valid(form)
-            except Patient.DoesNotExist:
-                form.add_error(None, "Patient introuvable.")
-        else:
-            form.add_error(None, "Veuillez sélectionner un patient.")
-        return self.form_invalid(form)
 
 # Suppression logique d’un examen
 class ExamenCytologiePvDeleteView(DeleteView):
@@ -325,23 +252,6 @@ class ExamenCytologieEcbuCreateView(CreateView):
     template_name = "laboratoire/ecbu_cytologie/ecbu_cytologie_form.html"
     success_url = reverse_lazy("laboratoire:ecbu_cytologie_list")
     
-    def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context["patients"] = Patient.objects.all()
-            return context
-
-    def form_valid(self, form):
-        patient_id = self.request.POST.get("patient")
-        if patient_id:
-            try:
-                patient = Patient.objects.get(pk=patient_id)
-                form.instance.patient = patient
-                return super().form_valid(form)
-            except Patient.DoesNotExist:
-                form.add_error(None, "Patient introuvable.")
-        else:
-            form.add_error(None, "Veuillez sélectionner un patient.")
-        return self.form_invalid(form)
 
 # Détail d'un examen
 class ExamenCytologieEcbuDetailView(DetailView):
@@ -356,23 +266,6 @@ class ExamenCytologieEcbuUpdateView(UpdateView):
     template_name = "laboratoire/ecbu_cytologie/ecbu_cytologie_form.html"
     success_url = reverse_lazy("laboratoire:ecbu_cytologie_list")
     
-    def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context["patients"] = Patient.objects.all()
-            return context
-
-    def form_valid(self, form):
-        patient_id = self.request.POST.get("patient")
-        if patient_id:
-            try:
-                patient = Patient.objects.get(pk=patient_id)
-                form.instance.patient = patient
-                return super().form_valid(form)
-            except Patient.DoesNotExist:
-                form.add_error(None, "Patient introuvable.")
-        else:
-            form.add_error(None, "Veuillez sélectionner un patient.")
-        return self.form_invalid(form)
 
 # Suppression logique d’un examen
 class ExamenCytologieEcbuDeleteView(DeleteView):

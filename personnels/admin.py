@@ -10,11 +10,13 @@ from openpyxl.styles import Font
 from io import BytesIO
 from datetime import datetime
 from django.conf import settings
-
+from django.utils.html import format_html
+from django.urls import reverse
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
+from .forms import CustomUserChangeForm
 
 
 # Export Excel
@@ -153,16 +155,26 @@ class PersonnelInline(admin.StackedInline):
 # Admin personnalisé pour CustomUser
 @admin.register(CustomUser)
 class CustomUserAdmin(BaseAdmin):
+    form = CustomUserChangeForm  # 🔽 utilisation du formulaire custom
     inlines = (PersonnelInline,)
-    
+
     fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        ('Informations personnelles', {'fields': ('last_name', 'first_name', 'email')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        ('Dates importantes', {'fields': ('last_login', 'date_joined')}),
+        (None, {
+            'fields': ('username', 'password', 'new_password')  # 🔽 champ de modification
+        }),
+        ('Informations personnelles', {
+            'fields': ('last_name', 'first_name', 'email')
+        }),
+        ('Permissions', {
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')
+        }),
+        ('Dates importantes', {
+            'fields': ('last_login', 'date_joined')
+        }),
     )
+
     list_display = ('username', 'email', 'last_name', 'first_name', 'is_staff')
-    search_fields = ('username', 'email', 'first_name', 'last_name')
+    search_fields = ('username', 'email', 'first_name', 'last_name', 'personnel__telephone')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
 
 
@@ -173,3 +185,5 @@ class PersonnelAdmin(BaseAdmin):
     search_fields = ('last_name', 'first_name', 'user__last_name', 'user__first_name', 'user__email', 'telephone', 'fonction')
     list_filter = ('sexe', 'fonction', 'deleted_at')
     
+
+

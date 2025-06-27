@@ -9,11 +9,12 @@ class ConsultationForm(forms.ModelForm):
     class Meta:
         model = Consultation
         fields = [
-           'patient', 'type_consultation','montant', 'medecin', 'assistant', 'commentaire',
+           'nom_personne','numero_dossier', 'type_consultation','montant', 'medecin', 'assistant', 'commentaire',
         ]
 
         widgets = {
-            'patient': forms.Select(attrs={'class': 'form-select'}),
+            'nom_personne': forms.TextInput(attrs={'class': 'form-control'}),
+            'numero_dossier': forms.TextInput(attrs={'class': 'form-control'}),
             'type_consultation': forms.Select(attrs={'class': 'form-select'}),
             'montant': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Montant à payer'}),
             'medecin': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom du médecin'}),

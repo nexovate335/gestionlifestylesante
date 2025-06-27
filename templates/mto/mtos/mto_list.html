@@ -26,10 +26,8 @@
                         <table id="basicExample" class="table truncate m-0 align-middle">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Numérode dossier</th>
                                     <th>Patient</th>
-                                    <th>Nom Personne</th>
                                     <th>Demandeur</th>
                                     <th>Pratiqueur</th>
                                     <th>Assistant(e)</th>
@@ -43,9 +41,7 @@
                             <tbody id="mtoTable">
                                 {% for mto in mtos %}
                                 <tr>
-                                    <td>{{ mto.id}}</td>
-                                    <td>{{ mto.patient.numero_dossier}}</td>
-                                    <td>{{ mto.patient.nom }} {{ mto.patient.prenom }}</td>
+                                    <td>{{ mto.numero_dossier}}</td>
                                     <td>{{ mto.nom_personne }}</td>
                                     <td>{{ mto.demandeur }}</td>
                                     <td>{{ mto.pratiqueur }}</td>

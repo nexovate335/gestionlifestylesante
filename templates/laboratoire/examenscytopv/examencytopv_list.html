@@ -25,7 +25,6 @@
                         <table id="basicExample" class="table truncate m-0 align-middle">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Numéro de dossier</th>
                                     <th>Patient</th>
                                     <th>PV Sécrétion</th>
@@ -37,9 +36,8 @@
                             <tbody id="examenTable">
                                 {% for examen in examens %}
                                 <tr>
-                                    <td>{{ examen.pk }}</td>
-                                    <td>{{ examen.patient.numero_dossier }}</td>
-                                    <td class="examen-patient">{{ examen.patient.nom }} {{ examen.patient.prenom }}</td>
+                                    <td>{{ examen.numero_dossier }}</td>
+                                    <td class="examen-patient">{{ examen.nom_personne }}</td>
                                     <td>{{ examen.pv_secretion }}</td>
                                     <td>{{ examen.pv_couleur }}</td>
                                     <td>{{ examen.cyto_ce }}</td>

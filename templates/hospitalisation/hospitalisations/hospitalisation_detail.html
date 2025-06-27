@@ -10,7 +10,11 @@
                 <tbody>
                     <tr>
                         <th class="bg-light">Patient</th>
-                        <td><span class="badge bg-primary">{{ hospitalisation.patient.nom }} {{ hospitalisation.patient.prenom }}</span></td>
+                        <td><span class="badge bg-primary">{{ hospitalisation.nom_personne }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Numéro de dossier</th>
+                        <td><span class="badge bg-primary">{{ hospitalisation.numero_dossier }}</span></td>
                     </tr>
                     <tr>
                         <th class="bg-light">Montant</th>

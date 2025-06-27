@@ -160,7 +160,7 @@ class BaseAdmin(admin.ModelAdmin):
 # Application aux modèles
 @admin.register(FactureCaisse)
 class FactureCaisseAdmin(BaseAdmin):
-    list_display = ('patient','nom_personne', 'save_by', 'facture_date_time', 'total', 'total_somme_verse',
+    list_display = ('patient','nom_personne','numero_dossier', 'save_by', 'facture_date_time', 'total', 'total_somme_verse',
                     'avance', 'reste_a_payer', 'nombre_versements', 'paye', 'deleted_at')
     list_filter = ('paye', 'facture_date_time', 'deleted_at')
     search_fields = ('patient__nom', 'save_by__nom')

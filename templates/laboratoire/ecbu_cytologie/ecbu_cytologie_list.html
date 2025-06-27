@@ -26,13 +26,10 @@
                         <table id="examenTable" class="table truncate m-0 align-middle">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Numéro de dossier</th>
                                     <th>Patient</th>
-                                    <th>Nom Personne</th>
                                     <th>ECBU Culot</th>
                                     <th>Cyto CE</th>
-                                    <th>Commentaire</th>
                                     <th>Date</th>
                                     <th>Actions</th>
                                 </tr>
@@ -40,13 +37,10 @@
                             <tbody id="examenTableBody">
                                 {% for examen in examens %}
                                 <tr>
-                                    <td>{{ examen.pk }}</td>
-                                    <td>{{ examen.patient.numero_dossier }}</td>
-                                    <td class="examen-patient">{{ examen.patient.nom }} {{ examen.patient.prenom }}</td>
+                                    <td>{{ examen.numero_dossier }}</td>
                                     <td>{{ examen.nom_personne }}</td>
                                     <td>{{ examen.ecbu_culot }}</td>
                                     <td>{{ examen.cyto_ce }}</td>
-                                    <td>{{ examen.commentaire|truncatechars:50 }}</td>
                                     <td>{{ examen.date|date:"d/m/Y H:i" }}</td>
                                     <td>
                                         <div class="d-inline-flex gap-1">

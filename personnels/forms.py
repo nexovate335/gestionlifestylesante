@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser, Personnel
 from django_countries.widgets import CountrySelectWidget
+from django.contrib.auth.hashers import make_password
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -58,3 +59,24 @@ class LoginForm(forms.Form):
         label="Mot de passe",
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Entrez votre mot de passe'})
     )
+
+
+class CustomUserChangeForm(forms.ModelForm):
+    new_password = forms.CharField(
+        required=False,
+        widget=forms.PasswordInput,
+        label="Nouveau mot de passe"
+    )
+
+    class Meta:
+        model = CustomUser
+        fields = '__all__'
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        new_password = self.cleaned_data.get('new_password')
+        if new_password:
+            user.password = make_password(new_password)
+        if commit:
+            user.save()
+        return user

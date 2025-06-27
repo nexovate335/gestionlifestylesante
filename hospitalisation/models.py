@@ -12,8 +12,9 @@ class HospitalisationManager(models.Manager):
         return super().get_queryset().filter(deleted_at__isnull=False)
 
 class Hospitalisation(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, verbose_name="Patient")
+    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, verbose_name="Patient", null=True, blank=True,)
     nom_personne = models.CharField(max_length=255,null=True, blank=True, verbose_name="Nom complet de la personne concernée")
+    numero_dossier = models.CharField(max_length=100, verbose_name="Numéro de dossier", null=True, blank=True)
     montant = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Montant")
     date_admission = models.DateTimeField(verbose_name="Date d'admission")
     date_sortie = models.DateTimeField(null=True, blank=True, verbose_name="Date de sortie")

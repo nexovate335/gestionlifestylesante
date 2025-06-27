@@ -159,7 +159,7 @@ class BaseAdmin(admin.ModelAdmin):
 
 @admin.register(Vaccin)
 class VaccinAdmin(BaseAdmin):
-    list_display = ('patient','nom_personne', 'type_vaccin', 'montant', 'save_by', 'date')
+    list_display = ('patient','nom_personne','numero_dossier', 'type_vaccin', 'montant', 'save_by', 'date')
     list_filter = ('date', 'type_vaccin', 'deleted_at')
     search_fields = ('type_vaccin',)
     ordering = ('-date',)
@@ -167,7 +167,7 @@ class VaccinAdmin(BaseAdmin):
     
     fieldsets = (
         ("Informations personnelles", {
-            'fields': ('patient', 'nom_personne')
+            'fields': ('patient', 'nom_personne', 'numero_dossier')
         }),
         ("Détails du vaccin", {
             'fields': ('type_vaccin', 'montant', 'commentaire','save_by', 'date')

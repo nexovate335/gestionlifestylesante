@@ -113,10 +113,11 @@ class FacturePharmacieForm(forms.ModelForm):
     
     class Meta:
         model = FacturePharmacie
-        fields = ['patient','nom_personne']  # Ajout du champ somme versée
+        fields = ['nom_personne','numero_dossier']  # Ajout du champ somme versée
         widgets = {
-            'patient': forms.Select(attrs={'class': 'form-control'}),
+           
             'nom_personne': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom de la personne'}),
+            'numero_dossier': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le numéro de dossier'}),
             
         }
 

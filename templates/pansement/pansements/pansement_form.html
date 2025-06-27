@@ -9,10 +9,16 @@
         {% csrf_token %}
         <div class="row g-3">
 
-            <!-- Patient (géré par le form Django) -->
+            <!-- Patient -->
             <div class="col-md-6">
-                <label for="{{ form.patient.id_for_label }}" class="form-label">Patient *</label>
-                {{ form.patient }}
+                <label for="{{ form.nom_personne.id_for_label }}" class="form-label">Nom personne complet *</label>
+                {{ form.nom_personne }}
+            </div>
+
+            <!-- Numero dossier -->
+            <div class="col-md-6">
+                <label for="{{ form.numero_dossier.id_for_label }}" class="form-label">Numéro de dossier *</label>
+                {{ form.numero_dossier }}
             </div>
 
             <!-- Montant -->
@@ -23,7 +29,7 @@
 
             <!-- Panseur (Médecin) -->
             <div class="col-md-6">
-                <label for="{{ form.panseur.id_for_label }}" class="form-label">Panseur (Médecin) *</label>
+                <label for="{{ form.panseur.id_for_label }}" class="form-label">Panseur *</label>
                 {{ form.panseur }}
             </div>
 

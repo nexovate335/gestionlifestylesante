@@ -26,10 +26,8 @@
                         <table id="hospitalisationTable" class="table truncate m-0 align-middle">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Patient</th>
                                     <th>Numéro de dosssier</th>
-                                    <th>Nom personne</th>
                                     <th>Date d'Admission</th>
                                     <th>Date de Sortie</th>
                                     <th>Nombre de jours</th>
@@ -42,9 +40,7 @@
                             <tbody id="hospitalisationBody">
                                 {% for hospitalisation in hospitalisations %}
                                 <tr>
-                                    <td>{{ hospitalisation.id }}</td>
-                                    <td class="hospitalisation-patient">{{ hospitalisation.patient.nom }} {{ hospitalisation.patient.prenom }}</td>
-                                    <td>{{ hospitalisation.patient.numero_dossier }}</td>
+                                    <td>{{ hospitalisation.numero_dossier }}</td>
                                     <td>{{ hospitalisation.nom_personne }}</td>
                                     <td>{{ hospitalisation.date_admission|date:"d/m/Y H:i" }}</td>
                                     <td>{{ hospitalisation.date_sortie|date:"d/m/Y H:i" }}</td>

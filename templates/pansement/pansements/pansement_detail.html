@@ -8,17 +8,10 @@
         <div class="card-body">
             <table class="table table-bordered table-hover">
                 <tbody>
+                    
                     <tr>
                         <th class="bg-light">Nom du Patient</th>
-                        <td>{{ pansement.patient.nom }} {{ pansement.patient.prenom }}</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Nom Personne</th>
                         <td>{{ pansement.nom_personne }}</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Description</th>
-                        <td>{{ pansement.observation }}</td>
                     </tr>
                     <tr>
                         <th class="bg-light">Montant</th>
@@ -27,6 +20,10 @@
                     <tr>
                         <th class="bg-light">Panseur</th>
                         <td>{{ pansement.panseur }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Observation</th>
+                        <td>{{ pansement.observation }}</td>
                     </tr>
                     <tr>
                         <th class="bg-light">Commentaire</th>

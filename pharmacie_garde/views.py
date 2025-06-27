@@ -214,7 +214,7 @@ class PhGardeFacturePharmacieListView(ListView):
     context_object_name = "factures"
 
     def get_queryset(self):
-        queryset = PhGardeFacturePharmacie.objects.all()
+        queryset = PhGardeFacturePharmacie.objects.all().order_by('-facture_date_time')
         request = self.request.GET
 
         date = request.get("date")
@@ -254,7 +254,7 @@ class PhGardeFacturePharmacieCaisseListView(ListView):
     context_object_name = "factures"
 
     def get_queryset(self):
-        queryset = PhGardeFacturePharmacie.objects.all()
+        queryset = PhGardeFacturePharmacie.objects.all().order_by('-facture_date_time')
         request = self.request.GET
 
         date = request.get("date")
@@ -296,7 +296,7 @@ class PhGardeFacturePharmacieRecepListView(ListView):
     context_object_name = "factures"
 
     def get_queryset(self):
-        queryset = PhGardeFacturePharmacie.objects.all()
+        queryset = PhGardeFacturePharmacie.objects.all().order_by('-facture_date_time')
         request = self.request.GET
 
         date = request.get("date")

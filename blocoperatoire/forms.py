@@ -9,8 +9,9 @@ class BlocOperatoireForm(forms.ModelForm):
         model = BlocOperatoire
         fields = [
             
-            'patient',
+          
             'nom_personne',
+            'numero_dossier',
             'montant',
             'actes',
             'medecin',
@@ -21,8 +22,8 @@ class BlocOperatoireForm(forms.ModelForm):
             'observation',
         ]
         widgets = {
-            'patient': forms.Select(attrs={'class': 'form-control'}),
             'nom_personne': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom de la personne'}),
+            'numero_dossier': forms.TextInput(attrs={'class': 'form-control'}),
             'montant': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le montant'}),
             'actes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Décrivez les actes opératoires'}),
             'medecin': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez le nom du médecin'}),

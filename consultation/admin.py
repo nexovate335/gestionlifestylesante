@@ -151,6 +151,7 @@ class ConsultationAdmin(BaseAdmin):
     list_display = (
         'patient',
         'nom_personne',
+        'numero_dossier',
         'type_consultation',
         'montant',
         'medecin',
@@ -174,7 +175,7 @@ class ConsultationAdmin(BaseAdmin):
 
     fieldsets = (
         ("Informations personnelles", {
-            'fields': ('patient','nom_personne', 'type_consultation', 'date')
+            'fields': ('patient','nom_personne', 'numero_dossier', 'type_consultation', 'date')
         }),
         ("Personnel médical", {
             'fields': ('medecin', 'assistant', 'suivi_medecin', 'save_by',)
