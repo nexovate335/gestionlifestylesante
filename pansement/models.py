@@ -31,7 +31,7 @@ class Pansement(models.Model):
         verbose_name_plural = "Pansements"
 
     def __str__(self):
-        return f"{self.patient.nom} {self.patient.prenom} - Médecin: {self.panseur}"
+        return f"{self.id}"
 
     def delete(self):
         self.deleted_at = now()
